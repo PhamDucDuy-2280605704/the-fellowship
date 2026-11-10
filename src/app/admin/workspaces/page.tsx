@@ -52,7 +52,7 @@ export default async function AdminWorkspacesPage({ searchParams }: { searchPara
             {(workspaces ?? []).map((workspace) => (
               <tr key={workspace.workspace_id}>
                 <td>
-                  <b>{workspace.name}</b>
+                  <Link href={`/admin/workspaces/${workspace.workspace_id}`} className={styles.workspaceLink}><b>{workspace.name}</b></Link>
                   <small>/{workspace.slug}</small>
                   {workspace.description && <small>{workspace.description}</small>}
                 </td>

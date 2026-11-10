@@ -113,3 +113,26 @@ export async function removeWorkspaceMember(formData: FormData): Promise<void> {
     ? `/workspaces/${slug}/members?error=remove-failed`
     : `/workspaces/${slug}/members?notice=member-removed`);
 }
+
+export async function revokeWorkspaceInvitation(formData: FormData): Promise<void> {
+  const invitationId = field(formData, "invitationId");
+  const slug = field(formData, "slug");
+  if (!validId(invitationId) || !safeSlug(slug)) {
+    redirect(`/workspaces/${slug}/members?error=invalid-invitation`);
+  }
+  const { supabase } = await requireActiveUser();
+  const { error } = await supabase.rpc("revoke_workspace_invitation", {
+    p_invitation_id: invitationId,
+  });
+  redirect(error
+    ? `/workspaces/${slug}/members?error=revoke-failed`
+    : `/workspaces/${slug}/members?notice=invitation-revoked`);
+}
+
+export async function leaveWorkspace(formData: FormData): Promise<void> {
+  const workspaceId = field(formData, "workspaceId");
+  if (!validId(workspaceId)) redirect("/workspaces?error=invalid-workspace");
+  const { supabase } = await requireActiveUser();
+  const { error } = await supabase.rpc("leave_workspace", { p_workspace_id: workspaceId });
+  redirect(error ? "/workspaces?error=leave-failed" : "/workspaces?notice=left-workspace");
+}

@@ -8,6 +8,11 @@ function readString(formData: FormData, name: string): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function isGmailAddress(email: string): boolean {
+  const parts = email.split("@");
+  return email.length <= 254 && parts.length === 2 && parts[0].length > 0 && parts[1] === "gmail.com" && !/\\s/.test(email);
+}
+
 export async function signIn(formData: FormData): Promise<void> {
   const email = readString(formData, "email").toLowerCase();
   const requestedNext = readString(formData, "next");
@@ -16,7 +21,7 @@ export async function signIn(formData: FormData): Promise<void> {
     : null;
 
   // Existing Auth identities only: login never creates a new account.
-  if (!email || email.length > 254 || !/^[^ @]+@[^ @]+[.][^ @]+$/.test(email)) {
+  if (!isGmailAddress(email)) {
     redirect("/login?error=send");
   }
 

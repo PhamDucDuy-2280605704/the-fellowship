@@ -1,6 +1,22 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { Be_Vietnam_Pro, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+
+const bodyFont = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const displayFont = Cormorant_Garamond({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +36,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="vi" data-scroll-behavior="smooth">
-      <body>{children}</body>
+      <body className={`${bodyFont.variable} ${displayFont.variable}`}>{children}</body>
     </html>
   );
 }

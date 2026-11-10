@@ -9,7 +9,7 @@ function readString(formData: FormData, name: string): string {
 }
 
 function isGmailAddress(email: string): boolean {
-  return email.length <= 254 && /^[^@\\s]+@gmail\\.com$/i.test(email);
+  return email.length <= 254 && /^[^@\s]+@gmail\.com$/i.test(email);
 }
 
 export async function signIn(formData: FormData): Promise<void> {
@@ -68,7 +68,7 @@ export async function signUp(formData: FormData): Promise<void> {
     ? String(formData.get("password"))
     : "";
 
-  const validEmail = email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validEmail = isGmailAddress(email);
   if (displayName.length < 2 || displayName.length > 80 || !validEmail) {
     redirect("/signup?error=invalid-input");
   }

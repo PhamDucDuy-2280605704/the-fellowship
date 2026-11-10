@@ -37,6 +37,20 @@ An Owner or workspace Admin never receives platform-wide Admin access.
 
 When promoting the initial platform Admin in a fresh project, insert that verified Auth user's UUID into `private.platform_admins` from the Supabase SQL editor using a trusted database-admin session. Never expose direct write privileges to this table through the Data API. Do not grant platform Admin based on `user_metadata`.
 
-## Still to implement
+## Workspace collaboration controls
 
-Invitation creation/acceptance, workspace member roster management for Owners, and richer activity auditing remain planned. Platform Admin inventory and account suspension are implemented separately from those workspace-level tools.
+The current application also includes:
+- One-time invitation creation, acceptance, revocation, email matching, and seven-day expiry.
+- Member roster, role changes, member removal, and self-service leaving.
+- Owner protection and workspace settings.
+- Workspace activity timeline for tracked Goal, Quest, note, and Council proposal changes.
+
+## Database helper visibility
+
+The `private` schema is not part of the exposed Supabase Data API schemas. The authenticated database role has schema `USAGE` only so RLS policies and narrowly granted helper functions can resolve their names. Execute permission remains granted per function; no direct table grants are provided by this schema permission. The anonymous role has no `USAGE` permission.
+
+## Remaining verification
+
+- Run the full role matrix with separate disposable Owner, Admin, Member, and Viewer accounts.
+- Verify cross-workspace read/write isolation and suspended-account behavior.
+- Expand immutable admin-action auditing and ownership transfer workflows before enabling those capabilities.

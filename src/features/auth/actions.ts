@@ -14,30 +14,43 @@ export async function signIn(formData: FormData): Promise<void> {
   const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\\\")
     ? requestedNext
     : null;
-  const password = typeof formData.get("password") === "string"
-    ? String(formData.get("password"))
-    : "";
 
-  if (!email || !password) {
-    redirect("/login?error=invalid-input");
+  // Existing Auth identities only: login never creates a new account.
+  if (!email || email.length > 254 || !/^[^ @]+@[^ @]+[.][^ @]+$/.test(email)) {
+    redirect("/login?error=send");
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://the-fellowship-phamducduy.vercel.app";
+  let emailRedirectTo: string;
+  try {
+    const parsed = new URL(siteUrl);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") throw new Error("Invalid site URL");
+    const callback = new URL("/auth/callback", parsed);
+    if (safeNext) callback.searchParams.set("next", safeNext);
+    emailRedirectTo = callback.toString();
+  } catch {
+    redirect("/login?error=send");
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: false, emailRedirectTo },
+  });
 
   if (error) {
-    redirect("/login?error=credentials");
+    const code = error.code ?? "";
+    if (code === "over_email_send_rate_limit" || error.status === 429) {
+      redirect("/login?error=rate-limit");
+    }
+    console.error("[auth.signin] Passwordless sign-in request failed", {
+      code: code || "unknown",
+      status: error.status ?? null,
+    });
+    redirect("/login?error=send");
   }
 
-  const { data: isActive, error: statusError } = await supabase.rpc("is_platform_user_active");
-  if (statusError || !isActive) {
-    await supabase.auth.signOut();
-    redirect("/login?error=suspended");
-  }
-
-  if (safeNext) redirect(safeNext);
-  const { data: isAdmin } = await supabase.rpc("is_platform_admin");
-  redirect(isAdmin ? "/admin" : "/workspaces");
+  redirect("/login?notice=check-email");
 }
 
 export async function signUp(formData: FormData): Promise<void> {

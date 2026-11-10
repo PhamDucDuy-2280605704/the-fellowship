@@ -31,7 +31,6 @@ export async function signIn(formData: FormData): Promise<void> {
     if (error.code === "user_banned") redirect("/login?error=suspended");
     console.error("[auth.signin] Password sign-in failed", {
       code: error.code ?? "unknown",
-      status: error.status ?? null,
     });
     redirect("/login?error=credentials");
   }
@@ -40,7 +39,6 @@ export async function signIn(formData: FormData): Promise<void> {
   if (pinStatusError) {
     console.error("[auth.signin] Recovery PIN status check failed", {
       code: pinStatusError.code ?? "unknown",
-      status: pinStatusError.status ?? null,
     });
   } else if (hasRecoveryPin !== true) {
     redirect("/recovery-pin");
@@ -119,7 +117,6 @@ export async function saveRecoveryPin(formData: FormData): Promise<void> {
   if (error) {
     console.error("[auth.recovery-pin] PIN save failed", {
       code: error.code ?? "unknown",
-      status: error.status ?? null,
     });
     redirect("/recovery-pin?error=save");
   }

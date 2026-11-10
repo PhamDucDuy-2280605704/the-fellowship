@@ -525,6 +525,8 @@
 .noteTags a:hover { border-color:var(--gold); background:rgba(201,168,106,.08); }
 .noteLinks span { padding:5px 8px; border-left:2px solid rgba(201,168,106,.45); background:rgba(201,168,106,.045); color:#b9b9ab; font-size:12px; }
 .noteLinks b { color:#dfc58d; font-weight:600; }
+.noteLinks a { color:#d8c89f; text-decoration:none; }
+.noteLinks a:hover { color:#f0dfb5; text-decoration:underline; }
 .noteActions { display:flex; align-items:center; flex-wrap:wrap; gap:14px; margin-top:13px; padding-top:10px; border-top:1px solid rgba(226,218,190,.09); }
 .noteEdit { flex:1 1 100%; }
 .noteEdit summary { width:max-content; color:#d7bd82; cursor:pointer; font-size:13px; }

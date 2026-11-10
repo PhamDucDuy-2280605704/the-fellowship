@@ -18,7 +18,8 @@ export async function createProposal(formData: FormData): Promise<void> {
   const title = field(formData, "title");
   const context = field(formData, "context");
   const closesAtRaw = field(formData, "closesAt");
-  const closesAt = closesAtRaw ? new Date(closesAtRaw).toISOString() : null;
+  const closesAtDate = closesAtRaw ? new Date(closesAtRaw) : null;
+  const closesAt = closesAtDate && Number.isFinite(closesAtDate.getTime()) ? closesAtDate.toISOString() : null;
   const votingMode = field(formData, "votingMode") === "anonymous" ? "anonymous" : "open";
   const options = field(formData, "options").split("\n").map((value) => value.trim()).filter(Boolean).slice(0, 8)
     .map((line) => { const [optionTitle, ...rest] = line.split("|"); return { title: optionTitle.trim(), description: rest.join("|").trim().slice(0, 3000) }; });
@@ -27,7 +28,7 @@ export async function createProposal(formData: FormData): Promise<void> {
   if (!validId(workspaceId) || title.length < 3 || title.length > 180 || context.length > 8000 ||
       options.length < 2 || options.some((option) => option.title.length < 1 || option.title.length > 180) ||
       criteria.some((criterion) => criterion.title.length < 2 || criterion.title.length > 120 || !Number.isFinite(criterion.weight) || criterion.weight <= 0 || criterion.weight > 100) ||
-      (closesAtRaw && (!closesAt || Number.isNaN(Date.parse(closesAtRaw)) || Date.parse(closesAtRaw) <= Date.now()))) back(slug, "invalid");
+      (closesAtRaw && (!closesAt || closesAtDate!.getTime() <= Date.now()))) back(slug, "invalid");
   const { supabase, user } = await requireActiveUser();
   const { data: proposal, error } = await supabase.from("council_proposals").insert({
     workspace_id: workspaceId, title, context, status: "draft", created_by: user.id, closes_at: closesAt, voting_mode: votingMode,

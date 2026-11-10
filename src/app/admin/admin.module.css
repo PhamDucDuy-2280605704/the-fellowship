@@ -88,7 +88,7 @@
 }
 .hero h1, .pageHeading h1 {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display), Georgia, serif;
   font-size: clamp(38px, 6vw, 66px);
   font-weight: 400;
   letter-spacing: -.045em;
@@ -117,7 +117,7 @@
 .metric { display: grid; gap: 12px; padding: 25px; background: rgba(255,255,255,.012); }
 .metric + .metric { border-left: 1px solid var(--line); }
 .metric > span { color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
-.metric strong { font-family: Georgia, "Times New Roman", serif; font-size: 46px; font-weight: 400; line-height: 1; }
+.metric strong { font-family: var(--font-display), Georgia, serif; font-size: 46px; font-weight: 400; line-height: 1; }
 .metric small, .shortcut small { color: var(--muted); font-size: 11px; line-height: 1.7; }
 .shortcuts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
 .shortcut {
@@ -135,7 +135,7 @@
 }
 .shortcut:hover { border-color: rgba(201,168,106,.55); background: rgba(201,168,106,.04); }
 .shortcutIcon { color: var(--gold); font-size: 25px; text-align: center; }
-.shortcut b { display: block; margin-bottom: 7px; font-family: Georgia, "Times New Roman", serif; font-size: 21px; font-weight: 400; }
+.shortcut b { display: block; margin-bottom: 7px; font-family: var(--font-display), Georgia, serif; font-size: 21px; font-weight: 400; }
 .shortcut small { display: block; }
 .arrow { color: var(--gold); font-size: 17px; }
 .note {

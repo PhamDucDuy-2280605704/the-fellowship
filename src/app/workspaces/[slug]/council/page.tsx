@@ -174,6 +174,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
                     {decision && (
                       <div className={styles.decisionNote}>
                         <b>Quyết định đã ghi nhận</b>
+                        <p><strong>Phương án:</strong> {proposalOptions.find((option) => option.id === decision.chosen_option_id)?.title ?? "Đã chọn"}</p>
                         <p>{decision.rationale}</p>
                       </div>
                     )}

@@ -124,6 +124,95 @@ export type Database = {
           },
         ]
       }
+      council_criteria: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          proposal_id: string
+          title: string
+          weight: number
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          proposal_id: string
+          title: string
+          weight?: number
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          proposal_id?: string
+          title?: string
+          weight?: number
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "council_criteria_proposal_id_workspace_id_fkey"
+            columns: ["proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_proposals"
+            referencedColumns: ["id", "workspace_id"]
+          },
+        ]
+      }
+      council_option_scores: {
+        Row: {
+          comment: string
+          created_at: string
+          criterion_id: string
+          option_id: string
+          proposal_id: string
+          score: number
+          updated_at: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          comment?: string
+          created_at?: string
+          criterion_id: string
+          option_id: string
+          proposal_id: string
+          score: number
+          updated_at?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          criterion_id?: string
+          option_id?: string
+          proposal_id?: string
+          score?: number
+          updated_at?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "council_option_scores_criterion_id_proposal_id_workspace_id_fkey"
+            columns: ["criterion_id", "proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_criteria"
+            referencedColumns: ["id", "proposal_id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "council_option_scores_option_id_proposal_id_workspace_id_fkey"
+            columns: ["option_id", "proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_options"
+            referencedColumns: ["id", "proposal_id", "workspace_id"]
+          },
+        ]
+      }
       council_decisions: {
         Row: {
           chosen_option_id: string | null
@@ -214,6 +303,7 @@ export type Database = {
           status: string
           title: string
           updated_at: string
+          voting_mode: string
           workspace_id: string
         }
         Insert: {
@@ -225,6 +315,7 @@ export type Database = {
           status?: string
           title: string
           updated_at?: string
+          voting_mode?: string
           workspace_id: string
         }
         Update: {
@@ -236,6 +327,7 @@ export type Database = {
           status?: string
           title?: string
           updated_at?: string
+          voting_mode?: string
           workspace_id?: string
         }
         Relationships: [

@@ -49,3 +49,121 @@
 @media(max-width:700px){.page{min-height:100svh;overflow:hidden;padding:0 17px}.backdrop{background-position:53% center;filter:none}.header{min-height:68px;gap:12px}.brand{gap:8px;font-size:13px}.brand .compass{width:34px;height:34px}.navigation{gap:17px;overflow-x:auto;scrollbar-width:none}.navigation::-webkit-scrollbar{display:none}.navigation a{font-size:12px;white-space:nowrap}.headerActions>span{display:none}.headerLogin{min-height:34px;padding:0 12px;font-size:12px}.hero{padding:43px 0 18px}.heroKicker{gap:9px}.heroKicker span{width:32px}.heroKicker p{font-size: 12px;letter-spacing:.2em}.hero h1{margin-top:13px;font-size:clamp(48px,14vw,76px)}.tagline{max-width:340px;margin-top:10px;font-size:17px;line-height:1.35}.portals{grid-template-columns:1fr;gap:48px;width:min(100%,430px);margin-top:28px;padding-top:12px}.portalCard{min-height:316px;padding:62px 22px 18px}.cardDescription{min-height:auto}.highlights{max-width:310px}.journey{margin:24px auto 20px}.footer{flex-wrap:wrap;justify-content:center;padding:13px 0;text-align:center}.footerMessage{width:100%;justify-content:center;order:3}.footer>p{font-size:12px}}
 @media(max-width:380px){.page{padding:0 13px}.brand{font-size: 12px;letter-spacing:.07em}.brand .compass{width:29px;height:29px}.navigation{gap:14px}.hero{padding-top:34px}.portalCard{min-height:320px}.journey blockquote{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.atmosphere span{animation:none;display:none}.navigation a,.navigation a:after,.headerLogin,.portalCard,.portalButton{transition:none}}
+
+
+/* 2026 visual refinement: clearer Middle-earth backdrop, quieter ornament, sharper reading hierarchy. */
+.page {
+  --gold: #d7b477;
+  --bright: #f4d79e;
+  --ink: #f7efdf;
+  background: #0c100d;
+}
+.backdrop {
+  background-position: center 52%;
+  transform: scale(1.015);
+}
+.backdrop:before {
+  background:
+    linear-gradient(90deg, rgba(5,8,7,.67), rgba(8,10,8,.36) 24%, rgba(8,10,8,.42) 76%, rgba(5,8,7,.64)),
+    linear-gradient(180deg, rgba(5,7,6,.58) 0%, rgba(7,9,7,.18) 24%, rgba(7,9,7,.30) 65%, rgba(5,7,6,.78) 100%);
+}
+.backdrop:after {
+  background:
+    radial-gradient(ellipse 62% 43% at 50% 37%, rgba(9,12,9,.78) 0%, rgba(9,12,9,.58) 54%, rgba(9,12,9,0) 100%),
+    radial-gradient(ellipse at 50% 48%, rgba(9,11,9,.08), rgba(4,6,5,.48) 82%);
+}
+.header {
+  border-bottom-color: rgba(224,190,132,.42);
+}
+.brand, .footerBrand {
+  text-shadow: 0 1px 12px rgba(0,0,0,.75);
+}
+.navigation a, .headerLogin {
+  text-shadow: 0 1px 8px rgba(0,0,0,.7);
+}
+.hero {
+  padding-top: 45px;
+  padding-bottom: 23px;
+}
+.hero h1 {
+  color: #f7e9cc;
+  text-shadow: 0 3px 18px rgba(0,0,0,.82), 0 0 48px rgba(231,190,119,.20);
+}
+.tagline {
+  color: #efd2a0;
+  text-shadow: 0 2px 12px rgba(0,0,0,.9);
+}
+.portals {
+  width: min(100%, 1000px);
+  gap: clamp(30px, 4.2vw, 72px);
+  margin-top: 20px;
+}
+.portalCard {
+  min-height: 346px;
+  padding-top: 69px;
+  border-color: rgba(222,184,117,.78);
+  border-radius: 4px 20px 4px 20px;
+  background:
+    linear-gradient(145deg, rgba(15,20,16,.97), rgba(12,17,14,.95)),
+    radial-gradient(ellipse at 50% 0%, rgba(212,172,103,.12), transparent 70%);
+  box-shadow:
+    inset 0 0 0 1px rgba(246,219,168,.12),
+    inset 0 18px 40px rgba(219,180,111,.045),
+    0 18px 48px rgba(0,0,0,.48),
+    0 0 24px rgba(216,172,98,.07);
+}
+.portalCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(247,211,151,.96);
+  box-shadow:
+    inset 0 0 0 1px rgba(246,219,168,.2),
+    0 24px 54px rgba(0,0,0,.52),
+    0 0 28px rgba(216,172,98,.14);
+}
+.cardEyebrow {
+  color: #d7b77e;
+  text-shadow: 0 1px 8px rgba(0,0,0,.65);
+}
+.portalCard h2 {
+  color: #f4e8d1;
+  text-shadow: 0 2px 12px rgba(0,0,0,.65);
+}
+.cardDescription, .highlights li {
+  color: #e1d7c4;
+}
+.cardFootnote {
+  color: #c9bda6;
+}
+.portalButton {
+  border-color: rgba(229,190,121,.9);
+  background: linear-gradient(180deg, rgba(115,79,34,.64), rgba(40,31,19,.88));
+  box-shadow: inset 0 0 0 1px rgba(248,218,160,.15), 0 7px 20px rgba(0,0,0,.22);
+}
+.portalButton:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, rgba(143,99,42,.72), rgba(52,39,22,.94));
+  box-shadow: 0 0 25px rgba(226,176,96,.2);
+}
+.journey blockquote {
+  color: #f0dfbd;
+  text-shadow: 0 2px 12px rgba(0,0,0,.9);
+}
+.footer {
+  border-top-color: rgba(224,184,112,.4);
+  text-shadow: 0 1px 8px rgba(0,0,0,.8);
+}
+@media (min-width: 1500px) and (min-height: 850px) {
+  .hero { padding-top: 48px; }
+  .portals { margin-top: 22px; }
+  .portalCard { min-height: 354px; }
+}
+@media (max-width: 700px) {
+  .backdrop { background-position: 54% center; }
+  .backdrop:after {
+    background:
+      radial-gradient(ellipse 95% 34% at 50% 29%, rgba(9,12,9,.76), rgba(9,12,9,.36) 70%, transparent 100%),
+      linear-gradient(180deg, rgba(5,7,6,.2), rgba(5,7,6,.48));
+  }
+  .hero { padding-top: 38px; }
+  .portalCard { min-height: 320px; }
+}

@@ -1,0 +1,14 @@
+:root {
+  color-scheme: dark;
+  background: #10130f;
+  font-family: Arial, Helvetica, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+* { box-sizing: border-box; }
+html { min-width: 320px; scroll-behavior: smooth; }
+body { min-height: 100vh; margin: 0; color: #f0eee5; background: #10130f; }
+::selection { color: #10130f; background: #c9a86a; }
+a:focus-visible { outline: 2px solid #c9a86a; outline-offset: 4px; }

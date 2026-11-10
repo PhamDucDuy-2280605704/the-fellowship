@@ -28,7 +28,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
   ]);
   if (!workspace) notFound();
 
-  const [membershipResult, proposalsResult, optionsResult, votesResult, decisionsResult] = await Promise.all([
+  const [membershipResult, proposalsResult, optionsResult, votesResult, decisionsResult, criteriaResult, scoresResult] = await Promise.all([
     supabase.from("workspace_members").select("role").eq("workspace_id",workspace.id).eq("user_id",user.id).eq("status","active").maybeSingle(),
     supabase.from("council_proposals").select("id,title,context,status,closes_at,created_at,created_by").eq("workspace_id",workspace.id).order("created_at",{ascending:false}),
     supabase.from("council_options").select("id,proposal_id,title,description").eq("workspace_id",workspace.id),
@@ -217,8 +217,12 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
             <input id="proposal-title" name="title" required minLength={3} maxLength={180} />
             <label htmlFor="proposal-context">Bối cảnh và tiêu chí</label>
             <textarea id="proposal-context" name="context" rows={4} maxLength={8000} />
-            <label htmlFor="proposal-options">Các phương án (mỗi dòng một phương án)</label>
-            <textarea id="proposal-options" name="options" rows={5} required placeholder={"Phương án A\nPhương án B"} />
+            <label htmlFor="proposal-options">Các phương án (mỗi dòng: Tiêu đề | Mô tả)</label>
+            <textarea id="proposal-options" name="options" rows={5} required placeholder={"Phương án A | Mô tả ngắn\nPhương án B | Mô tả ngắn"} />
+            <label htmlFor="proposal-closes">Thời điểm đóng biểu quyết (không bắt buộc)</label>
+            <input id="proposal-closes" type="datetime-local" name="closesAt" />
+            <label htmlFor="proposal-criteria">Tiêu chí chấm điểm (mỗi dòng: Tên | Trọng số 1–100)</label>
+            <textarea id="proposal-criteria" name="criteria" rows={4} placeholder={"Chi phí | 3\nTác động | 5\nKhả thi | 4"} />
             <button type="submit" className={styles.primaryButton}>Tạo đề xuất <span>→</span></button>
           </form>
           {!canManage && <p className={styles.permissionNote}>Thành viên có thể đề xuất và biểu quyết. Chỉ Owner/Admin được mở biểu quyết và chốt quyết định.</p>}

@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { signOut } from "@/features/auth/actions";
 import { createWorkspace } from "@/features/workspaces/actions";
-import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth/platform";
 import styles from "../workspaces.module.css";
 
 export const dynamic = "force-dynamic";
@@ -18,17 +17,13 @@ type SearchParams = Promise<{ error?: string }>;
 
 export default async function WorkspacesPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
-  const supabase = await createClient();
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-
-  if (userError || !userData.user) {
-    redirect("/login");
-  }
+  const { supabase, user } = await requireActiveUser();
+  const { data: isAdmin } = await supabase.rpc("is_platform_admin");
 
   const { data: memberships, error: membershipsError } = await supabase
     .from("workspace_members")
     .select("role, status, workspace:workspaces(id, name, slug, description, created_at)")
-    .eq("user_id", userData.user.id)
+    .eq("user_id", user.id)
     .eq("status", "active");
 
   const workspaceItems = (memberships ?? []).flatMap((membership) =>
@@ -52,7 +47,8 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>
-          <span>{userData.user.email}</span>
+          {isAdmin && <Link className={styles.quietButton} href="/admin">Admin Console</Link>}
+          <span>{user.email}</span>
           <form action={signOut}>
             <button type="submit" className={styles.quietButton}>Đăng xuất</button>
           </form>
@@ -61,7 +57,7 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
 
       <section className={styles.intro}>
         <p className={styles.eyebrow}>YOUR SHARED JOURNEYS</p>
-        <h1>Những hành trình của anh.</h1>
+        <h1>Không gian làm việc của bạn.</h1>
         <p>Chọn một workspace để tiếp tục, hoặc khởi tạo không gian mới cho nhóm.</p>
       </section>
 
@@ -70,7 +66,7 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
           <div className={styles.sectionHeading}>
             <div>
               <p className={styles.eyebrow}>WORKSPACES</p>
-              <h2>Không gian của anh</h2>
+              <h2>Không gian của bạn</h2>
             </div>
             <span className={styles.count}>{workspaceItems.length.toString().padStart(2, "0")}</span>
           </div>
@@ -109,10 +105,10 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
           <p className={styles.eyebrow}>START SOMETHING TOGETHER</p>
           <h2>Tạo một workspace mới.</h2>
           <p className={styles.panelDescription}>
-            Người tạo sẽ tự động trở thành Owner. Có thể mời thành viên sau khi luồng quản lý nhóm được hoàn thiện.
+            Bạn sẽ tự động trở thành Owner và có thể quản lý workspace của nhóm.
           </p>
 
-          {errorMessage ? <p className={styles.error} role="alert">{errorMessage}</p> : null}
+          {errorMessage && <p className={styles.error} role="alert">{errorMessage}</p>}
 
           <form action={createWorkspace} className={styles.form}>
             <label htmlFor="name">Tên workspace</label>

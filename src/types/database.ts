@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_recovery_attempts: {
+        Row: {
+          created_at: string
+          email_hash: string
+          id: number
+          ip_hash: string
+        }
+        Insert: {
+          created_at?: string
+          email_hash: string
+          id?: never
+          ip_hash: string
+        }
+        Update: {
+          created_at?: string
+          email_hash?: string
+          id?: never
+          ip_hash?: string
+        }
+        Relationships: []
+      }
+      account_recovery_pins: {
+        Row: {
+          created_at: string
+          email: string
+          failed_attempts: number
+          locked_until: string | null
+          pin_hash: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          failed_attempts?: number
+          locked_until?: string | null
+          pin_hash: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          failed_attempts?: number
+          locked_until?: string | null
+          pin_hash?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      account_signup_attempts: {
+        Row: {
+          created_at: string
+          id: number
+          ip_hash: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          ip_hash: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          ip_hash?: string
+        }
+        Relationships: []
+      }
       activity_events: {
         Row: {
           action: string
@@ -681,6 +750,7 @@ export type Database = {
         Args: { p_is_archived: boolean; p_workspace_id: string }
         Returns: undefined
       }
+      allow_account_signup: { Args: { p_ip: string }; Returns: boolean }
       create_workspace_invitation: {
         Args: {
           p_email: string
@@ -690,6 +760,14 @@ export type Database = {
         }
         Returns: string
       }
+      current_user_access: {
+        Args: never
+        Returns: {
+          is_active: boolean
+          is_admin: boolean
+        }[]
+      }
+      has_own_account_recovery_pin: { Args: never; Returns: boolean }
       is_platform_admin: { Args: never; Returns: boolean }
       is_platform_user_active: { Args: never; Returns: boolean }
       leave_workspace: { Args: { p_workspace_id: string }; Returns: undefined }
@@ -734,9 +812,17 @@ export type Database = {
         Args: { p_invitation_id: string }
         Returns: undefined
       }
+      set_own_account_recovery_pin: {
+        Args: { p_pin: string }
+        Returns: boolean
+      }
       update_workspace_member_role: {
         Args: { p_role: string; p_user_id: string; p_workspace_id: string }
         Returns: undefined
+      }
+      verify_account_recovery_pin: {
+        Args: { p_email: string; p_ip: string; p_pin: string }
+        Returns: string
       }
     }
     Enums: {

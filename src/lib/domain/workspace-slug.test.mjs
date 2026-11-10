@@ -10,8 +10,14 @@ test("normalizes punctuation and repeated whitespace", () => {
   assert.equal(slugifyWorkspaceName("  Product & Design   Squad! "), "product-design-squad");
 });
 
-test("limits slugs to 48 characters without leaving a trailing dash", () => {
+test("removes a trailing separator when truncation lands on a separator", () => {
   const slug = slugifyWorkspaceName("a".repeat(47) + " " + "b".repeat(20));
+  assert.equal(slug.length, 47);
+  assert.equal(slug.endsWith("-"), false);
+});
+
+test("caps a separator-free slug at 48 characters", () => {
+  const slug = slugifyWorkspaceName("a".repeat(60));
   assert.equal(slug.length, 48);
   assert.equal(slug.endsWith("-"), false);
 });

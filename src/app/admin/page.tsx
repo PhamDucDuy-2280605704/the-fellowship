@@ -27,7 +27,7 @@ export default async function AdminOverviewPage() {
     <section className={styles.content}>
       <div className={styles.hero}>
         <div>
-          <p className={styles.eyebrow}>THE STEWARD'S HALL · PRIVATE ADMINISTRATION</p>
+          <p className={styles.eyebrow}>THE STEWARD’S HALL · PRIVATE ADMINISTRATION</p>
           <h1>Toàn cảnh vương quốc.</h1>
           <p>Quản lý tài khoản, theo dõi mọi workspace và giữ cho The Fellowship vận hành an toàn.</p>
         </div>

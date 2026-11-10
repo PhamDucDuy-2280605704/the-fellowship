@@ -546,3 +546,17 @@
   .archiveSearch { width:100%; }
   .archiveCount { text-align:left; }
 }
+
+
+/* Council weighted evaluation */
+.councilCriteria { display:grid; gap:5px; margin-top:13px; padding:11px 13px; border-left:2px solid var(--gold); background:rgba(201,168,106,.045); }
+.councilCriteria b { color:#e2d2ad; font-size:13px; font-weight:600; }
+.councilCriteria span { color:var(--muted); font-size:12px; }
+.councilScoreGrid { grid-column:1/-1; display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px; width:100%; padding-top:9px; border-top:1px solid rgba(226,218,190,.08); }
+.councilScoreForm { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:5px; align-items:center; padding:7px; border:1px solid rgba(226,218,190,.09); }
+.councilScoreForm label { grid-column:1/-1; color:#cfc4a8; font-size:12px; }
+.councilScoreForm select { min-width:0; min-height:32px; padding:5px 7px; border:1px solid var(--line); background:#11150f; color:var(--ink); font:inherit; font-size:12px; }
+.councilScoreForm .smallButton { min-height:32px; font-size:12px; }
+.optionRow { grid-template-columns:minmax(0,1fr) auto; }
+.optionRow > form { grid-column:2; }
+.optionRow > .councilScoreGrid { grid-column:1/-1; }

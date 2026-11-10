@@ -961,6 +961,16 @@ export type Database = {
         Args: { p_role: string; p_user_id: string; p_workspace_id: string }
         Returns: undefined
       }
+      workspace_overview_stats: {
+        Args: { p_workspace_id: string }
+        Returns: {
+          active_member_count: number
+          completed_quest_count: number
+          goal_count: number
+          active_note_count: number
+          quest_count: number
+        }[]
+      }
       verify_account_recovery_pin: {
         Args: { p_email: string; p_ip: string; p_pin: string }
         Returns: string

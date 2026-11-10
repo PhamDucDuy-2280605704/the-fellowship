@@ -86,6 +86,47 @@ export async function signUp(formData: FormData): Promise<void> {
   redirect("/signup?notice=check-email");
 }
 
+
+export async function requestPasswordReset(formData: FormData): Promise<void> {
+  const email = readString(formData, "email").toLowerCase();
+  if (!isValidEmail(email)) redirect("/forgot-password?error=invalid-input");
+
+  const supabase = await createClient();
+  const redirectTo = `${publicSiteUrl()}/auth/callback?next=%2Freset-password`;
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+
+  if (error) {
+    console.error("[auth.password-reset] Recovery email request failed", {
+      code: error.code ?? "unknown",
+      status: error.status ?? null,
+    });
+    redirect("/forgot-password?error=request");
+  }
+
+  // Keep the response generic so the page does not reveal whether an email is registered.
+  redirect("/forgot-password?notice=sent");
+}
+
+export async function updatePassword(formData: FormData): Promise<void> {
+  const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
+  if (password.length < 6 || password.length > 128) redirect("/reset-password?error=password");
+
+  const supabase = await createClient();
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError || !userData.user) redirect("/login");
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    console.error("[auth.password-reset] Password update failed", {
+      code: error.code ?? "unknown",
+      status: error.status ?? null,
+    });
+    redirect("/reset-password?error=update");
+  }
+
+  redirect("/workspaces?notice=password-updated");
+}
+
 export async function signOut(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();

@@ -49,6 +49,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
             Đăng nhập
           </AuthSubmitButton>
         </form>
+        <p className={styles.footerText}>
+          <Link href="/forgot-password">Quên mật khẩu?</Link>
+        </p>
 
         <p className={styles.footerText}>
           Chưa có tài khoản? <Link href="/signup">Tạo tài khoản miễn phí</Link>

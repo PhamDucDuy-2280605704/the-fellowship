@@ -42,6 +42,7 @@ try {
     { path: "/", includes: "The Fellowship" },
     { path: "/login", includes: "Đăng nhập" },
     { path: "/signup", includes: "Tạo tài khoản" },
+    { path: "/forgot-password", includes: "Khôi phục mật khẩu" },
   ];
 
   for (const route of routes) {
@@ -58,7 +59,7 @@ try {
     throw new Error("Health endpoint smoke test failed.");
   }
 
-  console.log("Smoke tests passed: /, /login, /signup, and /api/health");
+  console.log("Smoke tests passed: /, /login, /signup, /forgot-password, and /api/health");
 } finally {
   server.kill("SIGTERM");
 }

@@ -14,7 +14,7 @@ export function AuthSubmitButton({ children, pendingLabel, className }: SubmitBu
 
   return (
     <button className={className} type="submit" disabled={pending} aria-disabled={pending}>
-      <span>{pending ? pendingLabel : children}</span>
+      {pending ? pendingLabel : children}
       <span aria-hidden="true">→</span>
     </button>
   );

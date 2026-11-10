@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { signOut } from "@/features/auth/actions";
-import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth/platform";
 import styles from "../../workspaces.module.css";
 
 export const dynamic = "force-dynamic";
@@ -16,12 +16,8 @@ type Params = Promise<{ slug: string }>;
 
 export default async function WorkspaceDetailPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const supabase = await createClient();
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-
-  if (userError || !userData.user) {
-    redirect("/login");
-  }
+  const { supabase, user } = await requireActiveUser();
+  const { data: isAdmin } = await supabase.rpc("is_platform_admin");
 
   const { data: workspace, error } = await supabase
     .from("workspaces")
@@ -37,11 +33,11 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
     .from("workspace_members")
     .select("role")
     .eq("workspace_id", workspace.id)
-    .eq("user_id", userData.user.id)
+    .eq("user_id", user.id)
     .eq("status", "active")
     .maybeSingle();
 
-  if (!membership) {
+  if (!membership && !isAdmin) {
     notFound();
   }
 
@@ -50,7 +46,8 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>
-          <span>{userData.user.email}</span>
+          {isAdmin && <Link className={styles.quietButton} href="/admin">Admin Console</Link>}
+          <span>{user.email}</span>
           <form action={signOut}>
             <button type="submit" className={styles.quietButton}>Đăng xuất</button>
           </form>
@@ -59,7 +56,7 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
 
       <Link className={styles.backLink} href="/workspaces">← Tất cả workspace</Link>
       <section className={styles.detailHero}>
-        <p className={styles.eyebrow}>SHARED WORKSPACE · {membership.role.toUpperCase()}</p>
+        <p className={styles.eyebrow}>SHARED WORKSPACE · {(membership?.role ?? "platform admin").toUpperCase()}</p>
         <h1>{workspace.name}</h1>
         <p>{workspace.description || "Một không gian chung để nhóm cùng theo đuổi mục tiêu."}</p>
         <span className={styles.slug}>/{workspace.slug}</span>

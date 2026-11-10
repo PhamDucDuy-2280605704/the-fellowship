@@ -23,7 +23,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
         : null;
   const noticeMessage = params.notice === "signed-out"
     ? "Anh đã đăng xuất thành công."
-    : null;
+    : params.notice === "password-updated"
+      ? "Mật khẩu đã được cập nhật. Hãy đăng nhập bằng mật khẩu mới."
+      : null;
 
   return (
     <main className={styles.page}>

@@ -8,6 +8,8 @@ const tabs = [
   ["council", "The Council", "/council"],
   ["archives", "The Archives", "/archives"],
   ["members", "Thành viên", "/members"],
+  ["activity", "Hoạt động", "/activity"],
+  ["settings", "Cài đặt", "/settings"],
 ] as const;
 
 export function WorkspaceNav({ slug, active }: { slug: string; active: string }) {

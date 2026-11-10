@@ -493,12 +493,12 @@
   position: fixed;
   z-index: -2;
   inset: 0;
-  background-image: url("/images/fellowship-reference-bg.webp");
+  background-image: linear-gradient(180deg, rgba(9,12,10,.34), rgba(8,10,9,.58)), url("/images/fellowship-reference-bg.webp");
   background-position: center 46%;
   background-size: cover;
   content: "";
-  filter: brightness(.23) saturate(.82) blur(2px);
-  transform: scale(1.015);
+  /* Keep the cinematic artwork on its own compositor layer; avoid full-viewport blur filters. */
+  transform: none;
   pointer-events: none;
 }
 .page::after {

@@ -74,12 +74,12 @@ This roadmap distinguishes implemented code from live verification and from capa
 **Status: advanced implementation integrated; live role and workflow verification pending**
 
 - Proposal with context, option descriptions, weighted criteria, and optional closing time.
-- One-member-one-vote ballots; voter identities are not exposed through the client API.
+- One-member-one-vote ballots with an aggregate-only summary RPC. Final revocation of legacy direct ballot-table grants is gated on deploying the new frontend; compatibility grants are temporarily retained for the currently deployed page.
 - Member scoring of each option against weighted criteria, with a normalized 0–100 summary.
 - Owner/Admin controls to open voting, record the selected option and rationale, and archive proposals.
 - Decision flow can create a follow-up Quest.
 
-**Remaining gate:** verify ballot summaries, vote replacement, scoring permissions, close-time enforcement, decision creation, and follow-up Quest behavior using separate accounts.
+**Remaining gate:** deploy the new frontend, revoke legacy direct ballot-table grants, then verify ballot summaries, vote replacement, scoring permissions, close-time enforcement, decision creation, and follow-up Quest behavior using separate accounts.
 
 ## Stage 8 — Advanced Archives
 

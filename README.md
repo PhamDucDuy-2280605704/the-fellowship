@@ -2,9 +2,9 @@
 
 **A workspace for collaboration, decisions, and shared knowledge.**
 
-> Version: 0.3.0 · Stage: Auth and workspace onboarding · Status: In development
+> Version: 0.4.0 · Stage: Platform administration and workspace onboarding · Status: In development
 
-The Fellowship helps a group move from a shared goal to coordinated work, deliberate decisions, and knowledge the group can reuse.
+The Fellowship helps groups move from a shared goal to coordinated work, deliberate decisions, and knowledge the group can reuse.
 
 ## Product modules
 
@@ -12,12 +12,21 @@ The Fellowship helps a group move from a shared goal to coordinated work, delibe
 2. **The Council** — proposals, options, weighted criteria, votes, and decision records.
 3. **The Archives** — notes, documents, tags, collections, backlinks, and later semantic search.
 
+## Platform roles
+
+- **Admin** — one platform administrator manages all registered accounts and every workspace from `/admin`.
+- **User** — every registered member can create and own workspaces, and can only access workspaces where they have active membership.
+- There is no guest account or anonymous application workspace.
+
+Workspace roles (Owner, Admin, Member, Viewer) are scoped to an individual workspace. They do not grant platform-wide administration.
+
+The Admin Console provides account inventory, email-confirmation and last-login status, account suspension/reactivation, workspace inventory, and workspace archive/restore actions. The account and workspace RPCs enforce the platform-admin check in PostgreSQL; the UI is not the security boundary.
+
 ## Technology
 
 - Next.js App Router 16 + React 19 + TypeScript
 - Supabase Auth + PostgreSQL + Row Level Security
 - `@supabase/ssr` for cookie-based Next.js sessions
-- Supabase Realtime and private Storage (planned)
 - GitHub Actions CI
 
 ## Supabase environment
@@ -27,7 +36,7 @@ Dedicated Supabase Free project:
 - Project URL: `https://talkxkmkqliqpmdlqmrq.supabase.co`
 - Region: Singapore
 
-Copy `.env.example` to `.env.local`, set the publishable key, and keep `NEXT_PUBLIC_SITE_URL=http://localhost:3000` for local development. Add `http://localhost:3000/auth/callback` to Supabase Auth → URL Configuration → Redirect URLs. When production hosting is connected, set the production `NEXT_PUBLIC_SITE_URL` and add its exact callback URL too. Do not commit secret/service-role keys.
+Copy `.env.example` to `.env.local`, set the publishable key, and keep `NEXT_PUBLIC_SITE_URL=http://localhost:3000` for local development. Add `http://localhost:3000/auth/callback` to Supabase Auth → URL Configuration → Redirect URLs. Do not commit secret/service-role keys.
 
 ## Implemented application flows
 
@@ -35,9 +44,11 @@ Copy `.env.example` to `.env.local`, set the publishable key, and keep `NEXT_PUB
 - PKCE email confirmation callback at `/auth/callback`.
 - Workspace list, create, and overview pages.
 - Workspace creator becomes Owner through a database trigger.
-- Workspace and profile reads are protected by RLS.
+- Admin-only account and workspace inventory, suspension/reactivation, and archive/restore.
+- Active-account checks on protected application pages and workspace creation.
+- Workspace and profile data remain protected by RLS.
 
-Auth email confirmation, redirect allow-list, and cross-workspace behavior still need live testing with real Auth accounts. Member invitations and member roster administration are not implemented yet.
+Member invitations, member roster administration inside the User workspace, and the Goals/Quests modules are still planned work. A suspended account is blocked from application data access; its Auth identity is retained so the Admin can restore it.
 
 ## Local development
 
@@ -69,7 +80,7 @@ npm run test:smoke
 
 ## Database
 
-Current schema: `profiles`, `workspaces`, and `workspace_members`. RLS is enabled on all three. See [Supabase foundation notes](docs/07-SUPABASE-FOUNDATION.md) and [Auth onboarding notes](docs/08-AUTH-ONBOARDING.md).
+Core tables: `profiles`, `workspaces`, and `workspace_members`. Platform administration is stored in the unexposed `private` schema. The active database includes migrations `20261110072318_platform_admin_and_account_management` and `20261110072520_secure_admin_rpc_and_rls_policies`. See [Access control](docs/04-ACCESS-CONTROL.md), [Supabase foundation notes](docs/07-SUPABASE-FOUNDATION.md), and [Auth onboarding notes](docs/08-AUTH-ONBOARDING.md).
 
 ## Product and architecture documents
 

@@ -21,7 +21,7 @@ export async function setUserSuspension(formData: FormData): Promise<void> {
   const { error } = await supabase.rpc("admin_set_user_suspension", {
     p_user_id: userId,
     p_is_suspended: shouldSuspend,
-    p_reason: reason || null,
+    p_reason: reason || undefined,
   });
 
   if (error) {

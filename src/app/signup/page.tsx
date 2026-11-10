@@ -19,9 +19,15 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
       ? "Vui lòng kiểm tra tên hiển thị và email."
       : params.error === "configuration"
         ? "Ứng dụng chưa cấu hình địa chỉ website cho email xác nhận."
-        : params.error === "signup-failed"
-          ? "Chưa thể tạo tài khoản. Hãy kiểm tra thông tin và thử lại."
-          : null;
+        : params.error === "invalid-email"
+          ? "Địa chỉ email không hợp lệ hoặc nhà cung cấp không chấp nhận địa chỉ này. Hãy nhập email thật, đúng định dạng và có thể nhận thư xác nhận."
+          : params.error === "email-rate-limit"
+            ? "Hệ thống đang gửi quá nhiều email xác nhận. Vui lòng chờ một lúc rồi thử lại."
+            : params.error === "email-provider"
+              ? "Dịch vụ email thử nghiệm của Supabase chưa cho phép gửi tới địa chỉ này. Cần cấu hình SMTP riêng để đăng ký bằng email bên ngoài."
+              : params.error === "signup-failed"
+                ? "Chưa thể tạo tài khoản với thông tin này. Hãy kiểm tra email, hoặc đăng nhập nếu anh đã có tài khoản."
+                : null;
   const noticeMessage = params.notice === "check-email"
     ? "Tài khoản đã được gửi yêu cầu tạo. Hãy mở email xác nhận để hoàn tất đăng ký."
     : null;

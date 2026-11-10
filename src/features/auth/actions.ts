@@ -95,7 +95,26 @@ export async function signUp(formData: FormData): Promise<void> {
   });
 
   if (error) {
-    // Keep the response generic; do not disclose whether an email is registered.
+    // Convert provider failures into safe, actionable messages without exposing account data.
+    const code = error.code ?? "";
+    if (code === "email_address_invalid") {
+      redirect("/signup?error=invalid-email");
+    }
+    if (code === "over_email_send_rate_limit") {
+      redirect("/signup?error=email-rate-limit");
+    }
+    if (code === "email_address_not_authorized") {
+      redirect("/signup?error=email-provider");
+    }
+    if (code === "weak_password" || code === "password_too_short") {
+      redirect("/signup?error=password");
+    }
+
+    console.error("[auth.signup] Supabase rejected sign-up", {
+      code: code || "unknown",
+      status: error.status ?? null,
+    });
+    // Keep duplicate-account and unexpected provider errors non-enumerable.
     redirect("/signup?error=signup-failed");
   }
 

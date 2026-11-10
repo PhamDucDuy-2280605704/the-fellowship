@@ -48,10 +48,10 @@
 .intro h1, .detailHero h1 {
   margin: 0;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display), Georgia, serif;
   font-size: clamp(42px, 7vw, 72px);
   font-weight: 400;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.012em;
   line-height: 1;
 }
 .intro > p:last-child {
@@ -79,10 +79,10 @@
 }
 .sectionHeading h2, .createPanel h2, .comingSoon h2 {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display), Georgia, serif;
   font-size: 29px;
   font-weight: 400;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.006em;
 }
 .count { color: var(--gold); font-size: 12px; }
 .workspaceList { display: grid; gap: 12px; }
@@ -109,7 +109,7 @@
 }
 .workspaceCard h3 {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display), Georgia, serif;
   font-size: 23px;
   font-weight: 400;
 }
@@ -132,7 +132,7 @@
 .emptyMark { color: var(--gold); font-size: 30px; }
 .emptyState h3 {
   margin: 12px 0 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display), Georgia, serif;
   font-size: 22px;
   font-weight: 400;
 }

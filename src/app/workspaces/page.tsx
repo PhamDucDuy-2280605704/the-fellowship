@@ -48,6 +48,7 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>
           {isAdmin && <Link className={styles.quietButton} href="/admin">Admin Console</Link>}
+          <Link className={styles.quietButton} href="/recovery-pin">Mã PIN bảo mật</Link>
           <span>{user.email}</span>
           <form action={signOut}>
             <button type="submit" className={styles.quietButton}>Đăng xuất</button>

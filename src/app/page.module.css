@@ -227,3 +227,23 @@
       linear-gradient(180deg, transparent 10%, rgba(16,19,15,.04) 45%, #10130f 96%);
   }
 }
+
+
+/* Keep small labels legible without changing the established type pairing. */
+.buildNote, .sectionAside, .moduleState, .footer > span {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+}
+.heroFoot {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+.moduleState {
+  max-width: 56%;
+  text-align: right;
+}
+@media (max-width: 760px) {
+  .authNav a { font-size: 10px; }
+  .heroFoot { font-size: 9px; letter-spacing: 0.08em; }
+}

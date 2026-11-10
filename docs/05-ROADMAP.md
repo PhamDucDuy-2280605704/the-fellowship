@@ -1,57 +1,98 @@
 # Roadmap and stage gates
 
+This roadmap distinguishes implemented code from live verification and from capabilities that remain planned. A feature appearing in the UI or repository is not considered production-verified until its authentication, authorization, and database behavior have been tested against the live environment.
+
 ## Stage 1 — Repository and app foundation
 
-**Status: completed**
+**Status: implementation complete**
 
-- Dedicated repository and Next.js/TypeScript shell.
+- Dedicated repository and Next.js/TypeScript application.
 - ESLint, TypeScript, unit tests, GitHub Actions.
 - Health endpoint and production route smoke check.
 
 ## Stage 2 — Supabase and authentication foundation
 
-**Status: completed for local onboarding; live Auth and cross-tenant tests still required**
+**Status: implementation complete; live onboarding verification pending**
 
 - Dedicated Supabase project and initial schema.
 - RLS, explicit API grants, workspace-owner trigger.
-- Email/password signup, login, PKCE callback, and signout.
-- Separate platform-admin registry and active-user status.
-- Server-guarded Admin RPCs for account and workspace inventory.
+- Email/password signup, login, PKCE callback, and sign-out.
+- Separate platform-admin registry and active-user checks.
+- Server-guarded Admin RPCs.
+
+**Remaining gate:** verify production URL allow-lists and email callback, then run the two-account onboarding and cross-workspace isolation tests in docs/08-AUTH-ONBOARDING.md.
 
 ## Stage 3 — Platform administration
 
-**Status: database functions implemented; Admin Console UI integrated**
+**Status: implementation integrated; live role verification pending**
 
 - Admin-only dashboard and navigation.
 - Account inventory with email-confirmation and last-login status.
 - User suspension/reactivation.
 - Global workspace inventory and archive/restore.
-- Non-admin users are redirected away from `/admin`.
+- PostgreSQL checks on administrative RPCs; non-admin access is rejected by the server-side guard.
 
-Exit gate: CI passes; verify admin and non-admin route access with separate accounts; verify suspended users cannot access workspace data.
+**Remaining gate:** test Admin and non-admin accounts separately, including suspension and restoration, against the live database.
 
 ## Stage 4 — Workspaces and membership
 
-Deliver: invitation create/accept/revoke; member roster and role management.
+**Status: baseline implementation complete**
 
-Exit gate: role matrix enforced in UI and database; owner cannot be removed or demoted accidentally.
+- Workspace creation and Owner assignment.
+- Invitation create, accept, and revoke; hashed one-time tokens with a seven-day expiry.
+- Member roster, workspace role changes, member removal, and self-service leaving.
+- Workspace name and description settings.
 
-## Stage 5 — Goals and quests
+**Remaining gate:** verify the full role matrix, invitation email matching/expiry/revocation, and Owner protection with separate accounts.
 
-Deliver: goal CRUD/archive; quest lifecycle; multi-assignee; due dates; dependency graph; check-ins.
+## Stage 5 — Goals and Quests
 
-Exit gate: same-workspace constraints, cycle tests, and unauthorized mutation tests pass.
+**Status: baseline implementation complete**
+
+- Goal creation, target date, and status/archive lifecycle.
+- Quest creation, Goal association, priority, due date, and status lifecycle.
+- Quest assignment to active workspace members.
+- Same-workspace dependency constraints and database cycle prevention.
+- Quest check-ins and progress values.
+
+**Remaining gate:** expand integration tests for unauthorized mutations, role restrictions, assignment constraints, and invalid status transitions. The current unit suite covers the dependency-cycle domain logic but is not a substitute for live RLS tests.
 
 ## Stage 6 — Timeline and basic Archives
 
-Deliver: append-only activity events, workspace timeline, Markdown notes attached to goals/quests.
+**Status: baseline implementation complete**
 
-Exit gate: correct actor/context; notes remain private to workspace members.
+- Append-only events for Goal, Quest, note, and Council proposal creation/updates.
+- Workspace activity timeline, limited to the 100 most recent events.
+- Workspace-level notes with archive and restore.
 
-## Stage 7 — Council
+**Known boundaries:** notes are not yet linked directly to Goals, Quests, or decisions; Markdown is not rendered; attachments, tags, collections, backlinks, and search remain planned.
 
-Deliver: proposal lifecycle, options, criteria, scoring, voting, decision record, follow-up actions.
+**Remaining gate:** verify event actor/context, append-only behavior, and workspace privacy against the live database.
+
+## Stage 7 — The Council
+
+**Status: basic proposal and voting flow implemented; advanced decision tools pending**
+
+- Proposal with context and multiple options.
+- One-member-one-vote polling while the proposal is open.
+- Owner/Admin controls to open voting and record a chosen option with rationale.
+
+**Planned:** weighted criteria, scoring, anonymous voting, configurable closing times, and follow-up Quest creation.
 
 ## Stage 8 — Advanced Archives
 
-Deliver: tags, collections, backlinks, full-text search; semantic search only after privacy and cost controls are defined.
+**Status: planned**
+
+- Markdown rendering and editing experience.
+- Notes linked to Goals, Quests, and Council decisions.
+- Tags, collections, backlinks, and full-text search.
+- Semantic search only after privacy, access-control, and cost requirements are defined.
+
+## Release gate — before calling the MVP production-verified
+
+- Run signup, confirmation, sign-in, sign-out, and workspace creation with at least two disposable accounts.
+- Verify that each account cannot read or mutate another account's workspace.
+- Verify Owner, Admin, Member, and Viewer permissions, including Owner protection.
+- Verify invitation expiry, email matching, revocation, and role assignment.
+- Run the full CI workflow: dependency audit, lint, typecheck, unit tests, production build, and route smoke tests.
+- Verify a successful Vercel deployment for the same commit as the current main branch.

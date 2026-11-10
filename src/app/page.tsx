@@ -15,16 +15,16 @@ const modules = [
     name: "The Council",
     role: "Cùng quyết định",
     description:
-      "Đề xuất phương án, cân nhắc đánh đổi và lưu lại lý do để những quyết định quan trọng không bị thất lạc.",
-    state: "Đang hoàn thiện",
+      "Tạo đề xuất, đưa các phương án ra biểu quyết và lưu lại lựa chọn cùng lý do của nhóm.",
+    state: "Biểu quyết cơ bản",
   },
   {
     number: "03",
     name: "The Archives",
     role: "Cùng ghi nhớ",
     description:
-      "Ghi chú, tài liệu và tri thức gắn với công việc — để kết quả hôm nay trở thành điểm tựa cho ngày mai.",
-    state: "Giai đoạn tiếp theo",
+      "Ghi chú cấp workspace để giữ lại bối cảnh và bài học, làm điểm tựa cho những chặng tiếp theo.",
+    state: "Ghi chú cơ bản",
   },
 ];
 

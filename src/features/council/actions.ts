@@ -64,10 +64,12 @@ export async function castProposalVote(formData: FormData): Promise<void> {
   const proposalId = field(formData, "proposalId");
   const optionId = field(formData, "optionId");
   if (![workspaceId, proposalId, optionId].every(validId)) back(slug, "invalid");
-  const { supabase, user } = await requireActiveUser();
-  const { error } = await supabase.from("council_votes").upsert({
-    workspace_id: workspaceId, proposal_id: proposalId, option_id: optionId, user_id: user.id,
-  }, { onConflict: "proposal_id,user_id" });
+  const { supabase } = await requireActiveUser();
+  const { error } = await supabase.rpc("cast_council_vote", {
+    p_workspace_id: workspaceId,
+    p_proposal_id: proposalId,
+    p_option_id: optionId,
+  });
   back(slug, error ? "vote" : undefined);
 }
 

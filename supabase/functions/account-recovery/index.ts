@@ -96,10 +96,10 @@ Deno.serve(async (request: Request) => {
     const email = readString(body.email, 254).toLowerCase();
     const pin = readString(body.pin, 6);
     const password = typeof body.password === "string" ? body.password : "";
-    const minimumPasswordLength = 8;
+    const minimumPasswordLength = 6;
 
     if (!/^\S+@\S+\.\S+$/.test(email) || !/^\d{6}$/.test(pin)
-      || password.length < minimumPasswordLength || password.length > 72) {
+      || password.length < minimumPasswordLength || password.length > 128) {
       return json({ error: "RECOVERY_FAILED" }, 400);
     }
 

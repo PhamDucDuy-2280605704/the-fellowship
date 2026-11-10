@@ -2,11 +2,21 @@ import { spawn } from "node:child_process";
 
 const port = 3187;
 const baseUrl = `http://127.0.0.1:${port}`;
-const command = process.platform === "win32" ? "npm.cmd" : "npm";
-const server = spawn(command, ["run", "start", "--", "--hostname", "127.0.0.1", "--port", String(port)], {
-  stdio: "inherit",
-  env: { ...process.env, PORT: String(port), NEXT_TELEMETRY_DISABLED: "1" },
-});
+const server = spawn(
+  process.execPath,
+  [
+    "node_modules/next/dist/bin/next",
+    "start",
+    "--hostname",
+    "127.0.0.1",
+    "--port",
+    String(port),
+  ],
+  {
+    stdio: "inherit",
+    env: { ...process.env, PORT: String(port), NEXT_TELEMETRY_DISABLED: "1" },
+  },
+);
 
 let serverReady = false;
 try {

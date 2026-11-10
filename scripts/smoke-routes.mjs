@@ -28,10 +28,18 @@ try {
 
   if (!serverReady) throw new Error("Timed out waiting for the production server.");
 
-  const homeResponse = await fetch(baseUrl);
-  const homeHtml = await homeResponse.text();
-  if (!homeResponse.ok || !homeHtml.includes("The Fellowship")) {
-    throw new Error(`Homepage smoke test failed (HTTP ${homeResponse.status}).`);
+  const routes = [
+    { path: "/", includes: "The Fellowship" },
+    { path: "/login", includes: "Đăng nhập" },
+    { path: "/signup", includes: "Tạo tài khoản" },
+  ];
+
+  for (const route of routes) {
+    const response = await fetch(`${baseUrl}${route.path}`);
+    const html = await response.text();
+    if (!response.ok || !html.includes(route.includes)) {
+      throw new Error(`Route smoke test failed for ${route.path} (HTTP ${response.status}).`);
+    }
   }
 
   const healthResponse = await fetch(`${baseUrl}/api/health`);
@@ -40,7 +48,7 @@ try {
     throw new Error("Health endpoint smoke test failed.");
   }
 
-  console.log("Smoke tests passed: / and /api/health");
+  console.log("Smoke tests passed: /, /login, /signup, and /api/health");
 } finally {
   server.kill("SIGTERM");
 }

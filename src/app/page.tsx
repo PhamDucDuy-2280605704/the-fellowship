@@ -44,7 +44,10 @@ export default function HomePage() {
           <span>THE FELLOWSHIP</span>
         </Link>
         <span className={styles.headerMeta}>COLLABORATION · DECISIONS · KNOWLEDGE</span>
-        <span className={styles.status}><span /> FOUNDATION</span>
+        <nav className={styles.authNav} aria-label="Tài khoản">
+          <Link href="/login">Đăng nhập</Link>
+          <Link href="/signup">Tham gia <span aria-hidden="true">↗</span></Link>
+        </nav>
       </header>
 
       <section className={styles.hero}>
@@ -115,7 +118,7 @@ export default function HomePage() {
       <footer className={styles.footer}>
         <div className={styles.footerBrand}><span className={styles.brandMark}>✦</span> THE FELLOWSHIP</div>
         <p>Built with purpose. Remembered together.</p>
-        <span>FOUNDATION / 0.1.0</span>
+        <span>FOUNDATION / 0.3.0</span>
       </footer>
     </main>
   );

@@ -12,12 +12,6 @@ function isValidEmail(email: string): boolean {
   return email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function publicSiteUrl(): string {
-  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  const host = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() || process.env.VERCEL_URL?.trim();
-  return (configured || (host ? `https://${host}` : "http://localhost:3000")).replace(/\/+$/, "");
-}
-
 export async function signIn(formData: FormData): Promise<void> {
   const email = readString(formData, "email").toLowerCase();
   const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
@@ -42,6 +36,16 @@ export async function signIn(formData: FormData): Promise<void> {
     redirect("/login?error=credentials");
   }
 
+  const { data: hasRecoveryPin, error: pinStatusError } = await supabase.rpc("has_own_account_recovery_pin");
+  if (pinStatusError) {
+    console.error("[auth.signin] Recovery PIN status check failed", {
+      code: pinStatusError.code ?? "unknown",
+      status: pinStatusError.status ?? null,
+    });
+  } else if (hasRecoveryPin !== true) {
+    redirect("/recovery-pin");
+  }
+
   redirect(safeNext || "/workspaces");
 }
 
@@ -52,14 +56,16 @@ export async function signUp(formData: FormData): Promise<void> {
     ? requestedNext
     : null;
   const email = readString(formData, "email").toLowerCase();
-  const password = typeof formData.get("password") === "string"
-    ? String(formData.get("password"))
-    : "";
+  const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
+  const recoveryPin = readString(formData, "recoveryPin");
+  const recoveryPinConfirm = readString(formData, "recoveryPinConfirm");
 
   if (displayName.length < 2 || displayName.length > 80 || !isValidEmail(email)) {
     redirect("/signup?error=invalid-input");
   }
-
+  if (!/^\d{6}$/.test(recoveryPin) || recoveryPin !== recoveryPinConfirm) {
+    redirect("/signup?error=pin");
+  }
   if (password.length < 6 || password.length > 128) {
     redirect("/signup?error=password");
   }
@@ -68,7 +74,7 @@ export async function signUp(formData: FormData): Promise<void> {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { display_name: displayName } },
+    options: { data: { display_name: displayName, recovery_pin: recoveryPin } },
   });
 
   if (error) {
@@ -87,50 +93,36 @@ export async function signUp(formData: FormData): Promise<void> {
     redirect(safeNext || "/workspaces");
   }
 
-  // Email confirmation is still enabled in the Supabase project. Do not imply
-  // an account is ready until the project setting is changed by an owner.
   redirect("/signup?notice=check-email");
 }
 
-
-export async function requestPasswordReset(formData: FormData): Promise<void> {
-  const email = readString(formData, "email").toLowerCase();
-  if (!isValidEmail(email)) redirect("/forgot-password?error=invalid-input");
-
-  const supabase = await createClient();
-  const redirectTo = `${publicSiteUrl()}/auth/callback?next=%2Freset-password`;
-  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-
-  if (error) {
-    console.error("[auth.password-reset] Recovery email request failed", {
-      code: error.code ?? "unknown",
-      status: error.status ?? null,
-    });
-    redirect("/forgot-password?error=request");
+export async function saveRecoveryPin(formData: FormData): Promise<void> {
+  const pin = readString(formData, "recoveryPin");
+  const pinConfirm = readString(formData, "recoveryPinConfirm");
+  if (!/^\d{6}$/.test(pin) || pin !== pinConfirm) {
+    redirect("/recovery-pin?error=pin");
   }
-
-  // Keep the response generic so the page does not reveal whether an email is registered.
-  redirect("/forgot-password?notice=sent");
-}
-
-export async function updatePassword(formData: FormData): Promise<void> {
-  const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
-  if (password.length < 6 || password.length > 128) redirect("/reset-password?error=password");
 
   const supabase = await createClient();
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError || !userData.user) redirect("/login");
 
-  const { error } = await supabase.auth.updateUser({ password });
+  const { data: isActive, error: activeError } = await supabase.rpc("is_platform_user_active");
+  if (activeError || !isActive) {
+    await supabase.auth.signOut();
+    redirect("/login?error=suspended");
+  }
+
+  const { error } = await supabase.rpc("set_own_account_recovery_pin", { p_pin: pin });
   if (error) {
-    console.error("[auth.password-reset] Password update failed", {
+    console.error("[auth.recovery-pin] PIN save failed", {
       code: error.code ?? "unknown",
       status: error.status ?? null,
     });
-    redirect("/reset-password?error=update");
+    redirect("/recovery-pin?error=save");
   }
 
-  redirect("/workspaces?notice=password-updated");
+  redirect("/workspaces?notice=pin-saved");
 }
 
 export async function signOut(): Promise<void> {

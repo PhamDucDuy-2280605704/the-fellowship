@@ -14,17 +14,17 @@ type SearchParams = Promise<{ error?: string; notice?: string; next?: string }>;
 export default async function SignUpPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
   const errorMessage = params.error === "password"
-    ? "Mật khẩu cần có từ 8 đến 128 ký tự."
+    ? "Mật khẩu cần có từ 6 đến 128 ký tự."
     : params.error === "invalid-input"
-      ? "Vui lòng kiểm tra tên hiển thị và email."
+      ? "Tên hiển thị cần từ 2 đến 80 ký tự và email phải kết thúc bằng @gmail.com."
       : params.error === "configuration"
         ? "Ứng dụng chưa cấu hình địa chỉ website cho email xác nhận."
         : params.error === "invalid-email"
-          ? "Địa chỉ email không hợp lệ hoặc nhà cung cấp không chấp nhận địa chỉ này. Hãy nhập email thật, đúng định dạng và có thể nhận thư xác nhận."
+          ? "Chỉ hỗ trợ địa chỉ kết thúc bằng @gmail.com. Hãy kiểm tra lại địa chỉ và thử lại."
           : params.error === "email-rate-limit"
             ? "Hệ thống đang gửi quá nhiều email xác nhận. Vui lòng chờ một lúc rồi thử lại."
             : params.error === "email-provider"
-              ? "Dịch vụ email thử nghiệm của Supabase chưa cho phép gửi tới địa chỉ này. Cần cấu hình SMTP riêng để đăng ký bằng email bên ngoài."
+              ? "Supabase chưa gửi được email xác nhận. Vui lòng thử lại sau hoặc liên hệ quản trị viên."
               : params.error === "signup-failed"
                 ? "Chưa thể tạo tài khoản với thông tin này. Hãy kiểm tra email, hoặc đăng nhập nếu anh đã có tài khoản."
                 : null;
@@ -41,7 +41,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
       <section className={styles.card} aria-labelledby="signup-title">
         <p className={styles.eyebrow}>JOIN THE FELLOWSHIP</p>
         <h1>Bắt đầu hành trình chung.</h1>
-        <p className={styles.description}>Tạo tài khoản để khởi tạo workspace và mời đồng đội tham gia.</p>
+        <p className={styles.description}>Dùng Gmail bất kỳ để tham gia Fellowship. Không cần lời mời từ quản trị viên.</p>
 
         {errorMessage ? <p className={styles.error} role="alert">{errorMessage}</p> : null}
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}
@@ -59,13 +59,14 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
             required
           />
           <label htmlFor="email">Email</label>
-          <input id="email" name="email" type="email" autoComplete="email" required />
+          <input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoComplete="email" placeholder="ten@gmail.com" required />
+          <p className={styles.footerText}>Chấp nhận mọi tên Gmail kết thúc bằng @gmail.com.</p>
           <label htmlFor="password">Mật khẩu</label>
           <input
             id="password"
             name="password"
             type="password"
-            minLength={8}
+            minLength={6}
             maxLength={128}
             autoComplete="new-password"
             required

@@ -37,7 +37,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
       <section className={styles.card} aria-labelledby="login-title">
         <p className={styles.eyebrow}>WELCOME BACK</p>
         <h1>Tiếp tục hành trình.</h1>
-        <p className={styles.description}>Nhập Gmail đã đăng ký. Fellowship sẽ gửi liên kết đăng nhập an toàn cho anh.</p>
+        <p className={styles.description}>Nhập Gmail đã đăng ký để nhận liên kết đăng nhập. Tài khoản mới có thể tạo miễn phí.</p>
 
         {errorMessage ? <p className={styles.error} role="alert">{errorMessage}</p> : null}
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}

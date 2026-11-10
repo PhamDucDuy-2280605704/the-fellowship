@@ -5,58 +5,53 @@
 **Status: completed**
 
 - Dedicated repository and Next.js/TypeScript shell.
-- Pinned framework dependencies and lockfile.
-- ESLint, TypeScript, tests, GitHub Actions.
-- Health endpoint and route smoke check.
+- ESLint, TypeScript, unit tests, GitHub Actions.
+- Health endpoint and production route smoke check.
 
-Exit gate passed: CI lint, typecheck, unit tests, production build, and route smoke checks all passed.
+## Stage 2 — Supabase and authentication foundation
 
-## Stage 2 — Supabase foundation
+**Status: completed for local onboarding; live Auth and cross-tenant tests still required**
 
-**Status: database foundation deployed; auth and RLS integration tests pending**
+- Dedicated Supabase project and initial schema.
+- RLS, explicit API grants, workspace-owner trigger.
+- Email/password signup, login, PKCE callback, and signout.
+- Separate platform-admin registry and active-user status.
+- Server-guarded Admin RPCs for account and workspace inventory.
 
-- [x] Dedicated Supabase Free project in Singapore.
-- [x] Initial schema for profiles, workspaces, and workspace members.
-- [x] RLS enabled and explicit API grants.
-- [x] Workspace creator is provisioned as owner by a database trigger.
-- [x] Migration files match the versions recorded in the project.
-- [x] Security Advisor returned no findings after the initial schema.
-- [x] TypeScript database types generated.
-- [ ] Add local/Vercel environment variables securely.
-- [x] Implement email/password signup, login, PKCE callback, and signout routes/actions.
-- [ ] Configure and verify email Auth behavior and redirect URLs in Supabase Dashboard.
-- [ ] Create disposable test Auth users.
-- [ ] Run positive and negative RLS tests for Owner, Admin, Member, Viewer, and non-member.
-- [x] Re-run CI after SSR and onboarding integration commits.
+## Stage 3 — Platform administration
 
-Exit gate: clean install, lint, typecheck, tests, build and smoke checks pass; Auth works; tenant-isolation denial tests pass. No real credentials committed.
+**Status: database functions implemented; Admin Console UI integrated**
 
-## Stage 3 — Workspaces and membership
+- Admin-only dashboard and navigation.
+- Account inventory with email-confirmation and last-login status.
+- User suspension/reactivation.
+- Global workspace inventory and archive/restore.
+- Non-admin users are redirected away from `/admin`.
 
-Deliver: create/list workspace; invitation create/accept/revoke; member list and role management.
+Exit gate: CI passes; verify admin and non-admin route access with separate accounts; verify suspended users cannot access workspace data.
+
+## Stage 4 — Workspaces and membership
+
+Deliver: invitation create/accept/revoke; member roster and role management.
 
 Exit gate: role matrix enforced in UI and database; owner cannot be removed or demoted accidentally.
 
-## Stage 4 — Goals and quests
+## Stage 5 — Goals and quests
 
 Deliver: goal CRUD/archive; quest lifecycle; multi-assignee; due dates; dependency graph; check-ins.
 
 Exit gate: same-workspace constraints, cycle tests, and unauthorized mutation tests pass.
 
-## Stage 5 — Timeline and basic Archives
+## Stage 6 — Timeline and basic Archives
 
 Deliver: append-only activity events, workspace timeline, Markdown notes attached to goals/quests.
 
 Exit gate: correct actor/context; notes remain private to workspace members.
 
-## Stage 6 — Council
+## Stage 7 — Council
 
 Deliver: proposal lifecycle, options, criteria, scoring, voting, decision record, follow-up actions.
 
-Exit gate: eligibility, anonymity semantics, tie handling, and finalization rules tested.
+## Stage 8 — Advanced Archives
 
-## Stage 7 — Advanced Archives
-
-Deliver: tags, collections, backlinks, source citations, full-text search. Semantic search only after retention, privacy, and cost controls are defined.
-
-Exit gate: search obeys workspace isolation and preserves source attribution.
+Deliver: tags, collections, backlinks, full-text search; semantic search only after privacy and cost controls are defined.

@@ -20,12 +20,12 @@
   position: fixed;
   z-index: -2;
   inset: -16px;
-  background-image: url("/images/fellowship-reference-bg.webp");
+  background-image: linear-gradient(180deg, rgba(8,11,9,.5), rgba(8,10,9,.68)), url("/images/fellowship-reference-bg.webp");
   background-position: center 47%;
   background-size: cover;
   content: "";
-  filter: blur(4px) brightness(.43) saturate(.9);
-  transform: scale(1.025);
+  /* Keep the background on a cheap compositor path; the overlay supplies contrast. */
+  transform: none;
   pointer-events: none;
 }
 .page::after {
@@ -71,9 +71,9 @@
   padding: clamp(30px, 5.5vw, 52px);
   border: 1px solid rgba(226, 190, 119, .55);
   border-radius: 4px 22px 4px 22px;
-  background: linear-gradient(145deg, rgba(19, 22, 18, .91), rgba(16, 20, 17, .88));
+  background: linear-gradient(145deg, rgba(19, 22, 18, .97), rgba(16, 20, 17, .95));
   box-shadow: inset 0 0 0 1px rgba(234, 198, 137, .12), 0 28px 90px rgba(0, 0, 0, .48), 0 0 34px rgba(213, 167, 91, .1);
-  backdrop-filter: blur(15px);
+  backdrop-filter: none;
 }
 .card::before, .card::after {
   position: absolute;

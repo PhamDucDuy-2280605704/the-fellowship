@@ -51,7 +51,9 @@ export default async function WorkspaceMembersPage({
     ? await supabase.rpc("list_workspace_invitations", { p_workspace_id: workspace.id })
     : { data: [], error: null };
   const invitations = invitationsResult.data ?? [];
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
+  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const deploymentHost = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() || process.env.VERCEL_URL?.trim();
+  const siteUrl = (configuredSiteUrl || (deploymentHost ? `https://${deploymentHost}` : "http://localhost:3000")).replace(/\/+$/, "");
   const inviteUrl = query.invite ? new URL(`/invite/${query.invite}`, siteUrl).toString() : null;
 
   const message = query.error === "invite-failed" ? "Không thể tạo lời mời. Kiểm tra vai trò của anh và thử lại."

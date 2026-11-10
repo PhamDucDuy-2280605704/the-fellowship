@@ -19,21 +19,20 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
   ]);
   if (error || !workspace) notFound();
 
-  const [membershipResult, goalsResult, questsResult, notesResult, membersResult] = await Promise.all([
+  const [membershipResult, statsResult] = await Promise.all([
     supabase.from("workspace_members").select("role").eq("workspace_id",workspace.id).eq("user_id",user.id).eq("status","active").maybeSingle(),
-    supabase.from("goals").select("id,status").eq("workspace_id",workspace.id),
-    supabase.from("quests").select("id,status").eq("workspace_id",workspace.id),
-    supabase.from("notes").select("id").eq("workspace_id",workspace.id).is("archived_at",null),
-    supabase.rpc("list_workspace_members",{p_workspace_id:workspace.id}),
+    supabase.rpc("workspace_overview_stats",{p_workspace_id:workspace.id}),
   ]);
   const membership = membershipResult.data;
   if (!membership && !isAdmin) notFound();
 
-  const goals = goalsResult.data ?? [];
-  const quests = questsResult.data ?? [];
-  const completedQuests = quests.filter((quest) => quest.status === "done").length;
-  const openQuests = quests.length - completedQuests;
-  const activeMembers = (membersResult.data ?? []).filter((member) => member.status === "active").length;
+  const stats = statsResult.data?.[0];
+  const activeMembers = Number(stats?.active_member_count ?? 0);
+  const goalCount = Number(stats?.goal_count ?? 0);
+  const questCount = Number(stats?.quest_count ?? 0);
+  const completedQuests = Number(stats?.completed_quest_count ?? 0);
+  const openQuests = questCount - completedQuests;
+  const activeNoteCount = Number(stats?.active_note_count ?? 0);
   const role = membership?.role ?? "platform admin";
 
   return (
@@ -58,9 +57,9 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
 
       <section className={styles.workspaceStats}>
         <article><span>THÀNH VIÊN</span><strong>{activeMembers}</strong><small>Những người đang đồng hành</small></article>
-        <article><span>GOALS</span><strong>{goals.length}</strong><small>Mục tiêu của nhóm</small></article>
+        <article><span>GOALS</span><strong>{goalCount}</strong><small>Mục tiêu của nhóm</small></article>
         <article><span>QUESTS ĐANG MỞ</span><strong>{openQuests}</strong><small>{completedQuests} Quest đã hoàn thành</small></article>
-        <article><span>ARCHIVES</span><strong>{notesResult.data?.length ?? 0}</strong><small>Ghi chú đang lưu giữ</small></article>
+        <article><span>ARCHIVES</span><strong>{activeNoteCount}</strong><small>Ghi chú đang lưu giữ</small></article>
       </section>
 
       <section className={styles.moduleLaunchGrid}>

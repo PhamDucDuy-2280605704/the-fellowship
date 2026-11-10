@@ -18,10 +18,12 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
     : params.error === "invalid-input"
       ? "Vui lòng nhập email và mật khẩu."
       : params.error === "callback"
-        ? "Liên kết xác nhận không còn hợp lệ hoặc đã hết hạn. Anh hãy đăng nhập lại hoặc đăng ký lại."
-        : null;
+        ? "Liên kết xác nhận không còn hợp lệ hoặc đã hết hạn. Hãy đăng nhập lại hoặc đăng ký lại."
+        : params.error === "suspended"
+          ? "Tài khoản hiện đang bị tạm khóa. Vui lòng liên hệ quản trị viên."
+          : null;
   const noticeMessage = params.notice === "signed-out"
-    ? "Anh đã đăng xuất thành công."
+    ? "Bạn đã đăng xuất thành công."
     : null;
 
   return (

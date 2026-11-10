@@ -32,7 +32,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
     supabase.from("workspace_members").select("role").eq("workspace_id",workspace.id).eq("user_id",user.id).eq("status","active").maybeSingle(),
     supabase.from("council_proposals").select("id,title,context,status,closes_at,created_at,created_by").eq("workspace_id",workspace.id).order("created_at",{ascending:false}),
     supabase.from("council_options").select("id,proposal_id,title,description").eq("workspace_id",workspace.id),
-    supabase.from("council_votes").select("proposal_id,option_id,user_id").eq("workspace_id",workspace.id),
+    supabase.rpc("list_council_vote_summary",{p_workspace_id:workspace.id}),
     supabase.from("council_decisions").select("proposal_id,chosen_option_id,rationale,decided_at").eq("workspace_id",workspace.id),
     supabase.from("council_criteria").select("id,proposal_id,title,weight").eq("workspace_id",workspace.id).order("created_at",{ascending:true}),
     supabase.from("council_option_scores").select("proposal_id,option_id,criterion_id,user_id,score,comment").eq("workspace_id",workspace.id),
@@ -100,7 +100,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
               {proposals.map((proposal) => {
                 const proposalOptions = optionsByProposal.get(proposal.id) ?? [];
                 const proposalVotes = votesByProposal.get(proposal.id) ?? [];
-                const myVote = proposalVotes.find((vote) => vote.user_id === user.id);
+                const myVote = proposalVotes.find((vote) => vote.has_my_vote);
                 const decision = decisionsByProposal.get(proposal.id)?.[0];
                 const proposalCriteria = criteriaByProposal.get(proposal.id) ?? [];
                 const proposalScores = scoresByProposal.get(proposal.id) ?? [];
@@ -116,7 +116,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
                     {proposalCriteria.length > 0 && <div className={styles.councilCriteria}><b>Tiêu chí đánh giá có trọng số</b>{proposalCriteria.map((criterion) => <span key={criterion.id}>{criterion.title} · trọng số {criterion.weight}</span>)}</div>}
                     <div className={styles.optionList}>
                       {proposalOptions.map((option) => {
-                        const optionVotes = proposalVotes.filter((vote) => vote.option_id === option.id).length;
+                        const optionVotes = proposalVotes.find((vote) => vote.option_id === option.id)?.vote_count ?? 0;
                         const optionScores = proposalScores.filter((score) => score.option_id === option.id);
                         const weighted = proposalCriteria.reduce((result, criterion) => {
                           const criterionScores = optionScores.filter((score) => score.criterion_id === criterion.id);

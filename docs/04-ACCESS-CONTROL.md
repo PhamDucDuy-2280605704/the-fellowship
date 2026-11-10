@@ -1,65 +1,42 @@
-# Workspace authorization model
+# Access control
 
-## Role matrix — product target
+## Platform roles
 
-| Capability | Owner | Admin | Member | Viewer |
-|---|---:|---:|---:|---:|
-| View workspace and active work | Yes | Yes | Yes | Yes |
-| Update workspace settings | Yes | Yes | No | No |
-| Invite members | Yes | Yes | No | No |
-| Change member role | Yes | Limited | No | No |
-| Remove members | Yes | Limited | No | No |
-| Transfer ownership | Yes | No | No | No |
-| Create/edit goals | Yes | Yes | Yes | No |
-| Create/edit quests | Yes | Yes | Yes | No |
-| Assign workspace members | Yes | Yes | Yes* | No |
-| Add check-ins | Yes | Yes | Yes | No |
-| Create/edit notes | Yes | Yes | Yes | No |
-| Archive workspace | Yes | No | No | No |
+The platform has two account classes and no guest role:
 
-Admin cannot remove, demote, or transfer the owner, nor promote another user to owner. A member may assign only active members of the same workspace; this can be narrowed to Admin/quest owner later.
+| Role | Scope | Capabilities |
+|---|---|---|
+| Admin | Entire platform | View every account and workspace; suspend/reactivate User accounts; archive/restore workspaces |
+| User | Own memberships | Create workspaces; become Owner of a workspace; access only workspaces with active membership |
 
-## Implemented foundation boundary
+The platform administrator is stored in `private.platform_admins`, outside the exposed Data API schema. The table has no grants to browser roles. Admin status is checked by a private, SECURITY DEFINER helper and narrow public RPC wrappers. It is not derived from editable profile metadata or a client-supplied field.
 
-| Resource | Current policy / grant |
-|---|---|
-| `profiles` | Authenticated user can SELECT/UPDATE their own row only |
-| `workspaces` | Active members can SELECT; creator can INSERT their own workspace; owner/admin can UPDATE allowed metadata columns |
-| `workspace_members` | User can SELECT their own membership row only; no direct browser INSERT/UPDATE/DELETE |
-| `private.*` trigger functions | Non-exposed schema; fixed empty search_path; EXECUTE revoked from public/anon/authenticated |
+## Workspace roles
 
-The workspace creation trigger automatically creates the owner's membership. Member roster reads, invitations, role changes, removal and ownership transfer are intentionally not exposed yet; implement them with reviewed server-side/database operations and tests.
+Workspace roles remain independent from platform roles:
 
-## Authorization source of truth
+- Owner — accountable workspace creator; protected from ordinary membership removal.
+- Admin — manages the workspace.
+- Member — contributes to workspace work.
+- Viewer — read-only participant.
 
-- `workspace_members.role` is the authority for workspace role.
-- `auth.uid()` is the authority for the authenticated user.
-- Never trust role, workspace ID, user ID, or permission claims supplied only by the browser.
-- Never use user-editable Supabase user metadata for authorization.
-- Profile display name is presentation data only.
+An Owner or workspace Admin never receives platform-wide Admin access.
 
-## Required isolation tests
+## Enforcement
 
-For Alice and Bob in separate workspaces:
-- Alice cannot read Bob's workspace, goals, quests, notes, files, or events.
-- Alice cannot insert a row referencing Bob's workspace.
-- Alice cannot update a row by changing workspace_id.
-- Alice cannot assign a non-member.
-- A viewer cannot mutate workspace data through direct API/database calls.
-- A removed member loses access on subsequent authorized requests and Realtime subscriptions.
+- RLS is enabled on exposed application tables.
+- Admin inventory RPCs check `private.is_platform_admin()` before returning auth account data or all workspaces.
+- Admin suspension and archive RPCs check the same server-side identity. Public wrappers execute as the caller and delegate to guarded functions in the unexposed private schema.
+- A restrictive `is_platform_user_active()` policy blocks suspended users from application tables.
+- The Next.js server checks account activity before rendering protected workspace routes or accepting workspace creation.
+- A platform Admin cannot suspend their own account.
+- Workspace archive/restore is reversible; it does not delete the workspace or its history.
+- Account suspension is reversible; it does not delete the Auth identity or application data.
 
-These integration tests are not yet run because no test Auth users have been created. They are a release gate before the workspace UI is considered complete.
+## Operational notes
 
-## RLS cautions
+When promoting the initial platform Admin in a fresh project, insert that verified Auth user's UUID into `private.platform_admins` from the Supabase SQL editor using a trusted database-admin session. Never expose direct write privileges to this table through the Data API. Do not grant platform Admin based on `user_metadata`.
 
-- Enable RLS on every exposed public table.
-- Policies check actual workspace membership, not merely TO authenticated.
-- UPDATE policies require both USING and WITH CHECK.
-- Avoid recursive policies on workspace_members.
-- Views must not accidentally bypass RLS; use security_invoker where supported or restrict access.
-- Avoid SECURITY DEFINER as a shortcut. Current trigger-only exceptions live in the non-exposed private schema, use a fixed empty search_path, and deny client EXECUTE.
-- Add explicit GRANTs for Data API exposure; do not assume new public tables are automatically exposed.
+## Still to implement
 
-## Invitations
-
-Invitations are scoped to a workspace and normalized email. Only owner/admin may create or revoke. Store a hash of a random, single-use, time-limited token. Acceptance binds the invite to the authenticated account's invited email and rechecks validity.
+Invitation creation/acceptance, workspace member roster management for Owners, and richer activity auditing remain planned. Platform Admin inventory and account suspension are implemented separately from those workspace-level tools.

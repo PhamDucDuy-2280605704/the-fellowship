@@ -7,6 +7,7 @@ import {
   createProposal,
   decideProposal,
   setProposalStatus,
+  scoreCouncilOption,
 } from "@/features/council/actions";
 import styles from "../../../workspaces.module.css";
 
@@ -33,6 +34,8 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
     supabase.from("council_options").select("id,proposal_id,title,description").eq("workspace_id",workspace.id),
     supabase.from("council_votes").select("proposal_id,option_id,user_id").eq("workspace_id",workspace.id),
     supabase.from("council_decisions").select("proposal_id,chosen_option_id,rationale,decided_at").eq("workspace_id",workspace.id),
+    supabase.from("council_criteria").select("id,proposal_id,title,weight").eq("workspace_id",workspace.id).order("created_at",{ascending:true}),
+    supabase.from("council_option_scores").select("proposal_id,option_id,criterion_id,user_id,score,comment").eq("workspace_id",workspace.id),
   ]);
   const membership = membershipResult.data;
   if (!membership && !isPlatformAdmin) notFound();
@@ -41,8 +44,13 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
   const options = optionsResult.data ?? [];
   const votes = votesResult.data ?? [];
   const decisions = decisionsResult.data ?? [];
+  const criteria = criteriaResult.data ?? [];
+  const scores = scoresResult.data ?? [];
   const errorMessage = query.error === "vote" ? "Bạn chưa thể biểu quyết. Có thể phiên bỏ phiếu đã đóng."
     : query.error === "decision" ? "Chưa thể lưu quyết định. Hãy chọn một phương án và ghi rõ lý do."
+    : query.error === "score" ? "Chưa thể lưu điểm đánh giá. Hãy kiểm tra quyền và thử lại."
+    : query.error === "followup" ? "Quyết định đã được lưu nhưng chưa thể tạo Quest theo dõi."
+    : query.error === "criteria" ? "Đề xuất đã được tạo nhưng chưa thể lưu tiêu chí đánh giá."
     : query.error ? "Không thể lưu thay đổi. Kiểm tra vai trò và thông tin đã nhập." : null;
 
   return (
@@ -83,25 +91,59 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
                 const proposalVotes = votes.filter((vote) => vote.proposal_id === proposal.id);
                 const myVote = proposalVotes.find((vote) => vote.user_id === user.id);
                 const decision = decisions.find((item) => item.proposal_id === proposal.id);
+                const proposalCriteria = criteria.filter((criterion) => criterion.proposal_id === proposal.id);
+                const proposalScores = scores.filter((score) => score.proposal_id === proposal.id);
                 const canVote = proposal.status === "voting" && (!proposal.closes_at || new Date(proposal.closes_at) > new Date());
                 return (
                   <article className={styles.recordCard} key={proposal.id}>
                     <div className={styles.recordTop}>
                       <span className={styles.statusPill}>{statusLabels[proposal.status] ?? proposal.status}</span>
-                      <span className={styles.recordDate}>{proposalVotes.length} lượt biểu quyết</span>
+                      <span className={styles.recordDate}>{proposalVotes.length} lượt biểu quyết{proposal.closes_at ? ` · Đóng ${new Date(proposal.closes_at).toLocaleString("vi-VN")}` : ""}</span>
                     </div>
                     <h3>{proposal.title}</h3>
                     {proposal.context && <p className={styles.recordDescription}>{proposal.context}</p>}
+                    {proposalCriteria.length > 0 && <div className={styles.councilCriteria}><b>Tiêu chí đánh giá có trọng số</b>{proposalCriteria.map((criterion) => <span key={criterion.id}>{criterion.title} · trọng số {criterion.weight}</span>)}</div>}
                     <div className={styles.optionList}>
                       {proposalOptions.map((option) => {
                         const optionVotes = proposalVotes.filter((vote) => vote.option_id === option.id).length;
+                        const optionScores = proposalScores.filter((score) => score.option_id === option.id);
+                        const weighted = proposalCriteria.reduce((result, criterion) => {
+                          const criterionScores = optionScores.filter((score) => score.criterion_id === criterion.id);
+                          if (criterionScores.length) {
+                            const average = criterionScores.reduce((sum, score) => sum + score.score, 0) / criterionScores.length;
+                            result.weighted += average * Number(criterion.weight);
+                            result.weight += Number(criterion.weight);
+                          }
+                          return result;
+                        }, { weighted: 0, weight: 0 });
+                        const weightedScore = weighted.weight ? Math.round((weighted.weighted / weighted.weight) * 20) : null;
                         return (
                           <div className={styles.optionRow} key={option.id}>
                             <div className={styles.optionCopy}>
                               <b>{option.title}</b>
                               {option.description && <span>{option.description}</span>}
                             </div>
-                            <span className={styles.optionVotes}>{optionVotes}</span>
+                            <span className={styles.optionVotes}>{optionVotes} phiếu{weightedScore !== null ? ` · ${weightedScore}/100` : ""}</span>
+                            {canVote && proposalCriteria.length > 0 && (
+                              <div className={styles.councilScoreGrid}>
+                                {proposalCriteria.map((criterion) => {
+                                  const ownScore = optionScores.find((score) => score.criterion_id === criterion.id && score.user_id === user.id);
+                                  return <form action={scoreCouncilOption} className={styles.councilScoreForm} key={criterion.id}>
+                                    <input type="hidden" name="workspaceId" value={workspace.id} />
+                                    <input type="hidden" name="slug" value={slug} />
+                                    <input type="hidden" name="proposalId" value={proposal.id} />
+                                    <input type="hidden" name="optionId" value={option.id} />
+                                    <input type="hidden" name="criterionId" value={criterion.id} />
+                                    <label htmlFor={`score-${option.id}-${criterion.id}`}>{criterion.title}</label>
+                                    <select id={`score-${option.id}-${criterion.id}`} name="score" defaultValue={ownScore?.score ?? ""} required>
+                                      <option value="" disabled>Điểm 0–5</option>
+                                      {[0,1,2,3,4,5].map((value) => <option key={value} value={value}>{value}/5</option>)}
+                                    </select>
+                                    <button className={styles.smallButton} type="submit">Lưu điểm</button>
+                                  </form>;
+                                })}
+                              </div>
+                            )}
                             {canVote && (
                               <form action={castProposalVote}>
                                 <input type="hidden" name="workspaceId" value={workspace.id} />
@@ -144,7 +186,18 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
                         </select>
                         <label htmlFor={`rationale-${proposal.id}`}>Lý do quyết định</label>
                         <textarea id={`rationale-${proposal.id}`} name="rationale" rows={3} required maxLength={5000} />
+                        <label htmlFor={`followup-${proposal.id}`}>Quest theo dõi (không bắt buộc)</label>
+                        <input id={`followup-${proposal.id}`} name="followupQuestTitle" maxLength={160} placeholder="Ví dụ: Triển khai phương án đã chọn" />
                         <button className={styles.primaryButton} type="submit">Ghi nhận quyết định <span>→</span></button>
+                      </form>
+                    )}
+                    {canManage && proposal.status !== "archived" && (
+                      <form action={setProposalStatus} className={styles.inlineControls}>
+                        <input type="hidden" name="workspaceId" value={workspace.id} />
+                        <input type="hidden" name="slug" value={slug} />
+                        <input type="hidden" name="proposalId" value={proposal.id} />
+                        <input type="hidden" name="status" value="archived" />
+                        <button className={styles.textButton} type="submit">Lưu trữ đề xuất</button>
                       </form>
                     )}
                   </article>

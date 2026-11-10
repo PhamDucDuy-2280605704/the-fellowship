@@ -43,6 +43,15 @@
   text-decoration: none;
 }
 .brandMark { color: var(--gold); font-size: 22px; }
+.authNav { display: inline-flex; align-items: center; gap: 18px; }
+.authNav a {
+  color: #d5cbb5;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+.authNav a:last-child { color: var(--gold); }
+.authNav a:hover { text-decoration: underline; }
 .status { display: inline-flex; align-items: center; gap: 8px; color: #d9c28e; }
 .status span {
   width: 6px; height: 6px; border-radius: 50%; background: #b6a06b;
@@ -125,6 +134,8 @@
   .page { width: min(100% - 36px, 1180px); }
   .header { min-height: 72px; }
   .headerMeta { display: none; }
+  .authNav { gap: 12px; }
+  .authNav a { font-size: 9px; }
   .hero { padding-top: 104px; }
   .heroActions { align-items: flex-start; flex-direction: column; gap: 14px; }
   .heroFoot { margin-top: 88px; font-size: 8px; }

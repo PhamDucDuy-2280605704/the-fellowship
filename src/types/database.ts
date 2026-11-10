@@ -341,32 +341,47 @@ export type Database = {
         Row: {
           archived_at: string | null
           content: string
+          council_proposal_id: string | null
           created_at: string
           created_by: string
+          goal_id: string | null
           id: string
+          search_vector: unknown
+          tags: string[]
           title: string
           updated_at: string
           workspace_id: string
+          quest_id: string | null
         }
         Insert: {
           archived_at?: string | null
           content?: string
+          council_proposal_id?: string | null
           created_at?: string
           created_by: string
+          goal_id?: string | null
           id?: string
+          search_vector?: unknown
+          tags?: string[]
           title: string
           updated_at?: string
           workspace_id: string
+          quest_id?: string | null
         }
         Update: {
           archived_at?: string | null
           content?: string
+          council_proposal_id?: string | null
           created_at?: string
           created_by?: string
+          goal_id?: string | null
           id?: string
+          search_vector?: unknown
+          tags?: string[]
           title?: string
           updated_at?: string
           workspace_id?: string
+          quest_id?: string | null
         }
         Relationships: [
           {
@@ -375,6 +390,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "workspaces"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_goal_same_workspace_fk"
+            columns: ["goal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "notes_quest_same_workspace_fk"
+            columns: ["quest_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "notes_council_same_workspace_fk"
+            columns: ["council_proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_proposals"
+            referencedColumns: ["id", "workspace_id"]
           },
         ]
       }

@@ -20,7 +20,6 @@ export async function createProposal(formData: FormData): Promise<void> {
   const closesAtRaw = field(formData, "closesAt");
   const closesAtDate = closesAtRaw ? new Date(closesAtRaw) : null;
   const closesAt = closesAtDate && Number.isFinite(closesAtDate.getTime()) ? closesAtDate.toISOString() : null;
-  const votingMode = field(formData, "votingMode") === "anonymous" ? "anonymous" : "open";
   const options = field(formData, "options").split("\n").map((value) => value.trim()).filter(Boolean).slice(0, 8)
     .map((line) => { const [optionTitle, ...rest] = line.split("|"); return { title: optionTitle.trim(), description: rest.join("|").trim().slice(0, 3000) }; });
   const criteria = field(formData, "criteria").split("\n").map((value) => value.trim()).filter(Boolean).slice(0, 8)
@@ -31,7 +30,7 @@ export async function createProposal(formData: FormData): Promise<void> {
       (closesAtRaw && (!closesAt || closesAtDate!.getTime() <= Date.now()))) back(slug, "invalid");
   const { supabase, user } = await requireActiveUser();
   const { data: proposal, error } = await supabase.from("council_proposals").insert({
-    workspace_id: workspaceId, title, context, status: "draft", created_by: user.id, closes_at: closesAt, voting_mode: votingMode,
+    workspace_id: workspaceId, title, context, status: "draft", created_by: user.id, closes_at: closesAt, voting_mode: "anonymous",
   }).select("id").single();
   if (error || !proposal) back(slug, "save");
   const { data: savedOptions, error: optionsError } = await supabase.from("council_options").insert(

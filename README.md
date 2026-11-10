@@ -2,7 +2,7 @@
 
 **A workspace for collaboration, decisions, and shared knowledge.**
 
-> Stage: Application foundation · Version: 0.1.0 · Status: In development
+> Version: 0.2.0 · Stage: Supabase foundation · Status: In development
 
 The Fellowship helps a group move from a shared goal to coordinated work, deliberate decisions, and knowledge the group can reuse.
 
@@ -16,15 +16,24 @@ The Fellowship helps a group move from a shared goal to coordinated work, delibe
 
 The first release focuses on a useful collaboration loop: workspaces and memberships, goals and quests, multiple assignees, dependency tracking, a workspace activity timeline, and basic notes. Council and advanced Archives capabilities are phased after that loop is reliable.
 
-## Technology baseline
+## Technology
 
-- Next.js App Router + React + TypeScript
-- Supabase Auth + PostgreSQL + Row Level Security (not connected yet)
+- Next.js App Router 16 + React 19 + TypeScript
+- Supabase Auth + PostgreSQL + Row Level Security
+- `@supabase/ssr` for cookie-based Next.js sessions
 - Supabase Realtime and private Storage (planned)
-- Vercel deployment (not connected yet)
 - GitHub Actions CI
+- Vercel deployment (not connected yet)
 
-The Next.js and React versions are pinned and a lockfile is committed. Do not copy production credentials, schemas, or migrations from `little-story-world`.
+## Supabase environment
+
+A dedicated Supabase Free project has been created for this repository in Singapore:
+
+- Project ref: `talkxkmkqliqpmdlqmrq`
+- Project URL: `https://talkxkmkqliqpmdlqmrq.supabase.co`
+- Database: PostgreSQL 17
+
+Copy `.env.example` to `.env.local` and add the project's publishable key from Supabase Dashboard. Do not copy secret/service-role keys into browser environment variables or Git.
 
 ## Local development
 
@@ -32,7 +41,14 @@ Requirements: Node.js 22 and npm.
 
 ```bash
 npm ci
+cp .env.example .env.local
 npm run dev
+```
+
+On Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env.local
 ```
 
 Open http://localhost:3000.
@@ -47,11 +63,16 @@ npm run build
 npm run test:smoke
 ```
 
-## Environment
+## Database foundation currently deployed
 
-The current app shell does not require Supabase credentials. Copy `.env.example` to `.env.local` when the dedicated Supabase project is configured.
+The dedicated Supabase database contains:
+- `profiles` — a user's own profile record.
+- `workspaces` — workspace boundary and settings.
+- `workspace_members` — workspace-scoped roles and membership state.
 
-Never commit `.env.local`, Supabase secret/service-role keys, access tokens, or private user data.
+Row Level Security is enabled on all three tables. Membership rows cannot be inserted or updated directly by browser clients. A database trigger creates the owner membership when an authenticated user creates a workspace. See [Supabase foundation notes](docs/07-SUPABASE-FOUNDATION.md).
+
+Authentication UI, member invitations, workspace roster administration, goals, and quests are not implemented yet. End-to-end tests with real Auth users remain a release gate.
 
 ## Product and architecture documents
 
@@ -62,8 +83,4 @@ Never commit `.env.local`, Supabase secret/service-role keys, access tokens, or 
 - [Access control](docs/04-ACCESS-CONTROL.md)
 - [Roadmap](docs/05-ROADMAP.md)
 - [Architecture decisions](docs/06-DECISIONS.md)
-- [Supabase setup notes](supabase/README.md)
-
-## Implementation status
-
-This repository contains the product design baseline and initial application shell. Authentication, database schema, RLS, invitations, goals, quests, and collaboration workflows are not implemented yet.
+- [Supabase foundation](docs/07-SUPABASE-FOUNDATION.md)

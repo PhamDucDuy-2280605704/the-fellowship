@@ -2,15 +2,33 @@
 
 ## Stage 1 — Repository and app foundation
 
-Deliver: dedicated repository; Next.js/TypeScript shell; pinned framework dependencies and lockfile; lint, typecheck, tests, GitHub Actions; safe environment guide.
+**Status: completed**
 
-Exit gate: clean install, lint, typecheck, tests, build and smoke checks pass; no real credentials committed.
+- Dedicated repository and Next.js/TypeScript shell.
+- Pinned framework dependencies and lockfile.
+- ESLint, TypeScript, tests, GitHub Actions.
+- Health endpoint and route smoke check.
+
+Exit gate passed: CI lint, typecheck, unit tests, production build, and route smoke checks all passed.
 
 ## Stage 2 — Supabase foundation
 
-Deliver: dedicated Supabase project; Auth configuration; reviewed initial schema and generated types; RLS for profiles/workspaces/membership; disposable test data and tenant-isolation tests.
+**Status: database foundation deployed; auth and RLS integration tests pending**
 
-Exit gate: positive and negative access tests pass for Owner, Admin, Member, Viewer, and non-member. No migration touches little-story-world.
+- [x] Dedicated Supabase Free project in Singapore.
+- [x] Initial schema for profiles, workspaces, and workspace members.
+- [x] RLS enabled and explicit API grants.
+- [x] Workspace creator is provisioned as owner by a database trigger.
+- [x] Migration files match the versions recorded in the project.
+- [x] Security Advisor returned no findings after the initial schema.
+- [x] TypeScript database types generated.
+- [ ] Add local/Vercel environment variables securely.
+- [ ] Configure and verify email Auth behavior and redirect URLs.
+- [ ] Create disposable test Auth users.
+- [ ] Run positive and negative RLS tests for Owner, Admin, Member, Viewer, and non-member.
+- [ ] Re-run CI after SSR integration commit.
+
+Exit gate: clean install, lint, typecheck, tests, build and smoke checks pass; Auth works; tenant-isolation denial tests pass. No real credentials committed.
 
 ## Stage 3 — Workspaces and membership
 
@@ -32,12 +50,12 @@ Exit gate: correct actor/context; notes remain private to workspace members.
 
 ## Stage 6 — Council
 
-Deliver: proposal lifecycle, options, criteria, scoring, voting, decision record, follow-up quests.
+Deliver: proposal lifecycle, options, criteria, scoring, voting, decision record, follow-up actions.
 
 Exit gate: eligibility, anonymity semantics, tie handling, and finalization rules tested.
 
 ## Stage 7 — Advanced Archives
 
-Deliver: tags, collections, backlinks, full-text search. Semantic search only after retention, privacy, and cost controls are defined.
+Deliver: tags, collections, backlinks, source citations, full-text search. Semantic search only after retention, privacy, and cost controls are defined.
 
 Exit gate: search obeys workspace isolation and preserves source attribution.

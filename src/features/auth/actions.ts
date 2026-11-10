@@ -71,29 +71,31 @@ export async function signUp(formData: FormData): Promise<void> {
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { data: { display_name: displayName, recovery_pin: recoveryPin } },
+  const { data: registration, error: registrationError } = await supabase.functions.invoke("account-recovery", {
+    body: { action: "register", email, password, displayName, pin: recoveryPin },
   });
 
-  if (error) {
-    const code = error.code ?? "";
-    if (code === "weak_password" || code === "password_too_short") {
-      redirect("/signup?error=password");
-    }
-    console.error("[auth.signup] Supabase rejected sign-up", {
-      code: code || "unknown",
-      status: error.status ?? null,
+  if (registrationError || registration?.ok !== true) {
+    console.error("[auth.signup] Member registration failed", {
+      status: registrationError?.context?.status ?? null,
     });
-    redirect("/signup?error=signup-failed");
+    redirect(registrationError?.context?.status === 429 ? "/signup?error=rate-limit" : "/signup?error=signup-failed");
   }
 
-  if (data.session) {
-    redirect(safeNext || "/workspaces");
+  // The Edge Function creates the member with email_confirm=true. This keeps
+  // registration independent from an email inbox while preserving normal Auth sessions.
+  const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+  if (signInError) {
+    console.error("[auth.signup] Immediate sign-in after registration failed", {
+      code: signInError.code ?? "unknown",
+      status: signInError.status ?? null,
+    });
+    redirect("/login?notice=account-created");
   }
 
-  redirect("/signup?notice=check-email");
+  const { data: hasRecoveryPin, error: pinStatusError } = await supabase.rpc("has_own_account_recovery_pin");
+  if (!pinStatusError && hasRecoveryPin !== true) redirect("/recovery-pin");
+  redirect(safeNext || "/workspaces");
 }
 
 export async function saveRecoveryPin(formData: FormData): Promise<void> {

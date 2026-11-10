@@ -346,7 +346,7 @@ export type Database = {
           created_by: string
           goal_id: string | null
           id: string
-          search_vector: unknown
+          search_vector: string
           tags: string[]
           title: string
           updated_at: string

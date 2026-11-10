@@ -21,6 +21,7 @@ The project is independent of `little-story-world`. No existing user records, st
 |---|---|---|
 | 20261110055955 | `initial_workspace_foundation` | Applied |
 | 20261110060025 | `index_workspace_creator` | Applied |
+| 20261110060319 | `restrict_workspace_insert_columns` | Applied |
 
 The matching SQL files live in `supabase/migrations`. Both versions were read back from the Supabase migration ledger after application.
 
@@ -62,9 +63,9 @@ The matching SQL files live in `supabase/migrations`. Both versions were read ba
 
 - Supabase project returned `ACTIVE_HEALTHY`.
 - Three expected tables exist with RLS enabled.
-- Migration ledger contains both expected versions.
+- Migration ledger contains all three expected versions.
 - Security Advisor returned no lints.
-- Privilege check confirmed anon cannot SELECT profiles, authenticated cannot directly INSERT membership rows, and authenticated cannot update `workspaces.created_by`.
+- Privilege checks confirmed anon cannot SELECT profiles; authenticated cannot directly INSERT membership rows; workspace INSERT is limited to name, slug, description and created_by; authenticated cannot update `workspaces.created_by` or set generated id/timestamp fields.
 - Function audit confirmed trigger-only SECURITY DEFINER functions cannot be executed by anon or authenticated roles.
 - Performance Advisor no longer reports the unindexed `workspaces.created_by` foreign key. It reports the two recently created indexes as unused; this is expected while the database has no application data or query workload.
 

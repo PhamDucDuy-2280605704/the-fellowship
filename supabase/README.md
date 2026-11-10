@@ -18,6 +18,7 @@ Dashboard: https://supabase.com/dashboard/project/talkxkmkqliqpmdlqmrq
 |---|---|---|
 | 20261110055955 | `initial_workspace_foundation.sql` | Profiles, workspaces, members, private trigger functions, RLS and explicit grants |
 | 20261110060025 | `index_workspace_creator.sql` | Index the `workspaces.created_by` foreign key |
+| 20261110060319 | `restrict_workspace_insert_columns.sql` | Limit authenticated workspace INSERT to name, slug, description and created_by |
 
 The filenames in this repository match the migration versions recorded by the Supabase project. Do not edit migrations that have already been applied. Add a new migration for every subsequent schema change.
 

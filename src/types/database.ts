@@ -826,6 +826,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cast_council_vote: {
+        Args: { p_option_id: string; p_proposal_id: string; p_workspace_id: string }
+        Returns: undefined
+      }
+      list_council_vote_summary: {
+        Args: { p_workspace_id: string }
+        Returns: {
+          has_my_vote: boolean
+          option_id: string
+          proposal_id: string
+          vote_count: number
+        }[]
+      }
       accept_workspace_invitation: {
         Args: { p_token_hash: string }
         Returns: string

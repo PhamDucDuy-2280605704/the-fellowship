@@ -10,6 +10,10 @@ function readString(formData: FormData, name: string): string {
 
 export async function signIn(formData: FormData): Promise<void> {
   const email = readString(formData, "email").toLowerCase();
+  const requestedNext = readString(formData, "next");
+  const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\\\")
+    ? requestedNext
+    : null;
   const password = typeof formData.get("password") === "string"
     ? String(formData.get("password"))
     : "";
@@ -31,12 +35,17 @@ export async function signIn(formData: FormData): Promise<void> {
     redirect("/login?error=suspended");
   }
 
+  if (safeNext) redirect(safeNext);
   const { data: isAdmin } = await supabase.rpc("is_platform_admin");
   redirect(isAdmin ? "/admin" : "/workspaces");
 }
 
 export async function signUp(formData: FormData): Promise<void> {
   const displayName = readString(formData, "displayName");
+  const requestedNext = readString(formData, "next");
+  const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\\\")
+    ? requestedNext
+    : null;
   const email = readString(formData, "email").toLowerCase();
   const password = typeof formData.get("password") === "string"
     ? String(formData.get("password"))
@@ -62,7 +71,9 @@ export async function signUp(formData: FormData): Promise<void> {
         !parsedSiteUrl.username &&
         !parsedSiteUrl.password
       ) {
-        emailRedirectTo = new URL("/auth/callback", parsedSiteUrl).toString();
+        const callbackUrl = new URL("/auth/callback", parsedSiteUrl);
+        if (safeNext) callbackUrl.searchParams.set("next", safeNext);
+        emailRedirectTo = callbackUrl.toString();
       }
     } catch {
       // Invalid configuration is handled below without swallowing Next.js redirects.
@@ -89,7 +100,7 @@ export async function signUp(formData: FormData): Promise<void> {
   }
 
   if (data.session) {
-    redirect("/workspaces");
+    redirect(safeNext || "/workspaces");
   }
 
   redirect("/signup?notice=check-email");

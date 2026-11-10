@@ -18,8 +18,13 @@ export async function createProposal(formData: FormData): Promise<void> {
   const title = field(formData, "title");
   const context = field(formData, "context");
   const closesAtRaw = field(formData, "closesAt");
-  const closesAtDate = closesAtRaw ? new Date(closesAtRaw) : null;
-  const closesAt = closesAtDate && Number.isFinite(closesAtDate.getTime()) ? closesAtDate.toISOString() : null;
+  const timezoneOffset = Number(field(formData, "timezoneOffset"));
+  const validOffset = Number.isInteger(timezoneOffset) && Math.abs(timezoneOffset) <= 840;
+  const parsedClosesAt = closesAtRaw ? new Date(`${closesAtRaw}:00Z`) : null;
+  const closesAtDate = parsedClosesAt && Number.isFinite(parsedClosesAt.getTime()) && validOffset
+    ? new Date(parsedClosesAt.getTime() + timezoneOffset * 60_000)
+    : null;
+  const closesAt = closesAtDate ? closesAtDate.toISOString() : null;
   const options = field(formData, "options").split("\n").map((value) => value.trim()).filter(Boolean).slice(0, 8)
     .map((line) => { const [optionTitle, ...rest] = line.split("|"); return { title: optionTitle.trim(), description: rest.join("|").trim().slice(0, 3000) }; });
   const criteria = field(formData, "criteria").split("\n").map((value) => value.trim()).filter(Boolean).slice(0, 8)

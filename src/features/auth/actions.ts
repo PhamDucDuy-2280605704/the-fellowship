@@ -25,7 +25,14 @@ export async function signIn(formData: FormData): Promise<void> {
     redirect("/login?error=credentials");
   }
 
-  redirect("/workspaces");
+  const { data: isActive, error: statusError } = await supabase.rpc("is_platform_user_active");
+  if (statusError || !isActive) {
+    await supabase.auth.signOut();
+    redirect("/login?error=suspended");
+  }
+
+  const { data: isAdmin } = await supabase.rpc("is_platform_admin");
+  redirect(isAdmin ? "/admin" : "/workspaces");
 }
 
 export async function signUp(formData: FormData): Promise<void> {
@@ -35,7 +42,7 @@ export async function signUp(formData: FormData): Promise<void> {
     ? String(formData.get("password"))
     : "";
 
-  const validEmail = email.length <= 254 && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+  const validEmail = email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   if (displayName.length < 2 || displayName.length > 80 || !validEmail) {
     redirect("/signup?error=invalid-input");
   }

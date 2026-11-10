@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-type SearchParams = Promise<{ error?: string; notice?: string }>;
+type SearchParams = Promise<{ error?: string; notice?: string; next?: string }>;
 
 export default async function LoginPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
@@ -41,6 +41,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}
 
         <form action={signIn} className={styles.form}>
+          {params.next?.startsWith("/invite/") && !params.next.startsWith("//") ? <input type="hidden" name="next" value={params.next} /> : null}
           <label htmlFor="email">Email</label>
           <input id="email" name="email" type="email" autoComplete="email" required />
           <label htmlFor="password">Mật khẩu</label>

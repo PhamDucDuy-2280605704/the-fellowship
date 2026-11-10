@@ -16,13 +16,15 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
   const params = await searchParams;
   const errorMessage = params.error === "password"
     ? "Mật khẩu cần có từ 6 đến 128 ký tự."
-    : params.error === "invalid-input"
-      ? "Vui lòng nhập tên từ 2 đến 80 ký tự và một địa chỉ email hợp lệ."
-      : params.error === "signup-failed"
-        ? "Chưa thể tạo tài khoản với thông tin này. Nếu đã có tài khoản, hãy đăng nhập."
-        : null;
+    : params.error === "pin"
+      ? "Mã PIN khôi phục phải gồm đúng 6 chữ số và hai lần nhập phải trùng nhau."
+      : params.error === "invalid-input"
+        ? "Vui lòng nhập tên từ 2 đến 80 ký tự và một địa chỉ email hợp lệ."
+        : params.error === "signup-failed"
+          ? "Chưa thể tạo tài khoản với thông tin này. Nếu đã có tài khoản, hãy đăng nhập."
+          : null;
   const noticeMessage = params.notice === "check-email"
-    ? "Tài khoản đã được ghi nhận. Nếu email chưa được xác nhận, hãy hoàn tất bước xác nhận trước khi đăng nhập."
+    ? "Tài khoản đã được ghi nhận. Nếu dự án vẫn yêu cầu xác nhận email, hãy hoàn tất bước đó trước khi đăng nhập."
     : null;
 
   return (
@@ -34,7 +36,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
       <section className={styles.card} aria-labelledby="signup-title">
         <p className={styles.eyebrow}>JOIN THE FELLOWSHIP</p>
         <h1>Tạo tài khoản miễn phí.</h1>
-        <p className={styles.description}>Chỉ cần tên, email và mật khẩu. Không cần mã mời hay quản trị viên duyệt.</p>
+        <p className={styles.description}>Đăng ký bằng email và mật khẩu. Chọn thêm mã PIN riêng để tự khôi phục tài khoản khi cần.</p>
 
         {errorMessage ? <p className={styles.error} role="alert">{errorMessage}</p> : null}
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}
@@ -47,6 +49,11 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
           <input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" placeholder="you@example.com" required />
           <label htmlFor="password">Mật khẩu</label>
           <input id="password" name="password" type="password" minLength={6} maxLength={128} autoComplete="new-password" placeholder="Ít nhất 6 ký tự" required />
+          <label htmlFor="recoveryPin">Mã PIN khôi phục (6 chữ số)</label>
+          <input id="recoveryPin" name="recoveryPin" type="password" inputMode="numeric" pattern="[0-9]{6}" minLength={6} maxLength={6} autoComplete="off" placeholder="••••••" required />
+          <label htmlFor="recoveryPinConfirm">Nhập lại mã PIN</label>
+          <input id="recoveryPinConfirm" name="recoveryPinConfirm" type="password" inputMode="numeric" pattern="[0-9]{6}" minLength={6} maxLength={6} autoComplete="off" placeholder="Nhập lại 6 chữ số" required />
+          <p className={styles.footerText}>PIN không phải mật khẩu đăng nhập. Hãy giữ bí mật và không dùng mã dễ đoán như ngày sinh hoặc 123456.</p>
           <AuthSubmitButton className={styles.submitButton} pendingLabel="Đang tạo tài khoản...">
             Tạo tài khoản miễn phí
           </AuthSubmitButton>

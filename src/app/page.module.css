@@ -64,8 +64,8 @@
 }
 .hero h1 {
   max-width: 900px; margin: 0; color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif; font-size: clamp(52px, 8.5vw, 104px);
-  font-weight: 400; letter-spacing: -0.055em; line-height: 0.99;
+  font-family: var(--font-display), Georgia, serif; font-size: clamp(52px, 8.5vw, 104px);
+  font-weight: 400; letter-spacing: -0.012em; line-height: 0.99;
 }
 .hero h1 span { color: #c9b88e; font-style: italic; }
 .lead { max-width: 600px; margin: 32px 0 0; color: #b7baae; font-size: 15px; line-height: 1.9; }
@@ -91,8 +91,8 @@
 }
 .sectionHeading h2, .principleIntro h2 {
   max-width: 620px; margin: 0; color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif; font-size: clamp(30px, 4.3vw, 48px);
-  font-weight: 400; letter-spacing: -0.035em; line-height: 1.12;
+  font-family: var(--font-display), Georgia, serif; font-size: clamp(30px, 4.3vw, 48px);
+  font-weight: 400; letter-spacing: -0.008em; line-height: 1.12;
 }
 .sectionAside { max-width: 230px; margin: 0 0 5px; line-height: 1.7; }
 .moduleGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); }
@@ -102,7 +102,7 @@
 .moduleState { text-align: right; letter-spacing: 0.04em; }
 .moduleRole { margin: 40px 0 9px; color: var(--gold); font-size: 11px; }
 .moduleCard h3 {
-  margin: 0; color: var(--ink); font-family: Georgia, "Times New Roman", serif;
+  margin: 0; color: var(--ink); font-family: var(--font-display), Georgia, serif;
   font-size: 27px; font-weight: 400;
 }
 .moduleDescription { min-height: 78px; margin: 14px 0 22px; color: var(--muted); font-size: 12px; line-height: 1.8; }
@@ -119,7 +119,7 @@
 }
 .principle > span { padding-top: 3px; color: var(--gold); font-size: 10px; }
 .principle h3 {
-  margin: 0 0 7px; color: var(--ink); font-family: Georgia, "Times New Roman", serif;
+  margin: 0 0 7px; color: var(--ink); font-family: var(--font-display), Georgia, serif;
   font-size: 19px; font-weight: 400;
 }
 .principle p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
@@ -129,7 +129,7 @@
 }
 .footerBrand { font-size: 10px; }
 .footerBrand .brandMark { font-size: 18px; }
-.footer p { color: #858a7e; font-family: Georgia, "Times New Roman", serif; font-size: 13px; font-style: italic; }
+.footer p { color: #858a7e; font-family: var(--font-display), Georgia, serif; font-size: 13px; font-style: italic; }
 @media (max-width: 760px) {
   .page { width: min(100% - 36px, 1180px); }
   .header { min-height: 72px; }

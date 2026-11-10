@@ -40,6 +40,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
   const membership = membershipResult.data;
   if (!membership && !isPlatformAdmin) notFound();
   const canManage = isPlatformAdmin || membership?.role === "owner" || membership?.role === "admin";
+  const canScore = isPlatformAdmin || ["owner", "admin", "member"].includes(membership?.role ?? "");
   const proposals = proposalsResult.data ?? [];
   const options = optionsResult.data ?? [];
   const votes = votesResult.data ?? [];
@@ -124,7 +125,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
                               {option.description && <span>{option.description}</span>}
                             </div>
                             <span className={styles.optionVotes}>{optionVotes} phiếu{weightedScore !== null ? ` · ${weightedScore}/100` : ""}</span>
-                            {canVote && proposalCriteria.length > 0 && (
+                            {canVote && canScore && proposalCriteria.length > 0 && (
                               <div className={styles.councilScoreGrid}>
                                 {proposalCriteria.map((criterion) => {
                                   const ownScore = optionScores.find((score) => score.criterion_id === criterion.id && score.user_id === user.id);

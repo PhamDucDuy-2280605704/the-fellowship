@@ -47,6 +47,16 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
   const decisions = decisionsResult.data ?? [];
   const criteria = criteriaResult.data ?? [];
   const scores = scoresResult.data ?? [];
+  const optionsByProposal = new Map<string, typeof options>();
+  const votesByProposal = new Map<string, typeof votes>();
+  const decisionsByProposal = new Map<string, typeof decisions>();
+  const criteriaByProposal = new Map<string, typeof criteria>();
+  const scoresByProposal = new Map<string, typeof scores>();
+  for (const item of options) optionsByProposal.set(item.proposal_id, [...(optionsByProposal.get(item.proposal_id) ?? []), item]);
+  for (const item of votes) votesByProposal.set(item.proposal_id, [...(votesByProposal.get(item.proposal_id) ?? []), item]);
+  for (const item of decisions) decisionsByProposal.set(item.proposal_id, [...(decisionsByProposal.get(item.proposal_id) ?? []), item]);
+  for (const item of criteria) criteriaByProposal.set(item.proposal_id, [...(criteriaByProposal.get(item.proposal_id) ?? []), item]);
+  for (const item of scores) scoresByProposal.set(item.proposal_id, [...(scoresByProposal.get(item.proposal_id) ?? []), item]);
   const errorMessage = query.error === "vote" ? "Bạn chưa thể biểu quyết. Có thể phiên bỏ phiếu đã đóng."
     : query.error === "decision" ? "Chưa thể lưu quyết định. Hãy chọn một phương án và ghi rõ lý do."
     : query.error === "score" ? "Chưa thể lưu điểm đánh giá. Hãy kiểm tra quyền và thử lại."
@@ -88,12 +98,12 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
           ) : (
             <div className={styles.recordList}>
               {proposals.map((proposal) => {
-                const proposalOptions = options.filter((option) => option.proposal_id === proposal.id);
-                const proposalVotes = votes.filter((vote) => vote.proposal_id === proposal.id);
+                const proposalOptions = optionsByProposal.get(proposal.id) ?? [];
+                const proposalVotes = votesByProposal.get(proposal.id) ?? [];
                 const myVote = proposalVotes.find((vote) => vote.user_id === user.id);
-                const decision = decisions.find((item) => item.proposal_id === proposal.id);
-                const proposalCriteria = criteria.filter((criterion) => criterion.proposal_id === proposal.id);
-                const proposalScores = scores.filter((score) => score.proposal_id === proposal.id);
+                const decision = decisionsByProposal.get(proposal.id)?.[0];
+                const proposalCriteria = criteriaByProposal.get(proposal.id) ?? [];
+                const proposalScores = scoresByProposal.get(proposal.id) ?? [];
                 const canVote = proposal.status === "voting" && (!proposal.closes_at || new Date(proposal.closes_at) > new Date());
                 return (
                   <article className={styles.recordCard} key={proposal.id}>

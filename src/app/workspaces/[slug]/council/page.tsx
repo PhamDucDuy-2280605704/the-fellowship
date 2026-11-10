@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
 import { WorkspaceNav } from "@/components/workspace-nav";
+import { LocalDateTimeOffset } from "@/components/local-datetime-offset";
 import {
   castProposalVote,
   createProposal,
@@ -78,7 +79,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
       <section className={styles.moduleHero}>
         <p className={styles.eyebrow}>THE COUNCIL · DELIBERATE TOGETHER</p>
         <h1>Quyết định có lý do.</h1>
-        <p>Đưa các phương án lên bàn, lắng nghe tiếng nói của thành viên và lưu lại điều nhóm đã chọn — cùng lý do.</p>
+        <p>Đưa các phương án lên bàn, chấm điểm theo tiêu chí có trọng số, biểu quyết kín và lưu lại quyết định cùng lý do.</p>
       </section>
       <WorkspaceNav slug={slug} active="council" />
       {errorMessage && <p className={styles.error} role="alert">{errorMessage}</p>}
@@ -232,6 +233,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
             <textarea id="proposal-options" name="options" rows={5} required placeholder={"Phương án A | Mô tả ngắn\nPhương án B | Mô tả ngắn"} />
             <label htmlFor="proposal-closes">Thời điểm đóng biểu quyết (không bắt buộc)</label>
             <input id="proposal-closes" type="datetime-local" name="closesAt" />
+            <LocalDateTimeOffset />
             <label htmlFor="proposal-criteria">Tiêu chí chấm điểm (mỗi dòng: Tên | Trọng số 1–100)</label>
             <textarea id="proposal-criteria" name="criteria" rows={4} placeholder={"Chi phí | 3\nTác động | 5\nKhả thi | 4"} />
             <button type="submit" className={styles.primaryButton}>Tạo đề xuất <span>→</span></button>

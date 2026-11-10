@@ -101,17 +101,17 @@ export default async function ArchivesPage({ params, searchParams }: { params: P
             <div className={styles.recordList}>
               {activeNotes.map((note) => {
                 const linked = [
-                  note.goal_id ? { label: "Goal", title: goalNames.get(note.goal_id) } : null,
-                  note.quest_id ? { label: "Quest", title: questNames.get(note.quest_id) } : null,
-                  note.council_proposal_id ? { label: "Council", title: proposalNames.get(note.council_proposal_id) } : null,
-                ].filter((item): item is {label:string;title:string} => Boolean(item?.title));
+                  note.goal_id ? { label: "Goal", title: goalNames.get(note.goal_id), href: `/workspaces/${slug}/goals` } : null,
+                  note.quest_id ? { label: "Quest", title: questNames.get(note.quest_id), href: `/workspaces/${slug}/quests` } : null,
+                  note.council_proposal_id ? { label: "Council", title: proposalNames.get(note.council_proposal_id), href: `/workspaces/${slug}/council` } : null,
+                ].filter((item): item is {label:string;title:string;href:string} => Boolean(item?.title));
                 return (
                   <article className={styles.noteCard} key={note.id}>
                     <div className={styles.recordTop}><span className={styles.statusPill}>GHI CHÚ</span><span className={styles.recordDate}>{new Date(note.updated_at).toLocaleDateString("vi-VN")}</span></div>
                     <h3>{note.title}</h3>
                     <MarkdownContent content={note.content} />
                     {!!note.tags?.length && <div className={styles.noteTags}>{note.tags.map((tag) => <Link key={tag} href={`/workspaces/${slug}/archives?tag=${encodeURIComponent(tag)}`}>#{tag}</Link>)}</div>}
-                    {!!linked.length && <div className={styles.noteLinks}>{linked.map((item) => <span key={item.label}><b>{item.label}:</b> {item.title}</span>)}</div>}
+                    {!!linked.length && <div className={styles.noteLinks}>{linked.map((item) => <span key={item.label}><b>{item.label}:</b> <Link href={item.href}>{item.title}</Link></span>)}</div>}
                     {canWrite && (
                       <div className={styles.noteActions}>
                         <details className={styles.noteEdit}>

@@ -23,10 +23,11 @@ Exit gate passed: CI lint, typecheck, unit tests, production build, and route sm
 - [x] Security Advisor returned no findings after the initial schema.
 - [x] TypeScript database types generated.
 - [ ] Add local/Vercel environment variables securely.
-- [ ] Configure and verify email Auth behavior and redirect URLs.
+- [x] Implement email/password signup, login, PKCE callback, and signout routes/actions.
+- [ ] Configure and verify email Auth behavior and redirect URLs in Supabase Dashboard.
 - [ ] Create disposable test Auth users.
 - [ ] Run positive and negative RLS tests for Owner, Admin, Member, Viewer, and non-member.
-- [ ] Re-run CI after SSR integration commit.
+- [x] Re-run CI after SSR and onboarding integration commits.
 
 Exit gate: clean install, lint, typecheck, tests, build and smoke checks pass; Auth works; tenant-isolation denial tests pass. No real credentials committed.
 

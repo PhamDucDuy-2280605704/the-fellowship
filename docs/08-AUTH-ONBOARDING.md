@@ -14,11 +14,13 @@ Updated: 2026-11-10
 
 ## Local configuration needed
 
-Copy `.env.example` to `.env.local` and replace the publishable key placeholder with the active publishable key from the dedicated Supabase project.
+Copy `.env.example` to `.env.local` and replace the publishable key placeholder with the active publishable key from the dedicated Supabase project. Keep `NEXT_PUBLIC_SITE_URL=http://localhost:3000` in local development.
 
 In Supabase Dashboard → Authentication → URL Configuration:
 - Site URL: `http://localhost:3000` during local development.
 - Redirect URL: `http://localhost:3000/auth/callback`.
+
+The signup action builds its email callback only from `NEXT_PUBLIC_SITE_URL`; it does not trust a request Origin header. Configure the exact production site URL and callback before enabling production signup.
 
 When production hosting is configured, update the Site URL and add the exact production callback URL. Keep local and production entries separate and only allow domains owned by the application.
 

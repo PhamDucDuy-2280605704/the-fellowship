@@ -1,6 +1,5 @@
 "use server";
 
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -36,7 +35,8 @@ export async function signUp(formData: FormData): Promise<void> {
     ? String(formData.get("password"))
     : "";
 
-  if (displayName.length < 2 || displayName.length > 80 || !email.includes("@")) {
+  const validEmail = email.length <= 254 && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+  if (displayName.length < 2 || displayName.length > 80 || !validEmail) {
     redirect("/signup?error=invalid-input");
   }
 
@@ -44,21 +44,25 @@ export async function signUp(formData: FormData): Promise<void> {
     redirect("/signup?error=password");
   }
 
-  const headerStore = await headers();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || headerStore.get("origin");
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  let emailRedirectTo: string | null = null;
 
-  if (!siteUrl) {
-    redirect("/signup?error=configuration");
+  if (siteUrl) {
+    try {
+      const parsedSiteUrl = new URL(siteUrl);
+      if (
+        (parsedSiteUrl.protocol === "https:" || parsedSiteUrl.protocol === "http:") &&
+        !parsedSiteUrl.username &&
+        !parsedSiteUrl.password
+      ) {
+        emailRedirectTo = new URL("/auth/callback", parsedSiteUrl).toString();
+      }
+    } catch {
+      // Invalid configuration is handled below without swallowing Next.js redirects.
+    }
   }
 
-  let emailRedirectTo: string;
-  try {
-    const parsedSiteUrl = new URL(siteUrl);
-    if (parsedSiteUrl.protocol !== "https:" && parsedSiteUrl.protocol !== "http:") {
-      redirect("/signup?error=configuration");
-    }
-    emailRedirectTo = new URL("/auth/callback", parsedSiteUrl).toString();
-  } catch {
+  if (!emailRedirectTo) {
     redirect("/signup?error=configuration");
   }
 

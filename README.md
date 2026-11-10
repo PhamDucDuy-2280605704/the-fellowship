@@ -27,7 +27,7 @@ Dedicated Supabase Free project:
 - Project URL: `https://talkxkmkqliqpmdlqmrq.supabase.co`
 - Region: Singapore
 
-Copy `.env.example` to `.env.local` and set the publishable key. Add `http://localhost:3000/auth/callback` to Supabase Auth → URL Configuration → Redirect URLs. When production hosting is connected, add its callback URL too. Do not commit secret/service-role keys.
+Copy `.env.example` to `.env.local`, set the publishable key, and keep `NEXT_PUBLIC_SITE_URL=http://localhost:3000` for local development. Add `http://localhost:3000/auth/callback` to Supabase Auth → URL Configuration → Redirect URLs. When production hosting is connected, set the production `NEXT_PUBLIC_SITE_URL` and add its exact callback URL too. Do not commit secret/service-role keys.
 
 ## Implemented application flows
 

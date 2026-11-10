@@ -647,6 +647,18 @@ export type Database = {
           user_id: string
         }[]
       }
+      admin_list_workspace_members: {
+        Args: { p_workspace_id: string }
+        Returns: {
+          display_name: string
+          email: string
+          is_suspended: boolean
+          joined_at: string
+          membership_status: string
+          user_id: string
+          workspace_role: string
+        }[]
+      }
       admin_list_workspaces: {
         Args: never
         Returns: {

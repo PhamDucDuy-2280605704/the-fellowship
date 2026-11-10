@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { setWorkspaceArchived } from "../actions";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import styles from "../admin.module.css";

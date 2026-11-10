@@ -10,7 +10,7 @@ function readString(formData: FormData, name: string): string {
 
 function isGmailAddress(email: string): boolean {
   const parts = email.split("@");
-  return email.length <= 254 && parts.length === 2 && parts[0].length > 0 && parts[1] === "gmail.com" && !/\\s/.test(email);
+  return email.length <= 254 && parts.length === 2 && parts[0].length > 0 && parts[1] === "gmail.com" && !email.includes(" ");
 }
 
 export async function signIn(formData: FormData): Promise<void> {

@@ -14,6 +14,301 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_events: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          title: string
+          workspace_id: string
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          title?: string
+          workspace_id: string
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          title?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_events_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      council_decisions: {
+        Row: {
+          chosen_option_id: string | null
+          decided_at: string
+          decided_by: string
+          id: string
+          proposal_id: string
+          rationale: string
+          workspace_id: string
+        }
+        Insert: {
+          chosen_option_id?: string | null
+          decided_at?: string
+          decided_by: string
+          id?: string
+          proposal_id: string
+          rationale: string
+          workspace_id: string
+        }
+        Update: {
+          chosen_option_id?: string | null
+          decided_at?: string
+          decided_by?: string
+          id?: string
+          proposal_id?: string
+          rationale?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "council_decisions_chosen_option_id_proposal_id_workspace_i_fkey"
+            columns: ["chosen_option_id", "proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_options"
+            referencedColumns: ["id", "proposal_id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "council_decisions_proposal_id_workspace_id_fkey"
+            columns: ["proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_proposals"
+            referencedColumns: ["id", "workspace_id"]
+          },
+        ]
+      }
+      council_options: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          proposal_id: string
+          title: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          proposal_id: string
+          title: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          proposal_id?: string
+          title?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "council_options_proposal_id_workspace_id_fkey"
+            columns: ["proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_proposals"
+            referencedColumns: ["id", "workspace_id"]
+          },
+        ]
+      }
+      council_proposals: {
+        Row: {
+          closes_at: string | null
+          context: string
+          created_at: string
+          created_by: string
+          id: string
+          status: string
+          title: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          closes_at?: string | null
+          context?: string
+          created_at?: string
+          created_by: string
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          closes_at?: string | null
+          context?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "council_proposals_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      council_votes: {
+        Row: {
+          created_at: string
+          option_id: string
+          proposal_id: string
+          updated_at: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          option_id: string
+          proposal_id: string
+          updated_at?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          option_id?: string
+          proposal_id?: string
+          updated_at?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "council_votes_option_id_proposal_id_workspace_id_fkey"
+            columns: ["option_id", "proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_options"
+            referencedColumns: ["id", "proposal_id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "council_votes_proposal_id_workspace_id_fkey"
+            columns: ["proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_proposals"
+            referencedColumns: ["id", "workspace_id"]
+          },
+        ]
+      }
+      goals: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          created_by: string
+          description: string
+          id: string
+          status: string
+          target_date: string | null
+          title: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          created_by: string
+          description?: string
+          id?: string
+          status?: string
+          target_date?: string | null
+          title: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          id?: string
+          status?: string
+          target_date?: string | null
+          title?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goals_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notes: {
+        Row: {
+          archived_at: string | null
+          content: string
+          created_at: string
+          created_by: string
+          id: string
+          title: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          content?: string
+          created_at?: string
+          created_by: string
+          id?: string
+          title: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_path: string | null
@@ -37,6 +332,229 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      quest_assignees: {
+        Row: {
+          assigned_at: string
+          assigned_by: string
+          quest_id: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by: string
+          quest_id: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string
+          quest_id?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quest_assignees_quest_id_workspace_id_fkey"
+            columns: ["quest_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "quest_assignees_workspace_id_user_id_fkey"
+            columns: ["workspace_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "workspace_members"
+            referencedColumns: ["workspace_id", "user_id"]
+          },
+        ]
+      }
+      quest_check_ins: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          id: string
+          progress: number | null
+          quest_id: string
+          workspace_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          id?: string
+          progress?: number | null
+          quest_id: string
+          workspace_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          progress?: number | null
+          quest_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quest_check_ins_quest_id_workspace_id_fkey"
+            columns: ["quest_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id", "workspace_id"]
+          },
+        ]
+      }
+      quest_dependencies: {
+        Row: {
+          created_at: string
+          created_by: string
+          depends_on_quest_id: string
+          quest_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          depends_on_quest_id: string
+          quest_id: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          depends_on_quest_id?: string
+          quest_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quest_dependencies_depends_on_quest_id_workspace_id_fkey"
+            columns: ["depends_on_quest_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "quest_dependencies_quest_id_workspace_id_fkey"
+            columns: ["quest_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id", "workspace_id"]
+          },
+        ]
+      }
+      quests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string
+          description: string
+          due_date: string | null
+          goal_id: string | null
+          id: string
+          priority: string
+          status: string
+          title: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by: string
+          description?: string
+          due_date?: string | null
+          goal_id?: string | null
+          id?: string
+          priority?: string
+          status?: string
+          title: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          due_date?: string | null
+          goal_id?: string | null
+          id?: string
+          priority?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quests_goal_same_workspace_fk"
+            columns: ["goal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "quests_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workspace_invitations: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string
+          revoked_at: string | null
+          role: string
+          token_hash: string
+          workspace_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by: string
+          revoked_at?: string | null
+          role: string
+          token_hash: string
+          workspace_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string
+          revoked_at?: string | null
+          role?: string
+          token_hash?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_invitations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       workspace_members: {
         Row: {
@@ -111,17 +629,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_workspace_invitation: {
+        Args: { p_token_hash: string }
+        Returns: string
+      }
       admin_list_users: {
         Args: never
         Returns: {
           created_at: string
           display_name: string
-          email: string | null
-          email_confirmed_at: string | null
+          email: string
+          email_confirmed_at: string
           is_suspended: boolean
-          last_sign_in_at: string | null
+          last_sign_in_at: string
           platform_role: string
-          suspension_reason: string | null
+          suspension_reason: string
           user_id: string
         }[]
       }
@@ -131,8 +653,8 @@ export type Database = {
           active_member_count: number
           created_at: string
           created_by: string
-          creator_email: string | null
-          description: string | null
+          creator_email: string
+          description: string
           is_archived: boolean
           name: string
           slug: string
@@ -140,15 +662,70 @@ export type Database = {
         }[]
       }
       admin_set_user_suspension: {
-        Args: { p_is_suspended: boolean; p_reason?: string | null; p_user_id: string }
+        Args: { p_is_suspended: boolean; p_reason?: string; p_user_id: string }
         Returns: undefined
       }
       admin_set_workspace_archived: {
         Args: { p_is_archived: boolean; p_workspace_id: string }
         Returns: undefined
       }
+      create_workspace_invitation: {
+        Args: {
+          p_email: string
+          p_role: string
+          p_token_hash: string
+          p_workspace_id: string
+        }
+        Returns: string
+      }
       is_platform_admin: { Args: never; Returns: boolean }
       is_platform_user_active: { Args: never; Returns: boolean }
+      leave_workspace: { Args: { p_workspace_id: string }; Returns: undefined }
+      list_workspace_activity: {
+        Args: { p_workspace_id: string }
+        Returns: {
+          action: string
+          actor_display_name: string
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          title: string
+        }[]
+      }
+      list_workspace_invitations: {
+        Args: { p_workspace_id: string }
+        Returns: {
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          role: string
+        }[]
+      }
+      list_workspace_members: {
+        Args: { p_workspace_id: string }
+        Returns: {
+          display_name: string
+          email: string
+          joined_at: string
+          role: string
+          status: string
+          user_id: string
+        }[]
+      }
+      remove_workspace_member: {
+        Args: { p_user_id: string; p_workspace_id: string }
+        Returns: undefined
+      }
+      revoke_workspace_invitation: {
+        Args: { p_invitation_id: string }
+        Returns: undefined
+      }
+      update_workspace_member_role: {
+        Args: { p_role: string; p_user_id: string; p_workspace_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

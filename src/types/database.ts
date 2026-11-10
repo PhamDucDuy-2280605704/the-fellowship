@@ -111,7 +111,44 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_list_users: {
+        Args: never
+        Returns: {
+          created_at: string
+          display_name: string
+          email: string | null
+          email_confirmed_at: string | null
+          is_suspended: boolean
+          last_sign_in_at: string | null
+          platform_role: string
+          suspension_reason: string | null
+          user_id: string
+        }[]
+      }
+      admin_list_workspaces: {
+        Args: never
+        Returns: {
+          active_member_count: number
+          created_at: string
+          created_by: string
+          creator_email: string | null
+          description: string | null
+          is_archived: boolean
+          name: string
+          slug: string
+          workspace_id: string
+        }[]
+      }
+      admin_set_user_suspension: {
+        Args: { p_is_suspended: boolean; p_reason?: string | null; p_user_id: string }
+        Returns: undefined
+      }
+      admin_set_workspace_archived: {
+        Args: { p_is_archived: boolean; p_workspace_id: string }
+        Returns: undefined
+      }
+      is_platform_admin: { Args: never; Returns: boolean }
+      is_platform_user_active: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

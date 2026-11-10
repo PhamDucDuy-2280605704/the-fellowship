@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 function safeInvitePath(value: string | null): string | null {
-  if (!value || !value.startsWith("/invite/") || value.startsWith("//") || value.includes("\\\\")) return null;
+  if (!value || !value.startsWith("/invite/") || value.startsWith("//") || value.includes("\\")) return null;
   return value;
 }
 

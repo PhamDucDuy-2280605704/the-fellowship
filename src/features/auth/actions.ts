@@ -9,14 +9,13 @@ function readString(formData: FormData, name: string): string {
 }
 
 function isGmailAddress(email: string): boolean {
-  const parts = email.split("@");
-  return email.length <= 254 && parts.length === 2 && parts[0].length > 0 && parts[1] === "gmail.com" && !email.includes(" ");
+  return email.length <= 254 && /^[^@\\s]+@gmail\\.com$/i.test(email);
 }
 
 export async function signIn(formData: FormData): Promise<void> {
   const email = readString(formData, "email").toLowerCase();
   const requestedNext = readString(formData, "next");
-  const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\\\")
+  const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\")
     ? requestedNext
     : null;
 
@@ -61,7 +60,7 @@ export async function signIn(formData: FormData): Promise<void> {
 export async function signUp(formData: FormData): Promise<void> {
   const displayName = readString(formData, "displayName");
   const requestedNext = readString(formData, "next");
-  const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\\\")
+  const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\")
     ? requestedNext
     : null;
   const email = readString(formData, "email").toLowerCase();
@@ -74,11 +73,11 @@ export async function signUp(formData: FormData): Promise<void> {
     redirect("/signup?error=invalid-input");
   }
 
-  if (password.length < 8 || password.length > 128) {
+  if (password.length < 6 || password.length > 128) {
     redirect("/signup?error=password");
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://the-fellowship-phamducduy.vercel.app";
   let emailRedirectTo: string | null = null;
 
   if (siteUrl) {
@@ -115,7 +114,7 @@ export async function signUp(formData: FormData): Promise<void> {
   if (error) {
     // Convert provider failures into safe, actionable messages without exposing account data.
     const code = error.code ?? "";
-    if (code === "email_address_invalid") {
+    if (code === "email_address_invalid" || code === "email_address_not_authorized") {
       redirect("/signup?error=invalid-email");
     }
     if (code === "over_email_send_rate_limit") {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { signUp } from "@/features/auth/actions";
+import { AuthSubmitButton } from "@/features/auth/submit-button";
 import styles from "../auth.module.css";
 
 export const metadata: Metadata = {
@@ -18,18 +19,18 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
     : params.error === "invalid-input"
       ? "Tên hiển thị cần từ 2 đến 80 ký tự và email phải kết thúc bằng @gmail.com."
       : params.error === "configuration"
-        ? "Ứng dụng chưa cấu hình địa chỉ website cho email xác nhận."
+        ? "Ứng dụng chưa hoàn tất cấu hình liên kết xác nhận. Vui lòng thử lại sau."
         : params.error === "invalid-email"
-          ? "Chỉ hỗ trợ địa chỉ kết thúc bằng @gmail.com. Hãy kiểm tra lại địa chỉ và thử lại."
+          ? "Địa chỉ Gmail chưa hợp lệ. Hãy kiểm tra lại và thử lại."
           : params.error === "email-rate-limit"
-            ? "Hệ thống đang gửi quá nhiều email xác nhận. Vui lòng chờ một lúc rồi thử lại."
+            ? "Gmail xác nhận đang được gửi quá nhiều lần. Hãy chờ một lúc trước khi thử lại."
             : params.error === "email-provider"
-              ? "Supabase chưa gửi được email xác nhận. Vui lòng thử lại sau hoặc liên hệ quản trị viên."
+              ? "Dịch vụ email xác nhận chưa sẵn sàng. Vui lòng thử lại sau."
               : params.error === "signup-failed"
-                ? "Chưa thể tạo tài khoản với thông tin này. Hãy kiểm tra email, hoặc đăng nhập nếu anh đã có tài khoản."
+                ? "Chưa thể tạo tài khoản với thông tin này. Nếu đã có tài khoản, hãy đăng nhập."
                 : null;
   const noticeMessage = params.notice === "check-email"
-    ? "Tài khoản đã được gửi yêu cầu tạo. Hãy mở email xác nhận để hoàn tất đăng ký."
+    ? "Gần xong rồi! Mở Gmail và nhấn liên kết xác nhận để kích hoạt tài khoản. Nhớ kiểm tra cả mục Spam."
     : null;
 
   return (
@@ -40,15 +41,15 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
       </Link>
       <section className={styles.card} aria-labelledby="signup-title">
         <p className={styles.eyebrow}>JOIN THE FELLOWSHIP</p>
-        <h1>Bắt đầu hành trình chung.</h1>
-        <p className={styles.description}>Dùng Gmail bất kỳ để tham gia Fellowship. Không cần lời mời từ quản trị viên.</p>
+        <h1>Tạo tài khoản miễn phí.</h1>
+        <p className={styles.description}>Chỉ cần tên, Gmail và mật khẩu. Không cần mã mời hay quản trị viên duyệt.</p>
 
         {errorMessage ? <p className={styles.error} role="alert">{errorMessage}</p> : null}
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}
 
         <form action={signUp} className={styles.form}>
           {params.next?.startsWith("/invite/") && !params.next.startsWith("//") ? <input type="hidden" name="next" value={params.next} /> : null}
-          <label htmlFor="displayName">Tên hiển thị</label>
+          <label htmlFor="displayName">Tên của anh</label>
           <input
             id="displayName"
             name="displayName"
@@ -56,11 +57,11 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
             minLength={2}
             maxLength={80}
             autoComplete="name"
+            placeholder="Tên hiển thị"
             required
           />
-          <label htmlFor="email">Email</label>
-          <input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoComplete="email" placeholder="ten@gmail.com" required />
-          <p className={styles.footerText}>Chấp nhận mọi tên Gmail kết thúc bằng @gmail.com.</p>
+          <label htmlFor="email">Gmail</label>
+          <input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" placeholder="ten@gmail.com" required />
           <label htmlFor="password">Mật khẩu</label>
           <input
             id="password"
@@ -69,11 +70,17 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
             minLength={6}
             maxLength={128}
             autoComplete="new-password"
+            placeholder="Ít nhất 6 ký tự"
             required
           />
-          <button type="submit">Tạo tài khoản <span aria-hidden="true">→</span></button>
+          <AuthSubmitButton className={styles.submitButton} pendingLabel="Đang tạo tài khoản...">
+            Tạo tài khoản miễn phí
+          </AuthSubmitButton>
         </form>
 
+        <p className={styles.footerText}>
+          Chỉ nhận địa chỉ @gmail.com. Tài khoản mới bắt đầu với quyền User.
+        </p>
         <p className={styles.footerText}>
           Đã có tài khoản? <Link href="/login">Đăng nhập</Link>
         </p>

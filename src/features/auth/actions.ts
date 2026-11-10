@@ -114,11 +114,11 @@ export async function signUp(formData: FormData): Promise<void> {
   if (error) {
     // Convert provider failures into safe, actionable messages without exposing account data.
     const code = error.code ?? "";
-    if (code === "email_address_invalid" || code === "email_address_not_authorized") {
-      redirect("/signup?error=invalid-email");
-    }
-    if (code === "over_email_send_rate_limit") {
+    if (code === "over_email_send_rate_limit" || error.status === 429) {
       redirect("/signup?error=email-rate-limit");
+    }
+    if (code === "email_address_invalid") {
+      redirect("/signup?error=invalid-email");
     }
     if (code === "email_address_not_authorized") {
       redirect("/signup?error=email-provider");

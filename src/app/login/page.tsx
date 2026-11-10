@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { signIn } from "@/features/auth/actions";
+import { AuthSubmitButton } from "@/features/auth/submit-button";
 import styles from "../auth.module.css";
 
 export const metadata: Metadata = {
@@ -23,7 +24,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
           ? "Tài khoản hiện đang bị tạm khóa. Vui lòng liên hệ quản trị viên."
           : null;
   const noticeMessage = params.notice === "check-email"
-    ? "Nếu Gmail này đã có tài khoản Fellowship đang hoạt động, liên kết đăng nhập sẽ được gửi tới hộp thư của anh. Hãy kiểm tra cả mục Spam."
+    ? "Nếu Gmail này đã có tài khoản Fellowship đang hoạt động, liên kết đăng nhập sẽ được gửi tới hộp thư. Hãy kiểm tra cả mục Spam."
     : params.notice === "signed-out"
       ? "Anh đã đăng xuất thành công."
       : null;
@@ -36,8 +37,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
       </Link>
       <section className={styles.card} aria-labelledby="login-title">
         <p className={styles.eyebrow}>WELCOME BACK</p>
-        <h1>Tiếp tục hành trình.</h1>
-        <p className={styles.description}>Nhập Gmail đã đăng ký để nhận liên kết đăng nhập. Tài khoản mới có thể tạo miễn phí.</p>
+        <h1>Chào mừng trở lại.</h1>
+        <p className={styles.description}>Nhập Gmail đã đăng ký. Fellowship sẽ gửi cho anh một liên kết đăng nhập an toàn.</p>
 
         {errorMessage ? <p className={styles.error} role="alert">{errorMessage}</p> : null}
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}
@@ -46,14 +47,16 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
           {params.next?.startsWith("/invite/") && !params.next.startsWith("//") ? <input type="hidden" name="next" value={params.next} /> : null}
           <label htmlFor="email">Gmail</label>
           <input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" placeholder="ten@gmail.com" required />
-          <button type="submit">Gửi liên kết đăng nhập <span aria-hidden="true">→</span></button>
+          <AuthSubmitButton className={styles.submitButton} pendingLabel="Đang gửi liên kết...">
+            Gửi liên kết đăng nhập
+          </AuthSubmitButton>
         </form>
 
         <p className={styles.footerText}>
-          Chỉ tài khoản đã được tạo mới đăng nhập được. Địa chỉ chưa có tài khoản sẽ không tự động đăng ký.
+          Chỉ Gmail đã có tài khoản mới đăng nhập được.
         </p>
         <p className={styles.footerText}>
-          Chưa có tài khoản? <Link href="/signup">Tham gia Fellowship</Link>
+          Chưa có tài khoản? <Link href="/signup">Tạo tài khoản miễn phí</Link>
         </p>
       </section>
       <Link className={styles.backLink} href="/">← Quay về trang giới thiệu</Link>

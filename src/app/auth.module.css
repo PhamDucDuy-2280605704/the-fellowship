@@ -200,3 +200,14 @@
 @media (prefers-reduced-motion: reduce) {
   .form input, .form button { transition: none; }
 }
+
+.form button:disabled {
+  cursor: wait;
+  opacity: .72;
+  transform: none;
+  box-shadow: none;
+}
+.submitButton > span:first-child {
+  flex: 1;
+  text-align: left;
+}

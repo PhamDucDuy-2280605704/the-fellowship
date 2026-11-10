@@ -5,7 +5,9 @@ import { WorkspaceNav } from "@/components/workspace-nav";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import {
   createWorkspaceInvitation,
+  leaveWorkspace,
   removeWorkspaceMember,
+  revokeWorkspaceInvitation,
   updateWorkspaceMemberRole,
 } from "@/features/workspaces/member-actions";
 import styles from "../../../workspaces.module.css";
@@ -45,6 +47,10 @@ export default async function WorkspaceMembersPage({
 
   const canManage = isPlatformAdmin || me?.role === "owner" || me?.role === "admin";
   const canPromoteAdmin = isPlatformAdmin || me?.role === "owner";
+  const invitationsResult = canManage
+    ? await supabase.rpc("list_workspace_invitations", { p_workspace_id: workspace.id })
+    : { data: [], error: null };
+  const invitations = invitationsResult.data ?? [];
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
   const inviteUrl = query.invite ? new URL(`/invite/${query.invite}`, siteUrl).toString() : null;
 
@@ -52,6 +58,8 @@ export default async function WorkspaceMembersPage({
     : query.error === "invalid-invitation" ? "Thông tin lời mời chưa hợp lệ."
     : query.error === "role-update" ? "Không thể đổi vai trò thành viên."
     : query.error === "remove-failed" ? "Không thể gỡ thành viên. Owner không thể bị gỡ khỏi workspace."
+    : query.error === "revoke-failed" ? "Không thể thu hồi lời mời."
+    : query.notice === "invitation-revoked" ? "Đã thu hồi lời mời."
     : query.notice === "joined" ? "Bạn đã tham gia workspace."
     : query.notice === "role-updated" ? "Đã cập nhật vai trò thành viên."
     : query.notice === "member-removed" ? "Đã gỡ thành viên khỏi workspace."
@@ -161,6 +169,39 @@ export default async function WorkspaceMembersPage({
             <p className={styles.permissionNote}>Chỉ Owner và Admin của workspace mới có thể mời thành viên.</p>
           )}
         </aside>
+        {canManage && (
+          <section className={styles.pendingInvites}>
+            <div className={styles.sectionHeading}>
+              <div><p className={styles.eyebrow}>OPEN INVITATIONS</p><h2>Lời mời đang chờ</h2></div>
+              <span className={styles.count}>{invitations.length.toString().padStart(2, "0")}</span>
+            </div>
+            {!invitations.length ? (
+              <p className={styles.permissionNote}>Không có lời mời nào đang chờ.</p>
+            ) : invitations.map((invitation) => (
+              <article className={styles.pendingInviteRow} key={invitation.id}>
+                <div><b>{invitation.email}</b><span>{invitation.role} · Hết hạn {new Date(invitation.expires_at).toLocaleDateString("vi-VN")}</span></div>
+                <form action={revokeWorkspaceInvitation}>
+                  <input type="hidden" name="invitationId" value={invitation.id} />
+                  <input type="hidden" name="slug" value={slug} />
+                  <button className={styles.removeButton} type="submit">Thu hồi</button>
+                </form>
+              </article>
+            ))}
+          </section>
+        )}
+        <section className={styles.leavePanel}>
+          <div>
+            <p className={styles.eyebrow}>YOUR MEMBERSHIP</p>
+            <h2>Rời workspace</h2>
+            <p>Owner cần chuyển quyền sở hữu trước khi rời đi. Thành viên khác có thể tự rời workspace.</p>
+          </div>
+          {me && me.role !== "owner" && (
+            <form action={leaveWorkspace}>
+              <input type="hidden" name="workspaceId" value={workspace.id} />
+              <button className={styles.removeButton} type="submit">Rời khỏi workspace</button>
+            </form>
+          )}
+        </section>
       </section>
     </main>
   );

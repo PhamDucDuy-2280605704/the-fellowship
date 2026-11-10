@@ -71,22 +71,26 @@ This roadmap distinguishes implemented code from live verification and from capa
 
 ## Stage 7 — The Council
 
-**Status: basic proposal and voting flow implemented; advanced decision tools pending**
+**Status: advanced implementation integrated; live role and workflow verification pending**
 
-- Proposal with context and multiple options.
-- One-member-one-vote polling while the proposal is open.
-- Owner/Admin controls to open voting and record a chosen option with rationale.
+- Proposal with context, option descriptions, weighted criteria, and optional closing time.
+- One-member-one-vote ballots; voter identities are not exposed through the client API.
+- Member scoring of each option against weighted criteria, with a normalized 0–100 summary.
+- Owner/Admin controls to open voting, record the selected option and rationale, and archive proposals.
+- Decision flow can create a follow-up Quest.
 
-**Planned:** weighted criteria, scoring, anonymous voting, configurable closing times, and follow-up Quest creation.
+**Remaining gate:** verify ballot summaries, vote replacement, scoring permissions, close-time enforcement, decision creation, and follow-up Quest behavior using separate accounts.
 
 ## Stage 8 — Advanced Archives
 
-**Status: planned**
+**Status: core advanced implementation integrated; live role verification pending**
 
-- Markdown rendering and editing experience.
-- Notes linked to Goals, Quests, and Council decisions.
-- Tags, collections, backlinks, and full-text search.
-- Semantic search only after privacy, access-control, and cost requirements are defined.
+- Safe lightweight Markdown rendering and editing.
+- Notes linked to Goals, Quests, and Council proposals within the same workspace.
+- Tags, tag filters, and indexed full-text search over titles, content, and tags.
+- Archive and restore lifecycle retained.
+
+**Still planned:** collections, backlinks, attachments, and semantic search after privacy, access-control, and cost requirements are defined.
 
 ## Release gate — before calling the MVP production-verified
 

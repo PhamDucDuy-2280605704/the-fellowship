@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-function safeInvitePath(value: string | null): string | null {
+function safeNextPath(value: string | null): string | null {
+  if (value === "/reset-password") return value;
   if (!value || !value.startsWith("/invite/") || value.startsWith("//") || value.includes("\\")) return null;
   return value;
 }

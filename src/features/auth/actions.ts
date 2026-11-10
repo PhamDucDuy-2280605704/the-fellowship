@@ -12,6 +12,12 @@ function isValidEmail(email: string): boolean {
   return email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function publicSiteUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const host = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() || process.env.VERCEL_URL?.trim();
+  return (configured || (host ? `https://${host}` : "http://localhost:3000")).replace(/\/+$/, "");
+}
+
 export async function signIn(formData: FormData): Promise<void> {
   const email = readString(formData, "email").toLowerCase();
   const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";

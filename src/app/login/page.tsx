@@ -25,7 +25,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
     ? "Anh đã đăng xuất thành công."
     : params.notice === "password-updated"
       ? "Mật khẩu đã được cập nhật. Hãy đăng nhập bằng mật khẩu mới."
-      : null;
+      : params.notice === "account-created"
+        ? "Tài khoản đã được tạo. Hãy đăng nhập bằng email và mật khẩu vừa đăng ký."
+        : null;
 
   return (
     <main className={styles.page}>

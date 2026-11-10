@@ -8,7 +8,7 @@ function field(formData: FormData, name: string): string {
   return typeof value === "string" ? value.trim() : "";
 }
 function validId(value: string) { return /^[0-9a-f-]{36}$/i.test(value); }
-function back(slug: string, error?: string) {
+function back(slug: string, error?: string): never {
   redirect(error ? `/workspaces/${slug}/council?error=${error}` : `/workspaces/${slug}/council`);
 }
 

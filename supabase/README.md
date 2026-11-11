@@ -1,90 +1,101 @@
-# Supabase setup and database workflow
+# Supabase — The Fellowship
 
-## Dedicated project
+Project ref: `talkxkmkqliqpmdlqmrq`
 
-The Fellowship uses its own Supabase project. It is not shared with `little-story-world`.
+This directory contains the database migrations for The Fellowship. The application uses Supabase Auth, Postgres, Row Level Security (RLS), and server-side RPCs for privileged operations.
 
-- Project: `the-fellowship`
-- Project ref: `talkxkmkqliqpmdlqmrq`
-- Region: `ap-southeast-1` (Singapore)
-- Plan at creation: Free
-- Database: PostgreSQL 17
+## Application capabilities
 
-Dashboard: https://supabase.com/dashboard/project/talkxkmkqliqpmdlqmrq
+- **Workspaces and members:** workspace creation, owner/admin/member/viewer roles, invitations, invitation acceptance, role changes, removal, and owner protections.
+- **Platform administration:** account suspension, workspace lifecycle management, and workspace-member inspection.
+- **Authentication:** signup throttling, account recovery PINs, lockout protection, and password-reset links.
+- **Goals and Quests:** status tracking, assignments, check-ins, and dependency relationships with cycle prevention.
+- **Council:** proposals, options, weighted criteria, anonymous ballots, member scoring, decisions, and optional follow-up Quests. Proposal creation and final decisions are transactional.
+- **Archives:** searchable notes with tags and links to Goals, Quests, and Council proposals; archive and restore support.
+- **Activity and overview:** workspace activity history and aggregate workspace statistics.
 
-## Migrations applied
+## Database model
 
-| Version | File | Purpose |
-|---|---|---|
-| 20261110055955 | `initial_workspace_foundation.sql` | Profiles, workspaces, members, private trigger functions, RLS and explicit grants |
-| 20261110060025 | `index_workspace_creator.sql` | Index the `workspaces.created_by` foreign key |
-| 20261110060319 | `restrict_workspace_insert_columns.sql` | Limit authenticated workspace INSERT to name, slug, description and created_by |
-| 20261110072318 | `platform_admin_and_account_management.sql` | Single platform-admin registry, user suspension, admin account/workspace inventory and first-pass RLS policies |
-| 20261110072520 | `secure_admin_rpc_and_rls_policies.sql` | Move privileged routines to the private schema, use invoker RPC wrappers, and harden admin-aware policies |
+### Public tables
 
-These migrations have already been applied to the dedicated project. Do not reapply them to the live database or edit their SQL after application. Add a new versioned migration for every subsequent schema change.
+- Identity and workspace core: `profiles`, `workspaces`, `workspace_members`, `workspace_invitations`, `activity_events`.
+- Goals and Quests: `goals`, `quests`, `quest_assignees`, `quest_dependencies`, `quest_check_ins`.
+- Council: `council_proposals`, `council_options`, `council_votes`, `council_decisions`, `council_criteria`, `council_option_scores`.
+- Archives: `notes`.
+- Internal authentication controls: `account_signup_attempts`, `account_recovery_attempts`, `account_recovery_pins`.
 
-## Current tables
+### Private tables
 
-Public:
-- `public.profiles`
-- `public.workspaces`
-- `public.workspace_members`
-
-Private:
 - `private.platform_admins`
 - `private.platform_user_status`
 
-RLS is enabled on all exposed application tables. The private administration tables have no grants to browser roles and are not exposed through the Data API.
+## Access and security model
 
-## Platform authorization
+- RLS is enabled on every application table in the `public` schema.
+- No `anon` role has direct read access to public tables.
+- `workspace_members` is directly readable only through its RLS rules; browser clients have no direct INSERT, UPDATE, or DELETE privileges. Membership changes use guarded RPCs.
+- `workspace_invitations` has no direct browser-role table privileges. Invitation tokens are stored as hashes and handled by guarded server-side/database functions.
+- Signup and recovery attempt tables are RLS-enabled and have no direct `anon` or `authenticated` table privileges; controlled service-role operations manage them.
+- The two `private` administration tables currently have RLS disabled, but neither `anon` nor `authenticated` has direct table privileges. Keep them ungranted to browser roles. The Supabase security advisor still reports the RLS-disabled status; enabling RLS as defense-in-depth requires a reviewed policy design.
+- Workspace authorization helpers include the platform-admin override. Platform admins can inspect and administer workspace modules; ordinary users remain limited by their active membership and role.
+- Privileged `SECURITY DEFINER` functions use a fixed/empty search path and explicit identity/role checks. The new workspace-member and Council transaction helpers live in `private`, are called through authenticated public RPC wrappers, and cannot be executed by `anon`.
+- A null workspace role is treated as no permission. The member role-change and removal RPCs explicitly reject non-members rather than relying on SQL's three-valued `NULL NOT IN (...)` behavior.
 
-- The platform has one Admin account, seeded into `private.platform_admins`.
-- User accounts are the default for all other registrations.
-- Platform Admin is separate from workspace Owner/Admin/Member/Viewer roles.
-- `private.is_platform_admin()` and `private.is_platform_user_active()` are narrow helpers in the unexposed private schema.
-- Public RPC wrappers execute as the caller and delegate to guarded private routines.
-- Admin RPCs provide account inventory, workspace inventory, user suspension/reactivation, and workspace archive/restore.
-- A suspended user is blocked by restrictive RLS policies and server-side route checks. The Auth identity and application data are retained so the Admin can restore access.
-- The platform Admin cannot suspend their own account.
+## Authentication requirements
 
-Never derive platform Admin privileges from `user_metadata` or client-supplied fields. For a fresh project, seed the initial verified Admin user from a trusted database-admin session in the Supabase SQL editor; do not expose writes to `private.platform_admins` through the Data API.
+- Protected workspace and admin routes verify that the platform account is active and that the user has a recovery PIN.
+- PIN verification failures fail closed: the session is signed out instead of granting access.
+- The recovery-PIN setup route is the deliberate exception so a signed-in user without a PIN can complete setup.
+- Signup throttling and recovery-attempt controls are managed server-side; browser clients cannot edit their backing tables.
+- **Leaked Password Protection is currently disabled in the hosted Auth settings.** Enable it in the Supabase Dashboard under Authentication settings / Password Security.
 
-## Workspace authorization
+## Applied migration history
 
-- Active workspace members can read their workspace.
-- Workspace owners and admins can update workspace metadata.
-- A user can create a workspace only with their own Auth user ID as `created_by`.
-- An after-insert database trigger provisions the creator as the workspace owner.
-- Browser clients have no direct INSERT/UPDATE/DELETE privileges on `workspace_members`. Invitations, roster display and role changes require reviewed server-side/database operations in a later stage.
-- Platform Admin can inspect all workspaces through guarded admin RPCs.
+The hosted project currently reports these 22 applied migrations:
 
-The profile trigger and workspace-owner trigger use narrowly scoped SECURITY DEFINER functions in the non-exposed `private` schema, with an empty search_path and EXECUTE revoked from public, anon and authenticated. Do not add broad grants to these functions.
+| Version | Migration |
+|---|---|
+| `20261110055955` | `initial_workspace_foundation` |
+| `20261110060025` | `index_workspace_creator` |
+| `20261110060319` | `restrict_workspace_insert_columns` |
+| `20261110072318` | `platform_admin_and_account_management` |
+| `20261110072520` | `secure_admin_rpc_and_rls_policies` |
+| `20261110090000` | `workspace_collaboration_modules` |
+| `20261110090500` | `activity_and_workspace_lifecycle` |
+| `20261110095443` | `portal_auth_and_foreign_key_performance` |
+| `20261110120423` | `archive_workspace_access_and_admin_member_inspection` |
+| `20261110135355` | `account_pin_based_recovery` |
+| `20261110135453` | `fix_recovery_pin_verification_lockout` |
+| `20261110140641` | `rate_limit_public_member_signup` |
+| `20261110143456` | `advanced_archives` |
+| `20261110143822` | `council_weighted_scoring` |
+| `20261110144627` | `grant_private_schema_usage` |
+| `20261110144850` | `private_council_ballots` |
+| `20261110145509` | `workspace_overview_stats` |
+| `20261110145722` | `council_draft_insert_guard` |
+| `20261110145947` | `legacy_council_vote_compat` |
+| `20261111033519` | `optimize_unindexed_workspace_foreign_keys` |
+| `20261111033818` | `fix_workspace_member_rpc_null_role_guard` |
+| `20261111034138` | `atomic_council_proposal_and_decision_actions` |
 
-## Data API exposure
+### Migration-history caveat
 
-New public tables are not automatically exposed to the Data API on current Supabase projects. Every new public table requires reviewed schema grants and RLS. Schema/table grants control API reachability; RLS controls which rows are visible. Review both independently.
+The hosted project has an applied migration `20261110095443_portal_auth_and_foreign_key_performance`, but no matching SQL file could be recovered from the current repository history. The other local migration filenames have been aligned with the hosted versions.
 
-## Local environment
+Do not use `supabase db reset` or treat a fresh database as reproducible until the original SQL for that missing migration is recovered or its effects are reconstructed and reviewed. Do not invent a no-op replacement: it would hide the history mismatch without recreating the schema changes.
 
-Copy `.env.example` to `.env.local` and set:
+## Migration workflow
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://talkxkmkqliqpmdlqmrq.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_replace_me
-```
+1. Create a migration with `supabase migration new <descriptive_name>`.
+2. Review the SQL and verify the target project before applying it.
+3. Apply the migration to the intended Supabase project.
+4. Keep the local filename version identical to the version recorded in the hosted migration history.
+5. Commit the migration to Git and refresh `src/types/database.ts` after public schema/RPC changes.
+6. Verify the migration ledger and relevant RLS/function grants after applying.
 
-Use the project's active publishable key from Dashboard → Connect or Settings → API Keys. Never commit a secret/service-role key or put it in a `NEXT_PUBLIC_*` variable.
+## Operational follow-ups
 
-## Change workflow
-
-1. Inspect the current project schema and migration ledger.
-2. Create a new migration locally using the Supabase CLI's `supabase migration new <name>` command.
-3. Review SQL and RLS before applying it.
-4. Apply to this dedicated project only.
-5. Verify tables, constraints, RLS, grants, and Supabase Advisors.
-6. Commit the exact SQL file with the version recorded in Supabase.
-7. Generate/update `src/types/database.ts` from the project.
-8. Run lint, typecheck, tests, build, and authorization tests.
-
-Never run Fellowship migrations against `little-story-world`.
+- Enable **Leaked Password Protection** in Supabase Auth settings.
+- Recover or reconstruct the missing `20261110095443` migration before using a fresh database bootstrap.
+- The performance advisor still reports indexes as unused. The workspace currently has low data volume; do not drop those indexes without production query evidence.
+- Complete real-account acceptance tests for signup, PIN setup, password recovery, invitations, role changes, and platform-admin workspace access. Automated build/smoke tests do not replace those authenticated end-to-end checks.

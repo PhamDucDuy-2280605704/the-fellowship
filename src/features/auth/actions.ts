@@ -28,18 +28,18 @@ export async function signIn(formData: FormData): Promise<void> {
     : (isSafeInviteReturn ? requestedNext : null);
 
   if (!isValidEmail(email) || password.length < 1 || password.length > 128) {
-    redirect("/login?error=invalid-input");
+    redirect(portal === "admin" ? "/the-stewards-hall/login?error=invalid-input" : "/login?error=invalid-input");
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    if (error.code === "user_banned") redirect("/login?error=suspended");
+    if (error.code === "user_banned") redirect(portal === "admin" ? "/the-stewards-hall/login?error=suspended" : "/login?error=suspended");
     console.error("[auth.signin] Password sign-in failed", {
       code: error.code ?? "unknown",
     });
-    redirect("/login?error=credentials");
+    redirect(portal === "admin" ? "/the-stewards-hall/login?error=credentials" : "/login?error=credentials");
   }
 
   const { data: isPlatformAdmin, error: roleError } = await supabase.rpc("is_platform_admin");

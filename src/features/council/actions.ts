@@ -54,8 +54,8 @@ export async function setProposalStatus(formData: FormData): Promise<void> {
   const status = field(formData, "status");
   if (!validId(workspaceId) || !validId(proposalId) || !["voting", "archived"].includes(status)) back(slug, "invalid");
   const { supabase } = await requireActiveUser();
-  const { error } = await supabase.from("council_proposals").update({ status }).eq("id", proposalId).eq("workspace_id", workspaceId);
-  back(slug, error ? "status" : undefined);
+  const { data, error } = await supabase.from("council_proposals").update({ status }).eq("id", proposalId).eq("workspace_id", workspaceId).select("id").maybeSingle();
+  back(slug, error || !data ? "status" : undefined);
 }
 
 export async function castProposalVote(formData: FormData): Promise<void> {

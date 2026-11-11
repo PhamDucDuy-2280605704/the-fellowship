@@ -58,10 +58,10 @@ export async function updateNote(formData: FormData): Promise<void> {
     back(slug, "invalid");
   }
   const { supabase } = await requireActiveUser();
-  const { error } = await supabase.from("notes").update({
+  const { data, error } = await supabase.from("notes").update({
     title, content, tags, goal_id: goalId, quest_id: questId, council_proposal_id: proposalId,
-  }).eq("id", noteId).eq("workspace_id", workspaceId);
-  back(slug, error ? "update" : undefined);
+  }).eq("id", noteId).eq("workspace_id", workspaceId).select("id").maybeSingle();
+  back(slug, error || !data ? "update" : undefined);
 }
 
 export async function archiveNote(formData: FormData): Promise<void> {
@@ -74,5 +74,5 @@ export async function archiveNote(formData: FormData): Promise<void> {
   const { error } = await supabase.from("notes").update({
     archived_at: shouldArchive ? new Date().toISOString() : null,
   }).eq("id", noteId).eq("workspace_id", workspaceId);
-  back(slug, error ? "archive" : undefined);
+  back(slug, error || !data ? "archive" : undefined);
 }

@@ -28,7 +28,7 @@ export async function createGoal(formData: FormData): Promise<void> {
     target_date: targetDate,
     created_by: user.id,
   });
-  back(slug, error ? "save" : undefined);
+  back(slug, error || !data ? "save" : undefined);
 }
 
 export async function updateGoalStatus(formData: FormData): Promise<void> {
@@ -39,9 +39,9 @@ export async function updateGoalStatus(formData: FormData): Promise<void> {
   if (!validId(workspaceId) || !validId(goalId) ||
       !["draft", "active", "on_hold", "completed", "archived"].includes(status)) back(slug, "invalid");
   const { supabase } = await requireActiveUser();
-  const { error } = await supabase.from("goals").update({
+  const { data, error } = await supabase.from("goals").update({
     status,
     archived_at: status === "archived" ? new Date().toISOString() : null,
-  }).eq("id", goalId).eq("workspace_id", workspaceId);
+  }).eq("id", goalId).eq("workspace_id", workspaceId).select("id").maybeSingle();
   back(slug, error ? "save" : undefined);
 }

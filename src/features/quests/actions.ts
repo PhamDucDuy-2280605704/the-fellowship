@@ -34,7 +34,7 @@ export async function createQuest(formData: FormData): Promise<void> {
     due_date: dueDate,
     created_by: user.id,
   });
-  back(slug, error ? "save" : undefined);
+  back(slug, error || !data ? "save" : undefined);
 }
 
 export async function updateQuestStatus(formData: FormData): Promise<void> {
@@ -45,10 +45,10 @@ export async function updateQuestStatus(formData: FormData): Promise<void> {
   if (!validId(workspaceId) || !validId(questId) ||
       !["backlog", "ready", "in_progress", "blocked", "done", "cancelled"].includes(status)) back(slug, "invalid");
   const { supabase } = await requireActiveUser();
-  const { error } = await supabase.from("quests").update({
+  const { data, error } = await supabase.from("quests").update({
     status,
     completed_at: status === "done" ? new Date().toISOString() : null,
-  }).eq("id", questId).eq("workspace_id", workspaceId);
+  }).eq("id", questId).eq("workspace_id", workspaceId).select("id").maybeSingle();
   back(slug, error ? "save" : undefined);
 }
 

@@ -37,7 +37,6 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
 
   return (
     <main className={`${styles.page} ${styles.loginPage}`}>
-      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-2.png?v=3504918561" fetchPriority="high" />
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/">
         <span>✦</span> THE FELLOWSHIP

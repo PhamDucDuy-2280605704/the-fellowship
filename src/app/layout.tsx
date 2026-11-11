@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Inter, Noto_Serif } from "next/font/google";
@@ -19,6 +20,8 @@ const displayFont = Noto_Serif({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://the-fellowship-zeta.vercel.app"),
+
   title: {
     default: "The Fellowship — Cùng nhau đi xa hơn",
     template: "%s · The Fellowship",
@@ -45,7 +48,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
   return (
     <html lang="vi" data-scroll-behavior="smooth">
       <head />
-      <body className={`${bodyFont.variable} ${displayFont.variable}`}>{children}</body>
+      <body className={`${bodyFont.variable} ${displayFont.variable}`}>
+        {children}
+      </body>
     </html>
   );
 }

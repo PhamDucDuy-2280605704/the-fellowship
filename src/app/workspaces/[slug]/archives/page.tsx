@@ -53,7 +53,7 @@ export default async function ArchivesPage({ params, searchParams }: { params: P
     : query.error ? "Không thể lưu ghi chú. Hãy kiểm tra nội dung và thử lại." : null;
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.bgLibrary}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

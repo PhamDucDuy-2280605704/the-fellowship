@@ -25,7 +25,7 @@ export default async function WorkspaceSettingsPage({ params, searchParams }: { 
   const canLeave = !!membership && membership.role !== "owner";
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.bgStudy}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

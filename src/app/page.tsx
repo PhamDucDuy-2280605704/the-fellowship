@@ -13,12 +13,10 @@ export default function HomePage() {
     <header className={styles.header}>
       <Link className={styles.brand} href="/" aria-label="The Fellowship"><AppIcon name="compass" className={styles.compass}/><span>THE FELLOWSHIP</span></Link>
       <nav className={styles.navigation} aria-label="Điều hướng chính">
-        <Link href="#intro"><AppIcon name="compass"/><span>Khám phá</span></Link>
-        <Link href="#portals"><AppIcon name="users"/><span>Cộng đồng</span></Link>
-        <Link href="#journey"><AppIcon name="route"/><span>Hành trình</span></Link>
-        <Link href="/signup"><AppIcon name="user-plus"/><span>Tham gia</span></Link>
+        <Link href="#portals">Cộng đồng</Link>
+        <Link href="/signup">Tham gia</Link>
       </nav>
-      <div className={styles.headerActions}><AppIcon name="sparkle"/><Link className={styles.headerLogin} href="/login">Đăng nhập</Link></div>
+      <div className={styles.headerActions}><Link className={styles.headerLogin} href="/login">Đăng nhập</Link></div>
     </header>
     <section className={styles.hero} id="intro">
       <div className={styles.heroKicker}><span/><p>ONE JOURNEY · ONE FELLOWSHIP</p><span/></div>
@@ -32,7 +30,7 @@ export default function HomePage() {
         <h2>Cổng Thành Viên</h2>
         <p className={styles.cardDescription}>Dành cho những người đồng hành, cùng nhau xây dựng và chinh phục mục tiêu lớn.</p>
         <ul className={styles.highlights}><li><span>✧</span>Cùng xây dựng cộng đồng</li><li><span>✧</span>Đặt mục tiêu và hoàn thành nhiệm vụ</li><li><span>✧</span>Lưu giữ và chia sẻ hành trình</li></ul>
-        <Link className={styles.portalButton} href="/login"><AppIcon name="users"/><span>Đăng nhập Thành Viên</span><b>›</b></Link>
+        <Link className={styles.portalButton} href="/login"><span>Đăng nhập Thành Viên</span><b>›</b></Link>
         <p className={styles.cardFootnote}>Chưa có tài khoản? <Link href="/signup">Tham gia Fellowship</Link></p>
       </article>
     </section>

@@ -17,7 +17,7 @@ export default function HomePage() {
     <header className={styles.header}>
       <Link className={styles.brand} href="/" aria-label="The Fellowship"><Compass/><span>THE FELLOWSHIP</span></Link>
       <nav className={styles.navigation} aria-label="Điều hướng chính">
-        <Link href="#intro">Khám phá</Link><Link href="#portals">Cộng đồng</Link><Link href="#journey">Hành trình</Link><Link href="/login">Tính năng</Link>
+        <Link href="#intro">Khám phá</Link><Link href="#portals">Cộng đồng</Link><Link href="#journey">Hành trình</Link><Link href="/signup">Tham gia</Link>
       </nav>
       <div className={styles.headerActions}><span aria-hidden="true">✧</span><Link className={styles.headerLogin} href="/login">Đăng nhập</Link></div>
     </header>

@@ -28,7 +28,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
               ? "Chưa thể xác minh mã PIN bảo mật. Vui lòng thử lại."
               : null;
   const noticeMessage = params.notice === "signed-out"
-    ? "Anh đã đăng xuất thành công."
+    ? "Bạn đã đăng xuất thành công."
     : params.notice === "password-updated"
       ? "Mật khẩu đã được cập nhật. Hãy đăng nhập bằng mật khẩu mới."
       : params.notice === "account-created"
@@ -44,7 +44,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
       <section className={styles.card} aria-labelledby="login-title">
         <p className={styles.eyebrow}>WELCOME BACK</p>
         <h1>Chào mừng trở lại.</h1>
-        <p className={styles.description}>Đăng nhập bằng email và mật khẩu anh đã tạo khi đăng ký.</p>
+        <p className={styles.description}>Đăng nhập bằng email và mật khẩu bạn đã tạo khi đăng ký.</p>
 
         {errorMessage ? <p className={styles.error} role="alert">{errorMessage}</p> : null}
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}
@@ -55,7 +55,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
           <label htmlFor="email">Email</label>
           <input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" placeholder="you@example.com" required />
           <label htmlFor="password">Mật khẩu</label>
-          <input id="password" name="password" type="password" autoComplete="current-password" placeholder="Mật khẩu của anh" required />
+          <input id="password" name="password" type="password" autoComplete="current-password" placeholder="Mật khẩu của bạn" required />
           <AuthSubmitButton className={styles.submitButton} pendingLabel="Đang đăng nhập...">
             Đăng nhập
           </AuthSubmitButton>

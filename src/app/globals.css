@@ -45,3 +45,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* Application-wide readable text defaults. Component-specific display sizes remain in their modules. */
 button, input, textarea, select { font-size: 1.0625rem; }
+
+/* 2026 interface foundation: consistent contrast, sizing and interaction states. */
+:root {
+  --color-bg: #0b100d;
+  --color-panel: rgba(17, 23, 18, .88);
+  --color-ink: #f3efe3;
+  --color-muted: #b7b9aa;
+  --color-gold: #d6b477;
+  --color-gold-soft: rgba(214, 180, 119, .16);
+  color-scheme: dark;
+}
+html { background: var(--color-bg); }
+body { font-size: 16px; line-height: 1.65; }
+button, input, textarea, select { font-size: 16px; }
+button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled), a { touch-action: manipulation; }
+:where(input, textarea, select) {
+  color-scheme: dark;
+}
+:where(button, input, textarea, select):disabled { cursor: not-allowed; opacity: .68; }

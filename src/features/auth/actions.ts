@@ -16,13 +16,16 @@ export async function signIn(formData: FormData): Promise<void> {
   const email = readString(formData, "email").toLowerCase();
   const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
   const requestedNext = readString(formData, "next");
+  const portal = readString(formData, "portal") === "admin" ? "admin" : "member";
   const isSafeInviteReturn = requestedNext.startsWith("/invite/")
     && !requestedNext.startsWith("//")
     && !requestedNext.includes(String.fromCharCode(92));
   const isSafePrivateAdminReturn = (requestedNext === "/the-stewards-hall" || requestedNext.startsWith("/the-stewards-hall/"))
     && !requestedNext.startsWith("//")
     && !requestedNext.includes(String.fromCharCode(92));
-  const safeNext = isSafePrivateAdminReturn || isSafeInviteReturn ? requestedNext : null;
+  const safeNext = portal === "admin"
+    ? (isSafePrivateAdminReturn ? requestedNext : "/the-stewards-hall")
+    : (isSafeInviteReturn ? requestedNext : null);
 
   if (!isValidEmail(email) || password.length < 1 || password.length > 128) {
     redirect("/login?error=invalid-input");
@@ -37,6 +40,20 @@ export async function signIn(formData: FormData): Promise<void> {
       code: error.code ?? "unknown",
     });
     redirect("/login?error=credentials");
+  }
+
+  const { data: isPlatformAdmin, error: roleError } = await supabase.rpc("is_platform_admin");
+  if (roleError) {
+    await supabase.auth.signOut();
+    redirect(portal === "admin" ? "/the-stewards-hall/login?error=role-check" : "/login?error=role-check");
+  }
+  if (portal === "admin" && isPlatformAdmin !== true) {
+    await supabase.auth.signOut();
+    redirect("/the-stewards-hall/login?error=wrong-portal");
+  }
+  if (portal === "member" && isPlatformAdmin === true) {
+    await supabase.auth.signOut();
+    redirect("/login?error=wrong-portal");
   }
 
   const { data: hasRecoveryPin, error: pinStatusError } = await supabase.rpc("has_own_account_recovery_pin");

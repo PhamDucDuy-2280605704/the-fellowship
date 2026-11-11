@@ -20,7 +20,7 @@
   position: fixed;
   z-index: -2;
   inset: -16px;
-  background-image: linear-gradient(180deg, rgba(8,11,9,.5), rgba(8,10,9,.68)), url("https://www.lotro.com/images/about/feature-2.png?v=3504918561"), url("/images/fellowship-reference-bg.webp");
+  background-image: linear-gradient(180deg, rgba(8,11,9,.5), rgba(8,10,9,.68)), url("/images/fellowship-reference-bg.webp");
   background-position: center 47%;
   background-size: cover;
   content: "";
@@ -212,27 +212,3 @@
   text-align: left;
 }
 
-
-/* Each portal uses a distinct real Middle-earth filming landscape. */
-.signupPage::before {
-  background-image: linear-gradient(180deg, rgba(8,11,9,.52), rgba(8,10,9,.72)), url("https://www.lotro.com/images/about/feature-6.png?v=255186907"), url("/images/fellowship-reference-bg.webp");
-  background-position: center 48%;
-}
-.recoveryPage::before {
-  background-image: linear-gradient(180deg, rgba(8,11,9,.58), rgba(8,10,9,.76)), url("https://www.lotro.com/images/about/feature-1.png?v=602098898"), url("/images/fellowship-reference-bg.webp");
-  background-position: center 52%;
-}
-.adminLoginPage::before {
-  background-image: linear-gradient(180deg, rgba(8,11,9,.62), rgba(8,10,9,.80)), url("https://www.lotro.com/images/about/feature-5.png?v=758224346"), url("/images/fellowship-reference-bg.webp");
-  background-position: center 50%;
-}
-
-
-.recoveryPinPage::before {
-  background-image: linear-gradient(180deg, rgba(8,11,9,.58), rgba(8,10,9,.76)), url("https://www.lotro.com/images/about/feature-3.png?v=2732952715"), url("/images/fellowship-reference-bg.webp");
-  background-position: center 46%;
-}
-.invitePage::before {
-  background-image: linear-gradient(180deg, rgba(8,11,9,.54), rgba(8,10,9,.72)), url("https://www.lotro.com/images/about/feature-4.png"), url("/images/fellowship-reference-bg.webp");
-  background-position: center 48%;
-}

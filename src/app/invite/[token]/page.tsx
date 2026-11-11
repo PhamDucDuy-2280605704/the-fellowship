@@ -31,7 +31,6 @@ export default async function InvitationPage({
 
   return (
     <main className={`${styles.page} ${styles.invitePage}`}>
-      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-4.png" fetchPriority="high" />
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/"><span>✦</span> THE FELLOWSHIP</Link>
       <section className={styles.card}>

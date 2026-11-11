@@ -23,7 +23,6 @@ export default async function StewardLoginPage({ searchParams }: { searchParams:
               ? "Chưa thể xác minh mã PIN bảo mật. Vui lòng thử lại."
               : null;
   return <main className={`${styles.page} ${styles.adminLoginPage}`}>
-    <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-5.png?v=758224346" fetchPriority="high" />
     <div className={styles.ambient} aria-hidden="true" />
     <Link className={styles.brand} href="/">✦ THE FELLOWSHIP · STEWARDS</Link>
     <section className={styles.card} aria-labelledby="login-title">

@@ -162,57 +162,6 @@ export type Database = {
           },
         ]
       }
-      council_option_scores: {
-        Row: {
-          comment: string
-          created_at: string
-          criterion_id: string
-          option_id: string
-          proposal_id: string
-          score: number
-          updated_at: string
-          user_id: string
-          workspace_id: string
-        }
-        Insert: {
-          comment?: string
-          created_at?: string
-          criterion_id: string
-          option_id: string
-          proposal_id: string
-          score: number
-          updated_at?: string
-          user_id: string
-          workspace_id: string
-        }
-        Update: {
-          comment?: string
-          created_at?: string
-          criterion_id?: string
-          option_id?: string
-          proposal_id?: string
-          score?: number
-          updated_at?: string
-          user_id?: string
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "council_option_scores_criterion_id_proposal_id_workspace_id_fkey"
-            columns: ["criterion_id", "proposal_id", "workspace_id"]
-            isOneToOne: false
-            referencedRelation: "council_criteria"
-            referencedColumns: ["id", "proposal_id", "workspace_id"]
-          },
-          {
-            foreignKeyName: "council_option_scores_option_id_proposal_id_workspace_id_fkey"
-            columns: ["option_id", "proposal_id", "workspace_id"]
-            isOneToOne: false
-            referencedRelation: "council_options"
-            referencedColumns: ["id", "proposal_id", "workspace_id"]
-          },
-        ]
-      }
       council_decisions: {
         Row: {
           chosen_option_id: string | null
@@ -255,6 +204,57 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "council_proposals"
             referencedColumns: ["id", "workspace_id"]
+          },
+        ]
+      }
+      council_option_scores: {
+        Row: {
+          comment: string
+          created_at: string
+          criterion_id: string
+          option_id: string
+          proposal_id: string
+          score: number
+          updated_at: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          comment?: string
+          created_at?: string
+          criterion_id: string
+          option_id: string
+          proposal_id: string
+          score: number
+          updated_at?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          criterion_id?: string
+          option_id?: string
+          proposal_id?: string
+          score?: number
+          updated_at?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "council_option_scores_criterion_id_proposal_id_workspace_i_fkey"
+            columns: ["criterion_id", "proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_criteria"
+            referencedColumns: ["id", "proposal_id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "council_option_scores_option_id_proposal_id_workspace_id_fkey"
+            columns: ["option_id", "proposal_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "council_options"
+            referencedColumns: ["id", "proposal_id", "workspace_id"]
           },
         ]
       }
@@ -438,12 +438,12 @@ export type Database = {
           created_by: string
           goal_id: string | null
           id: string
-          search_vector: string
+          quest_id: string | null
+          search_vector: unknown
           tags: string[]
           title: string
           updated_at: string
           workspace_id: string
-          quest_id: string | null
         }
         Insert: {
           archived_at?: string | null
@@ -453,12 +453,12 @@ export type Database = {
           created_by: string
           goal_id?: string | null
           id?: string
+          quest_id?: string | null
           search_vector?: unknown
           tags?: string[]
           title: string
           updated_at?: string
           workspace_id: string
-          quest_id?: string | null
         }
         Update: {
           archived_at?: string | null
@@ -468,20 +468,20 @@ export type Database = {
           created_by?: string
           goal_id?: string | null
           id?: string
+          quest_id?: string | null
           search_vector?: unknown
           tags?: string[]
           title?: string
           updated_at?: string
           workspace_id?: string
-          quest_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "notes_workspace_id_fkey"
-            columns: ["workspace_id"]
+            foreignKeyName: "notes_council_same_workspace_fk"
+            columns: ["council_proposal_id", "workspace_id"]
             isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
+            referencedRelation: "council_proposals"
+            referencedColumns: ["id", "workspace_id"]
           },
           {
             foreignKeyName: "notes_goal_same_workspace_fk"
@@ -498,11 +498,11 @@ export type Database = {
             referencedColumns: ["id", "workspace_id"]
           },
           {
-            foreignKeyName: "notes_council_same_workspace_fk"
-            columns: ["council_proposal_id", "workspace_id"]
+            foreignKeyName: "notes_workspace_id_fkey"
+            columns: ["workspace_id"]
             isOneToOne: false
-            referencedRelation: "council_proposals"
-            referencedColumns: ["id", "workspace_id"]
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -826,19 +826,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      cast_council_vote: {
-        Args: { p_option_id: string; p_proposal_id: string; p_workspace_id: string }
-        Returns: undefined
-      }
-      list_council_vote_summary: {
-        Args: { p_workspace_id: string }
-        Returns: {
-          has_my_vote: boolean
-          option_id: string
-          proposal_id: string
-          vote_count: number
-        }[]
-      }
       accept_workspace_invitation: {
         Args: { p_token_hash: string }
         Returns: string
@@ -892,6 +879,25 @@ export type Database = {
         Returns: undefined
       }
       allow_account_signup: { Args: { p_ip: string }; Returns: boolean }
+      cast_council_vote: {
+        Args: {
+          p_option_id: string
+          p_proposal_id: string
+          p_workspace_id: string
+        }
+        Returns: undefined
+      }
+      create_council_proposal: {
+        Args: {
+          p_closes_at: string
+          p_context: string
+          p_criteria: Json
+          p_options: Json
+          p_title: string
+          p_workspace_id: string
+        }
+        Returns: string
+      }
       create_workspace_invitation: {
         Args: {
           p_email: string
@@ -908,10 +914,29 @@ export type Database = {
           is_admin: boolean
         }[]
       }
+      decide_council_proposal: {
+        Args: {
+          p_followup_quest_title: string
+          p_option_id: string
+          p_proposal_id: string
+          p_rationale: string
+          p_workspace_id: string
+        }
+        Returns: undefined
+      }
       has_own_account_recovery_pin: { Args: never; Returns: boolean }
       is_platform_admin: { Args: never; Returns: boolean }
       is_platform_user_active: { Args: never; Returns: boolean }
       leave_workspace: { Args: { p_workspace_id: string }; Returns: undefined }
+      list_council_vote_summary: {
+        Args: { p_workspace_id: string }
+        Returns: {
+          has_my_vote: boolean
+          option_id: string
+          proposal_id: string
+          vote_count: number
+        }[]
+      }
       list_workspace_activity: {
         Args: { p_workspace_id: string }
         Returns: {
@@ -961,19 +986,19 @@ export type Database = {
         Args: { p_role: string; p_user_id: string; p_workspace_id: string }
         Returns: undefined
       }
+      verify_account_recovery_pin: {
+        Args: { p_email: string; p_ip: string; p_pin: string }
+        Returns: string
+      }
       workspace_overview_stats: {
         Args: { p_workspace_id: string }
         Returns: {
           active_member_count: number
+          active_note_count: number
           completed_quest_count: number
           goal_count: number
-          active_note_count: number
           quest_count: number
         }[]
-      }
-      verify_account_recovery_pin: {
-        Args: { p_email: string; p_ip: string; p_pin: string }
-        Returns: string
       }
     }
     Enums: {

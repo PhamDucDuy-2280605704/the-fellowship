@@ -31,7 +31,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
                 : params.error === "signup-disabled"
                   ? "Chức năng đăng ký hiện đang bị tắt. Vui lòng liên hệ quản trị viên."
                   : params.error === "server-error"
-                    ? "Máy chủ không thể hoàn tất việc tạo tài khoản. Dữ liệu của anh chưa được xác nhận là đã tạo; vui lòng thử lại sau."
+                    ? "Máy chủ không thể hoàn tất việc tạo tài khoản. Dữ liệu của bạn chưa được xác nhận là đã tạo; vui lòng thử lại sau."
                     : params.error === "invalid-input"
                       ? "Thông tin đăng ký không hợp lệ. Vui lòng kiểm tra lại các trường."
                       : null;
@@ -72,7 +72,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
         </form>
 
         <p className={styles.footerText}>
-          Tài khoản mới bắt đầu với quyền User. Admin có thể xem và quản lý thành viên.
+          Tài khoản mới bắt đầu với quyền Người dùng. Admin có thể xem và quản lý thành viên.
         </p>
         <p className={styles.footerText}>
           Đã có tài khoản? <Link href="/login">Đăng nhập</Link>

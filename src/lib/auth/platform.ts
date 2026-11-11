@@ -15,7 +15,9 @@ export async function requireActiveUser(options: { allowPlatformAdmin?: boolean 
       && !privateAdminPath.includes(String.fromCharCode(92))
       ? privateAdminPath
       : null;
-    redirect(safePrivateAdminPath ? `/login?next=${encodeURIComponent(safePrivateAdminPath)}` : "/login");
+    redirect(safePrivateAdminPath
+      ? `/the-stewards-hall/login?next=${encodeURIComponent(safePrivateAdminPath)}`
+      : "/login");
   }
 
   const { data: isActive, error: statusError } = await supabase.rpc("is_platform_user_active");

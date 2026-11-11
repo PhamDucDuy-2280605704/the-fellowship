@@ -42,7 +42,7 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
           : null;
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.bgWorkspace}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

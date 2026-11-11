@@ -39,9 +39,9 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
     supabase.from("council_option_scores").select("proposal_id,option_id,criterion_id,user_id,score,comment").eq("workspace_id",workspace.id),
   ]);
   const membership = membershipResult.data;
-  if (!membership) notFound();
-  const canManage = membership.role === "owner" || membership.role === "admin";
-  const canScore = ["owner", "admin", "member"].includes(membership.role);
+  if (!membership && !isPlatformAdmin) notFound();
+  const canManage = isPlatformAdmin || membership?.role === "owner" || membership?.role === "admin";
+  const canScore = isPlatformAdmin || ["owner", "admin", "member"].includes(membership?.role ?? "");
   const proposals = proposalsResult.data ?? [];
   const options = optionsResult.data ?? [];
   const votes = votesResult.data ?? [];

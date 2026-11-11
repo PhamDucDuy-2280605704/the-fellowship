@@ -4,9 +4,20 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function requireActiveUser(options: { allowPlatformAdmin?: boolean; allowMissingRecoveryPin?: boolean } = {}) {
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
 
-  if (error || !data.user) {
+  // Run independent checks together. current_user_access combines the active
+  // account and platform-admin checks into one authenticated database request.
+  const pinStatusRequest = options.allowMissingRecoveryPin
+    ? Promise.resolve({ data: true, error: null })
+    : supabase.rpc("has_own_account_recovery_pin");
+
+  const [userResult, accessResult, pinResult] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.rpc("current_user_access"),
+    pinStatusRequest,
+  ]);
+
+  if (userResult.error || !userResult.data.user) {
     const requestHeaders = await headers();
     const privateAdminPath = requestHeaders.get("x-private-admin-path");
     const safePrivateAdminPath = privateAdminPath
@@ -20,24 +31,17 @@ export async function requireActiveUser(options: { allowPlatformAdmin?: boolean;
       : "/login");
   }
 
-  const pinStatusRequest = options.allowMissingRecoveryPin
-    ? Promise.resolve({ data: true, error: null })
-    : supabase.rpc("has_own_account_recovery_pin");
-  const [statusResult, roleResult, pinResult] = await Promise.all([
-    supabase.rpc("is_platform_user_active"),
-    supabase.rpc("is_platform_admin"),
-    pinStatusRequest,
-  ]);
-
-  if (statusResult.error || !statusResult.data) {
-    await supabase.auth.signOut();
-    redirect("/login?error=suspended");
-  }
-  if (roleResult.error) {
+  const access = accessResult.data?.[0];
+  if (accessResult.error || !access) {
     await supabase.auth.signOut();
     redirect("/login?error=role-check");
   }
-  const isPlatformAdmin = roleResult.data === true;
+  if (!access.is_active) {
+    await supabase.auth.signOut();
+    redirect("/login?error=suspended");
+  }
+
+  const isPlatformAdmin = access.is_admin === true;
 
   if (!options.allowMissingRecoveryPin) {
     if (pinResult.error) {
@@ -49,7 +53,7 @@ export async function requireActiveUser(options: { allowPlatformAdmin?: boolean;
 
   if (isPlatformAdmin && !options.allowPlatformAdmin) redirect("/the-stewards-hall");
 
-  return { supabase, user: data.user, isPlatformAdmin };
+  return { supabase, user: userResult.data.user, isPlatformAdmin };
 }
 
 export async function requirePlatformAdmin() {

@@ -1,16 +1,7 @@
-import styles from "../../workspaces.module.css";
-
+/**
+ * Avoid replacing the entire workspace view with a full-page loading screen
+ * while another workspace module is being prepared.
+ */
 export default function WorkspaceDetailLoading() {
-  return (
-    <main className={styles.page} aria-busy="true" aria-live="polite">
-      <header className={styles.topbar}>
-        <span className={styles.brand}>✦ THE FELLOWSHIP</span>
-      </header>
-      <section className={styles.detailHero}>
-        <p className={styles.eyebrow}>THE FELLOWSHIP</p>
-        <h1>Đang mở workspace…</h1>
-        <p>Đang tải Goals, Quests, Council và Archives.</p>
-      </section>
-    </main>
-  );
+  return null;
 }

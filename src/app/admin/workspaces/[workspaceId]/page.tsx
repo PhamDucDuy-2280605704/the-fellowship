@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { setWorkspaceArchived } from "../../actions";
+import { deleteWorkspacePermanently, setWorkspaceArchived } from "../../actions";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import styles from "../../admin.module.css";
 
@@ -51,6 +51,18 @@ export default async function AdminWorkspaceDetailPage({ params }: { params: Par
           <button className={workspace.is_archived ? styles.restoreButton : styles.dangerButton} type="submit">{workspace.is_archived ? "Khôi phục workspace" : "Lưu trữ workspace"}</button>
         </form>
       </div>
+      <details style={{ margin: "18px 0", padding: 16, border: "1px solid rgba(190,112,92,.35)" }}>
+        <summary style={{ cursor: "pointer", color: "#e3ad9f" }}>Xóa workspace này vĩnh viễn</summary>
+        <p className={styles.footnote}>Toàn bộ Goals, Quests, Council, Archives, thành viên, lời mời và lịch sử hoạt động của workspace sẽ bị xóa, không thể khôi phục.</p>
+        <form action={deleteWorkspacePermanently} style={{ display: "grid", gap: 10 }}>
+          <input type="hidden" name="workspaceId" value={workspace.workspace_id} />
+          <label style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13, lineHeight: 1.6 }}>
+            <input type="checkbox" name="confirmDelete" value="yes" required style={{ marginTop: 4 }} />
+            Tôi xác nhận mình muốn xóa vĩnh viễn workspace này.
+          </label>
+          <button className={styles.dangerButton} type="submit">Xác nhận xóa workspace</button>
+        </form>
+      </details>
       <div className={styles.tableWrap}>
         <table className={styles.table}>
           <thead><tr><th>Thành viên</th><th>Email</th><th>Vai trò workspace</th><th>Trạng thái tham gia</th><th>Tài khoản</th><th>Ngày tham gia</th></tr></thead>

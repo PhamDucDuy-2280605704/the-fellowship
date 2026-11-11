@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-type SearchParams = Promise<{ error?: string }>;
+type SearchParams = Promise<{ error?: string; notice?: string }>;
 
 export default async function WorkspacesPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
@@ -39,7 +39,9 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
         ? "Tên workspace cần có từ 2 đến 80 ký tự; mô tả tối đa 1.000 ký tự."
         : params.error === "create-failed"
           ? "Chưa thể tạo workspace. Hãy thử lại."
-          : null;
+          : params.error === "delete-failed"
+            ? "Không thể xóa workspace. Hãy kiểm tra quyền sở hữu hoặc liên hệ Platform Admin."
+            : null;
 
   return (
     <main className={`${styles.page} ${styles.bgWorkspace}`}>
@@ -53,6 +55,8 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
           </form>
         </div>
       </header>
+
+      {params.notice === "deleted" && <p className={styles.success} role="status">Workspace và dữ liệu liên quan đã được xóa vĩnh viễn.</p>}
 
       <section className={styles.intro}>
         <p className={styles.eyebrow}>YOUR SHARED JOURNEYS</p>

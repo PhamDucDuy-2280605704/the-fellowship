@@ -51,3 +51,27 @@ export async function setWorkspaceArchived(formData: FormData): Promise<void> {
 
   redirect(shouldArchive ? "/the-stewards-hall/workspaces?notice=archived" : "/the-stewards-hall/workspaces?notice=restored");
 }
+
+export async function deleteWorkspacePermanently(formData: FormData): Promise<void> {
+  const workspaceId = field(formData, "workspaceId");
+  const confirmation = field(formData, "confirmDelete");
+  if (!/^[0-9a-f-]{36}$/i.test(workspaceId)) {
+    redirect("/the-stewards-hall/workspaces?error=invalid-input");
+  }
+  if (confirmation !== "yes") {
+    redirect("/the-stewards-hall/workspaces?error=delete-confirm");
+  }
+
+  const { supabase } = await requirePlatformAdmin();
+  const { error } = await supabase.rpc(
+    "delete_workspace" as "leave_workspace",
+    { p_workspace_id: workspaceId },
+  );
+
+  if (error) {
+    console.error("[admin.workspace.delete] Workspace deletion failed", { code: error.code ?? "unknown" });
+    redirect("/the-stewards-hall/workspaces?error=delete-failed");
+  }
+
+  redirect("/the-stewards-hall/workspaces?notice=deleted");
+}

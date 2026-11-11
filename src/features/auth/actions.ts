@@ -42,29 +42,38 @@ export async function signIn(formData: FormData): Promise<void> {
     redirect(portal === "admin" ? "/the-stewards-hall/login?error=credentials" : "/login?error=credentials");
   }
 
-  const { data: isPlatformAdmin, error: roleError } = await supabase.rpc("is_platform_admin");
-  if (roleError) {
+  // These checks are independent after the password session is established.
+  // One RPC returns both account status and platform-admin role.
+  const [accessResult, pinStatusResult] = await Promise.all([
+    supabase.rpc("current_user_access"),
+    supabase.rpc("has_own_account_recovery_pin"),
+  ]);
+
+  const access = accessResult.data?.[0];
+  if (accessResult.error || !access) {
     await supabase.auth.signOut();
     redirect(portal === "admin" ? "/the-stewards-hall/login?error=role-check" : "/login?error=role-check");
   }
-  if (portal === "admin" && isPlatformAdmin !== true) {
+  if (!access.is_active) {
+    await supabase.auth.signOut();
+    redirect(portal === "admin" ? "/the-stewards-hall/login?error=suspended" : "/login?error=suspended");
+  }
+  if (portal === "admin" && access.is_admin !== true) {
     await supabase.auth.signOut();
     redirect("/the-stewards-hall/login?error=wrong-portal");
   }
-  if (portal === "member" && isPlatformAdmin === true) {
+  if (portal === "member" && access.is_admin === true) {
     await supabase.auth.signOut();
     redirect("/login?error=wrong-portal");
   }
-
-  const { data: hasRecoveryPin, error: pinStatusError } = await supabase.rpc("has_own_account_recovery_pin");
-  if (pinStatusError) {
+  if (pinStatusResult.error) {
     console.error("[auth.signin] Recovery PIN status check failed", {
-      code: pinStatusError.code ?? "unknown",
+      code: pinStatusResult.error.code ?? "unknown",
     });
     await supabase.auth.signOut();
     redirect(portal === "admin" ? "/the-stewards-hall/login?error=pin-check" : "/login?error=pin-check");
   }
-  if (hasRecoveryPin !== true) redirect("/recovery-pin");
+  if (pinStatusResult.data !== true) redirect("/recovery-pin");
 
   redirect(safeNext || "/workspaces");
 }

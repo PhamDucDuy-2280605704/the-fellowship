@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
 import { WorkspaceNav } from "@/components/navigation/workspace-nav";
 import { leaveWorkspace } from "@/features/workspaces/member-actions";
-import { updateWorkspaceDetails } from "@/features/workspaces/settings-actions";
+import { deleteWorkspace, updateWorkspaceDetails } from "@/features/workspaces/settings-actions";
 import styles from "../../../workspaces.module.css";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ export default async function WorkspaceSettingsPage({ params, searchParams }: { 
   const { slug } = await params;
   const query = await searchParams;
   const { supabase, user, isPlatformAdmin } = await requireActiveUser({ allowPlatformAdmin: true });
-  const { data: workspace } = await supabase.from("workspaces").select("id,name,slug,description,created_at").eq("slug",slug).maybeSingle();
+  const { data: workspace } = await supabase.from("workspaces").select("id,name,slug,description,created_at,created_by").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 
   const { data: membership } = await supabase.from("workspace_members")
@@ -23,13 +23,16 @@ export default async function WorkspaceSettingsPage({ params, searchParams }: { 
   if (!membership && !isPlatformAdmin) notFound();
   const canManage = isPlatformAdmin || membership?.role === "owner" || membership?.role === "admin";
   const canLeave = !!membership && membership.role !== "owner";
+  const canDelete = isPlatformAdmin || (
+    membership?.role === "owner" && workspace.created_by === user.id
+  );
 
   return (
     <main className={`${styles.page} ${styles.bgStudy}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>
-          {isPlatformAdmin && <Link className={styles.quietButton} href="/admin">Admin Console</Link>}
+          {isPlatformAdmin && <Link className={styles.quietButton} href="/the-stewards-hall">Admin Console</Link>}
           <span>{user.email}</span><Link className={styles.quietButton} href="/workspaces">Workspace của tôi</Link>
         </div>
       </header>
@@ -42,7 +45,9 @@ export default async function WorkspaceSettingsPage({ params, searchParams }: { 
       <WorkspaceNav slug={slug} active="settings" />
 
       {query.notice === "saved" && <p className={styles.success} role="status">Đã lưu cài đặt workspace.</p>}
-      {query.error && <p className={styles.error} role="alert">Không thể lưu cài đặt. Kiểm tra quyền và dữ liệu rồi thử lại.</p>}
+      {query.error === "delete-failed" && <p className={styles.error} role="alert">Không thể xóa workspace. Chỉ tài khoản tạo workspace đang giữ vai trò Owner hoặc Platform Admin mới có quyền này.</p>}
+      {query.error === "delete-confirm" && <p className={styles.error} role="alert">Anh cần đánh dấu xác nhận trước khi xóa workspace.</p>}
+      {query.error && query.error !== "delete-failed" && <p className={styles.error} role="alert">Không thể lưu cài đặt. Kiểm tra quyền và dữ liệu rồi thử lại.</p>}
 
       <section className={styles.settingsGrid}>
         <div className={styles.modulePanel}>
@@ -67,7 +72,7 @@ export default async function WorkspaceSettingsPage({ params, searchParams }: { 
           <p className={styles.roleSummary}>{membership?.role ?? "Platform Admin"}</p>
           <p>Workspace được tạo ngày {new Date(workspace.created_at).toLocaleDateString("vi-VN")}.</p>
           {membership?.role === "owner" ? (
-            <p className={styles.permissionNote}>Bạn là Owner. Hãy chuyển quyền sở hữu trước khi rời workspace để nhóm không bị mất người quản lý.</p>
+            <p className={styles.permissionNote}>Bạn là Owner. Bạn có thể rời workspace sau khi chuyển quyền sở hữu cho thành viên khác.</p>
           ) : canLeave ? (
             <form action={leaveWorkspace}>
               <input type="hidden" name="workspaceId" value={workspace.id} />
@@ -76,6 +81,26 @@ export default async function WorkspaceSettingsPage({ params, searchParams }: { 
           ) : <p className={styles.permissionNote}>Tài khoản Admin nền tảng có thể truy cập để hỗ trợ quản trị.</p>}
         </aside>
       </section>
+
+      {canDelete && (
+        <section className={styles.modulePanel} style={{ marginTop: 18 }}>
+          <p className={styles.eyebrow}>IRREVERSIBLE ACTION</p>
+          <h2>Xóa workspace vĩnh viễn.</h2>
+          <p>Thao tác này xóa workspace cùng Goals, Quests, Council, Archives, thành viên, lời mời và lịch sử hoạt động. Dữ liệu không thể khôi phục.</p>
+          <details>
+            <summary style={{ cursor: "pointer", color: "#dcaca0", marginBottom: 12 }}>Mở xác nhận xóa workspace</summary>
+            <form action={deleteWorkspace} className={styles.moduleForm}>
+              <input type="hidden" name="workspaceId" value={workspace.id} />
+              <input type="hidden" name="slug" value={slug} />
+              <label style={{ display: "flex", alignItems: "flex-start", gap: 9, lineHeight: 1.6 }}>
+                <input type="checkbox" name="confirmDelete" value="yes" required style={{ width: "auto", marginTop: 4 }} />
+                Tôi hiểu rằng toàn bộ dữ liệu của workspace này sẽ bị xóa vĩnh viễn.
+              </label>
+              <button className={styles.removeButton} type="submit">Xóa vĩnh viễn workspace</button>
+            </form>
+          </details>
+        </section>
+      )}
     </main>
   );
 }

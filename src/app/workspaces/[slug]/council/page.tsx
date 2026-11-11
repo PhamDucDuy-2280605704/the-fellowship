@@ -39,9 +39,9 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
     supabase.from("council_option_scores").select("proposal_id,option_id,criterion_id,user_id,score,comment").eq("workspace_id",workspace.id),
   ]);
   const membership = membershipResult.data;
-  if (!membership && !isPlatformAdmin) notFound();
-  const canManage = isPlatformAdmin || membership?.role === "owner" || membership?.role === "admin";
-  const canScore = isPlatformAdmin || ["owner", "admin", "member"].includes(membership?.role ?? "");
+  if (!membership) notFound();
+  const canManage = membership.role === "owner" || membership.role === "admin";
+  const canScore = ["owner", "admin", "member"].includes(membership.role);
   const proposals = proposalsResult.data ?? [];
   const options = optionsResult.data ?? [];
   const votes = votesResult.data ?? [];
@@ -60,9 +60,8 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
   for (const item of scores) scoresByProposal.set(item.proposal_id, [...(scoresByProposal.get(item.proposal_id) ?? []), item]);
   const errorMessage = query.error === "vote" ? "Bạn chưa thể biểu quyết. Có thể phiên bỏ phiếu đã đóng."
     : query.error === "decision" ? "Chưa thể lưu quyết định. Hãy chọn một phương án và ghi rõ lý do."
+    : query.error === "proposal" ? "Chưa thể tạo đề xuất. Kiểm tra phương án, tiêu chí và quyền thành viên."
     : query.error === "score" ? "Chưa thể lưu điểm đánh giá. Hãy kiểm tra quyền và thử lại."
-    : query.error === "followup" ? "Quyết định đã được lưu nhưng chưa thể tạo Quest theo dõi."
-    : query.error === "criteria" ? "Đề xuất đã được tạo nhưng chưa thể lưu tiêu chí đánh giá."
     : query.error ? "Không thể lưu thay đổi. Kiểm tra vai trò và thông tin đã nhập." : null;
 
   return (
@@ -105,7 +104,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
                 const decision = decisionsByProposal.get(proposal.id)?.[0];
                 const proposalCriteria = criteriaByProposal.get(proposal.id) ?? [];
                 const proposalScores = scoresByProposal.get(proposal.id) ?? [];
-                const canVote = proposal.status === "voting" && (!proposal.closes_at || new Date(proposal.closes_at) > new Date());
+                const canVote = canScore && proposal.status === "voting" && (!proposal.closes_at || new Date(proposal.closes_at) > new Date());
                 return (
                   <article className={styles.recordCard} key={proposal.id}>
                     <div className={styles.recordTop}>
@@ -223,7 +222,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
           <p className={styles.eyebrow}>BRING A QUESTION</p>
           <h2>Đưa vấn đề lên bàn.</h2>
           <p>Viết câu hỏi rõ ràng và mỗi phương án trên một dòng. Owner/Admin sẽ mở biểu quyết khi nhóm sẵn sàng.</p>
-          <form action={createProposal} className={styles.moduleForm}>
+          {canScore && <form action={createProposal} className={styles.moduleForm}>
             <input type="hidden" name="workspaceId" value={workspace.id} />
             <input type="hidden" name="slug" value={slug} />
             <label htmlFor="proposal-title">Câu hỏi / đề xuất</label>
@@ -238,8 +237,8 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
             <label htmlFor="proposal-criteria">Tiêu chí chấm điểm (mỗi dòng: Tên | Trọng số 1–100)</label>
             <textarea id="proposal-criteria" name="criteria" rows={4} placeholder={"Chi phí | 3\nTác động | 5\nKhả thi | 4"} />
             <button type="submit" className={styles.primaryButton}>Tạo đề xuất <span>→</span></button>
-          </form>
-          {!canManage && <p className={styles.permissionNote}>Thành viên có thể đề xuất và biểu quyết. Chỉ Owner/Admin được mở biểu quyết và chốt quyết định.</p>}
+          </form>}
+          {!canScore && <p className={styles.permissionNote}>Vai trò Viewer chỉ có thể xem đề xuất và kết quả; hãy nhờ Owner/Admin thay đổi quyền nếu cần tham gia.</p>}
         </aside>
       </section>
     </main>

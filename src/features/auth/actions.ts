@@ -127,7 +127,7 @@ export async function signUp(formData: FormData): Promise<void> {
       RATE_CHECK_UNAVAILABLE: "server-error",
       ACCOUNT_CREATION_FAILED: "server-error",
     };
-    redirect(\`/signup?error=\${errorByCode[rejectionCode] ?? "server-error"}\`);
+    redirect("/signup?error=" + (errorByCode[rejectionCode] ?? "server-error"));
   }
 
   // The Edge Function creates the member with email_confirm=true. This keeps

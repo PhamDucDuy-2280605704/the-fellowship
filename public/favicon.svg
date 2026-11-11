@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>The Fellowship</title>
+  <rect width="64" height="64" rx="15" fill="#0b100d"/>
+  <circle cx="32" cy="32" r="23" fill="none" stroke="#d6b477" stroke-width="2.2"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#d6b477" stroke-opacity=".38" stroke-width="1" stroke-dasharray="1.5 3"/>
+  <path d="M32 5.5 35 13l-3 3-3-3 3-7.5ZM58.5 32 51 35l-3-3 3-3 7.5 3ZM32 58.5 29 51l3-3 3 3-3 7.5ZM5.5 32 13 29l3 3-3 3-7.5-3Z" fill="#d6b477"/>
+  <path d="m32 17 5.2 10.8L47 32l-9.8 4.2L32 47l-5.2-10.8L17 32l9.8-4.2L32 17Z" fill="none" stroke="#f3efe3" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="m32 23 3.8 9-3.8 9-3.8-9 3.8-9Z" fill="#d6b477"/>
+  <circle cx="32" cy="32" r="2.1" fill="#f3efe3"/>
+</svg>

@@ -3,25 +3,32 @@ import { NextRequest, NextResponse } from "next/server";
 import type { Database } from "@/types/database";
 import { getSupabasePublicEnvIfConfigured } from "@/lib/supabase/env";
 
-const PRIVATE_ADMIN_PREFIX = "/the-stewards-hall";
+// Public URLs are intentionally different from the internal Next.js route paths.
+// Public:   /the-stewards-hall              -> internal: /admin
+// Public:   /the-stewards-hall/login        -> internal: /steward-login
+// Direct requests to /admin are hidden and return 404.
+const PUBLIC_ADMIN_PREFIX = "/the-stewards-hall";
 const INTERNAL_ADMIN_PREFIX = "/admin";
+const PUBLIC_ADMIN_LOGIN_PATH = `${PUBLIC_ADMIN_PREFIX}/login`;
+const INTERNAL_ADMIN_LOGIN_PATH = "/steward-login";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Internal implementation routes must not be used as public entry points.
   if (pathname === INTERNAL_ADMIN_PREFIX || pathname.startsWith(`${INTERNAL_ADMIN_PREFIX}/`)) {
     return new NextResponse(null, { status: 404 });
   }
 
   const isPrivateAdminPath =
-    pathname === PRIVATE_ADMIN_PREFIX || pathname.startsWith(`${PRIVATE_ADMIN_PREFIX}/`);
+    pathname === PUBLIC_ADMIN_PREFIX || pathname.startsWith(`${PUBLIC_ADMIN_PREFIX}/`);
   const destination = isPrivateAdminPath ? request.nextUrl.clone() : null;
 
   if (destination) {
     destination.pathname =
-      pathname === `${PRIVATE_ADMIN_PREFIX}/login`
-        ? "/steward-login"
-        : pathname.replace(PRIVATE_ADMIN_PREFIX, INTERNAL_ADMIN_PREFIX) || INTERNAL_ADMIN_PREFIX;
+      pathname === PUBLIC_ADMIN_LOGIN_PATH
+        ? INTERNAL_ADMIN_LOGIN_PATH
+        : `${INTERNAL_ADMIN_PREFIX}${pathname.slice(PUBLIC_ADMIN_PREFIX.length)}` || INTERNAL_ADMIN_PREFIX;
   }
 
   const createResponse = () => {

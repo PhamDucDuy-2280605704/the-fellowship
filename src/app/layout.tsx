@@ -25,17 +25,26 @@ export const metadata: Metadata = {
   },
   description:
     "Không gian cộng tác để một nhóm cùng theo đuổi mục tiêu, hoàn thành công việc và lưu giữ tri thức.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any", type: "image/x-icon" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#10130f",
+  themeColor: "#0b100d",
   colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="vi" data-scroll-behavior="smooth"><head />
+    <html lang="vi" data-scroll-behavior="smooth">
+      <head />
       <body className={`${bodyFont.variable} ${displayFont.variable}`}>{children}</body>
     </html>
   );

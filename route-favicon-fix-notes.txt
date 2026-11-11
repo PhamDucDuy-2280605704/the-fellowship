@@ -1,0 +1,30 @@
+THE FELLOWSHIP — ROUTE + FAVICON FIX
+
+Files in this package:
+1) src/app/layout.tsx              Updated full file: adds favicon metadata.
+2) src/proxy.ts                    Updated full file: makes public/internal admin route mapping explicit; authorization behavior is unchanged.
+3) public/favicon.svg              New vector favicon.
+4) public/favicon.ico              New multi-size legacy/browser favicon.
+5) public/apple-touch-icon.png     New 180x180 Apple touch icon.
+6) README.md                       Updated full file: documents the actual public Admin URLs.
+
+PUBLIC ADMIN URLS (production host):
+- https://the-fellowship-zeta.vercel.app/the-stewards-hall
+- https://the-fellowship-zeta.vercel.app/the-stewards-hall/login
+- https://the-fellowship-zeta.vercel.app/the-stewards-hall/accounts
+- https://the-fellowship-zeta.vercel.app/the-stewards-hall/workspaces
+
+INTERNAL ROUTES (do not share as public URLs):
+- /admin is the internal rewrite target for /the-stewards-hall and is intentionally blocked when requested directly.
+- /steward-login is the internal rewrite target for /the-stewards-hall/login.
+
+INSTALL:
+Copy the included paths into the project root, preserving folders, and overwrite the existing README.md, src/app/layout.tsx, and src/proxy.ts.
+Then run:
+  npm run lint
+  npm run typecheck
+  npm run build
+
+After deployment, open the website and refresh the favicon. Browsers can cache old/missing favicons; if the globe remains, hard-refresh the page or remove and re-add the bookmark after the new deployment is live.
+
+No Supabase schema, credentials, migrations, or role-granting logic are changed. Existing Platform Admin authorization checks remain in place.

@@ -59,23 +59,10 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
         <article><span>ARCHIVES</span><strong>{activeNoteCount}</strong><small>Ghi chú đang lưu giữ</small></article>
       </section>
 
-      <section className={styles.moduleLaunchGrid}>
-        <Link href={`/workspaces/${slug}/goals`} className={styles.moduleLaunchCard}>
-          <span className={styles.launchNumber}>01 / DIRECTION</span><b>Goals</b><p>Giữ cho cả nhóm nhìn về cùng một đích đến.</p><span className={styles.launchArrow}>↗</span>
-        </Link>
-        <Link href={`/workspaces/${slug}/quests`} className={styles.moduleLaunchCard}>
-          <span className={styles.launchNumber}>02 / EXECUTION</span><b>Quests</b><p>Chia nhỏ công việc, giao người thực hiện và cập nhật tiến độ.</p><span className={styles.launchArrow}>↗</span>
-        </Link>
-        <Link href={`/workspaces/${slug}/council`} className={styles.moduleLaunchCard}>
-          <span className={styles.launchNumber}>03 / DECISIONS</span><b>The Council</b><p>Đưa phương án ra bàn, biểu quyết và lưu lại lý do.</p><span className={styles.launchArrow}>↗</span>
-        </Link>
-        <Link href={`/workspaces/${slug}/archives`} className={styles.moduleLaunchCard}>
-          <span className={styles.launchNumber}>04 / KNOWLEDGE</span><b>The Archives</b><p>Ghi lại bài học, ngữ cảnh và tri thức có thể kế thừa.</p><span className={styles.launchArrow}>↗</span>
-        </Link>
-        <Link href={`/workspaces/${slug}/members`} className={styles.moduleLaunchCard}>
-          <span className={styles.launchNumber}>05 / THE COMPANY</span><b>Thành viên</b><p>Mời đồng đội và quản lý vai trò trong workspace.</p><span className={styles.launchArrow}>↗</span>
-        </Link>
-      </section>
+      <div className={styles.activityShortcut}>
+        <div><b>Nhật ký hoạt động</b><span>Theo dõi các thay đổi mới nhất trong workspace.</span></div>
+        <Link href={`/workspaces/${slug}/activity`}>Xem hoạt động <span aria-hidden="true">→</span></Link>
+      </div>
     </main>
   );
 }

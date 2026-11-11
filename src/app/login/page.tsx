@@ -14,7 +14,11 @@ type SearchParams = Promise<{ error?: string; notice?: string; next?: string }>;
 
 export default async function LoginPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
-  const errorMessage = params.error === "credentials"
+  const errorMessage = params.error === "wrong-portal"
+    ? "Tài khoản Admin không thể đăng nhập qua cổng thành viên. Hãy dùng cổng quản trị riêng."
+    : params.error === "role-check"
+      ? "Chưa xác minh được quyền tài khoản. Vui lòng thử lại."
+      : params.error === "credentials"
     ? "Email hoặc mật khẩu chưa chính xác."
     : params.error === "invalid-input"
       ? "Vui lòng nhập email hợp lệ và mật khẩu."
@@ -44,6 +48,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}
 
         <form action={signIn} className={styles.form}>
+          <input type="hidden" name="portal" value="member" />
           {(params.next === "/the-stewards-hall" || params.next?.startsWith("/the-stewards-hall/") || (params.next?.startsWith("/invite/") && !params.next.startsWith("//"))) ? <input type="hidden" name="next" value={params.next} /> : null}
           <label htmlFor="email">Email</label>
           <input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" placeholder="you@example.com" required />

@@ -435,12 +435,11 @@
 }
 
 
-/* Section-specific scenes: community gathering and the road ahead. */
+/* Keep the member card clean: remove the extra framed scene behind it. */
 .portals {
   position: relative;
-  isolation: isolate;
   padding: 30px clamp(14px, 3vw, 30px);
-  background: linear-gradient(rgba(8,12,9,.72), rgba(8,12,9,.84)), url("/images/backgrounds/lucid-origin_A_beautiful_medieval_fellowship_gathering_courtyard_inside_an_ancient_fortified_-0.jpg") center 48% / cover no-repeat;
+  background: none;
 }
 .journey {
   position: relative;

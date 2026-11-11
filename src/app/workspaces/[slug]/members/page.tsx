@@ -54,7 +54,7 @@ export default async function WorkspaceMembersPage({
   const siteUrl = (configuredSiteUrl || (deploymentHost ? `https://${deploymentHost}` : "http://localhost:3000")).replace(/\/+$/, "");
   const inviteUrl = query.invite ? new URL(`/invite/${query.invite}`, siteUrl).toString() : null;
 
-  const message = query.error === "invite-failed" ? "Không thể tạo lời mời. Kiểm tra vai trò của anh và thử lại."
+  const message = query.error === "invite-failed" ? "Không thể tạo lời mời. Kiểm tra vai trò của bạn và thử lại."
     : query.error === "invalid-invitation" ? "Thông tin lời mời chưa hợp lệ."
     : query.error === "role-update" ? "Không thể đổi vai trò thành viên."
     : query.error === "remove-failed" ? "Không thể gỡ thành viên. Owner không thể bị gỡ khỏi workspace."

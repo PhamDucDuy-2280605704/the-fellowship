@@ -68,6 +68,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
           Chưa có tài khoản? <Link href="/signup">Tạo tài khoản miễn phí</Link>
         </p>
       </section>
+      <Link className={styles.backLink} href="/" aria-label="Quay về trang chủ">
+        ← Về trang chủ
+      </Link>
     </main>
   );
 }

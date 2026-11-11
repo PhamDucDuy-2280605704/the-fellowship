@@ -59,7 +59,7 @@ export default async function AdminOverviewPage() {
       </div>
 
       <div className={styles.shortcuts}>
-        <Link className={styles.shortcut} href="/admin/accounts">
+        <Link className={styles.shortcut} href="/the-stewards-hall/accounts">
           <span className={styles.shortcutIcon}>♙</span>
           <span>
             <b>Quản lý tài khoản</b>
@@ -67,7 +67,7 @@ export default async function AdminOverviewPage() {
           </span>
           <span className={styles.arrow}>↗</span>
         </Link>
-        <Link className={styles.shortcut} href="/admin/workspaces">
+        <Link className={styles.shortcut} href="/the-stewards-hall/workspaces">
           <span className={styles.shortcutIcon}>⌂</span>
           <span>
             <b>Quản lý toàn bộ workspace</b>

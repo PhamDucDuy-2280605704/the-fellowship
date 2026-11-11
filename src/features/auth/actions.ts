@@ -61,9 +61,10 @@ export async function signIn(formData: FormData): Promise<void> {
     console.error("[auth.signin] Recovery PIN status check failed", {
       code: pinStatusError.code ?? "unknown",
     });
-  } else if (hasRecoveryPin !== true) {
-    redirect("/recovery-pin");
+    await supabase.auth.signOut();
+    redirect(portal === "admin" ? "/the-stewards-hall/login?error=pin-check" : "/login?error=pin-check");
   }
+  if (hasRecoveryPin !== true) redirect("/recovery-pin");
 
   redirect(safeNext || "/workspaces");
 }
@@ -113,7 +114,14 @@ export async function signUp(formData: FormData): Promise<void> {
   }
 
   const { data: hasRecoveryPin, error: pinStatusError } = await supabase.rpc("has_own_account_recovery_pin");
-  if (!pinStatusError && hasRecoveryPin !== true) redirect("/recovery-pin");
+  if (pinStatusError) {
+    console.error("[auth.signup] Recovery PIN status check failed", {
+      code: pinStatusError.code ?? "unknown",
+    });
+    await supabase.auth.signOut();
+    redirect("/login?error=pin-check");
+  }
+  if (hasRecoveryPin !== true) redirect("/recovery-pin");
   redirect(safeNext || "/workspaces");
 }
 

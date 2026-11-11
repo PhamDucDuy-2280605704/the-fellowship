@@ -15,7 +15,13 @@ export default async function StewardLoginPage({ searchParams }: { searchParams:
       ? "Chưa xác minh được quyền Admin. Hãy thử lại."
       : params.error === "credentials"
         ? "Email hoặc mật khẩu chưa chính xác."
-        : null;
+        : params.error === "suspended"
+          ? "Tài khoản quản trị hiện đang bị tạm khóa."
+          : params.error === "invalid-input"
+            ? "Vui lòng nhập email hợp lệ và mật khẩu."
+            : params.error === "pin-check"
+              ? "Chưa thể xác minh mã PIN bảo mật. Vui lòng thử lại."
+              : null;
   return <main className={`${styles.page} ${styles.adminLoginPage}`}>
     <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-5.png?v=758224346" fetchPriority="high" />
     <div className={styles.ambient} aria-hidden="true" />

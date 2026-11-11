@@ -20,9 +20,11 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
       ? "Mã PIN khôi phục phải gồm đúng 6 chữ số và hai lần nhập phải trùng nhau."
       : params.error === "invalid-input"
         ? "Vui lòng nhập tên từ 2 đến 80 ký tự và một địa chỉ email hợp lệ."
-        : params.error === "signup-failed"
-          ? "Chưa thể tạo tài khoản với thông tin này. Nếu đã có tài khoản, hãy đăng nhập."
-          : null;
+        : params.error === "rate-limit"
+          ? "Có quá nhiều yêu cầu đăng ký từ mạng này. Vui lòng chờ vài phút rồi thử lại."
+          : params.error === "signup-failed"
+            ? "Chưa thể tạo tài khoản với thông tin này. Nếu đã có tài khoản, hãy đăng nhập."
+            : null;
   const noticeMessage = params.notice === "check-email"
     ? "Tài khoản đã được ghi nhận. Nếu dự án vẫn yêu cầu xác nhận email, hãy hoàn tất bước đó trước khi đăng nhập."
     : null;

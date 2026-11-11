@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
-export async function requireActiveUser(options: { allowPlatformAdmin?: boolean } = {}) {
+export async function requireActiveUser(options: { allowPlatformAdmin?: boolean; allowMissingRecoveryPin?: boolean } = {}) {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
 
@@ -31,6 +31,15 @@ export async function requireActiveUser(options: { allowPlatformAdmin?: boolean 
     await supabase.auth.signOut();
     redirect("/login?error=role-check");
   }
+  if (!options.allowMissingRecoveryPin) {
+    const { data: hasRecoveryPin, error: pinStatusError } = await supabase.rpc("has_own_account_recovery_pin");
+    if (pinStatusError) {
+      await supabase.auth.signOut();
+      redirect(isPlatformAdmin === true ? "/the-stewards-hall/login?error=pin-check" : "/login?error=pin-check");
+    }
+    if (hasRecoveryPin !== true) redirect("/recovery-pin");
+  }
+
   if (isPlatformAdmin === true && !options.allowPlatformAdmin) redirect("/the-stewards-hall");
 
   return { supabase, user: data.user };

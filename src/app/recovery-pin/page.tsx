@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 type SearchParams = Promise<{ error?: string }>;
 
 export default async function RecoveryPinPage({ searchParams }: { searchParams: SearchParams }) {
-  await requireActiveUser();
+  await requireActiveUser({ allowPlatformAdmin: true, allowMissingRecoveryPin: true });
   const params = await searchParams;
   const errorMessage = params.error === "pin"
     ? "Mã PIN phải gồm đúng 6 chữ số và hai lần nhập phải trùng nhau."

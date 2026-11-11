@@ -1,0 +1,1 @@
+Ảnh nền riêng cho khu vực Steward/Admin. Tên file đề xuất: `background.webp`.

@@ -12,7 +12,9 @@ export function proxy(request: NextRequest) {
   }
 
   if (pathname === PRIVATE_ADMIN_PREFIX || pathname.startsWith(`${PRIVATE_ADMIN_PREFIX}/`)) {
-    const internalPath = pathname.replace(PRIVATE_ADMIN_PREFIX, INTERNAL_ADMIN_PREFIX) || INTERNAL_ADMIN_PREFIX;
+    const internalPath = pathname === `${PRIVATE_ADMIN_PREFIX}/login`
+      ? "/steward-login"
+      : pathname.replace(PRIVATE_ADMIN_PREFIX, INTERNAL_ADMIN_PREFIX) || INTERNAL_ADMIN_PREFIX;
     const destination = request.nextUrl.clone();
     destination.pathname = internalPath;
 

@@ -20,7 +20,6 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
           <Link href="/the-stewards-hall">Tổng quan</Link>
           <Link href="/the-stewards-hall/accounts">Tài khoản</Link>
           <Link href="/the-stewards-hall/workspaces">Workspaces</Link>
-          <Link href="/workspaces">Khu vực User ↗</Link>
         </nav>
         <div className={styles.account}>
           <span>{user.email}</span>

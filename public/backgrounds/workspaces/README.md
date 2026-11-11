@@ -1,0 +1,1 @@
+Ảnh nền riêng cho trang danh sách workspace. Tên file đề xuất: `background.webp`.

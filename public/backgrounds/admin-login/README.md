@@ -1,0 +1,1 @@
+Nền riêng trang đăng nhập Steward/Admin. Thêm `background.webp` vào thư mục này.

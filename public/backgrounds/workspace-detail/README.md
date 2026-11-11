@@ -1,0 +1,1 @@
+Ảnh nền riêng cho từng workspace và các trang con. Tên file đề xuất: `background.webp`.

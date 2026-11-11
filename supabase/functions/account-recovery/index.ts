@@ -73,16 +73,27 @@ Deno.serve(async (request: Request) => {
       const password = typeof body.password === "string" ? body.password : "";
       const displayName = readString(body.displayName, 80);
       const pin = readString(body.pin, 6);
-      if (!/^\\S+@\\S+\\.\\S+$/.test(email) || password.length < 6 || password.length > 128
-        || displayName.length < 2 || !/^\\d{6}$/.test(pin)) {
-        return json({ error: "SIGNUP_FAILED" }, 400);
+      if (!/^\S+@\S+\.\S+$/.test(email) || email.length > 254) {
+        return json({ error: "INVALID_EMAIL" }, 400);
+      }
+      if (password.length < 6 || password.length > 128) {
+        return json({ error: "INVALID_PASSWORD" }, 400);
+      }
+      if (displayName.length < 2 || displayName.length > 80) {
+        return json({ error: "INVALID_DISPLAY_NAME" }, 400);
+      }
+      if (!/^\d{6}$/.test(pin)) {
+        return json({ error: "INVALID_PIN" }, 400);
       }
 
       const { data: allowed, error: rateError } = await admin.rpc("allow_account_signup", {
         p_ip: requestIp(request),
       });
-      if (rateError || allowed !== true) {
-        if (rateError) console.error("[account-recovery] Signup rate check failed:", rateError.message);
+      if (rateError) {
+        console.error("[account-recovery] Signup rate check failed:", rateError.code ?? "unknown");
+        return json({ error: "RATE_CHECK_UNAVAILABLE" }, 503);
+      }
+      if (allowed !== true) {
         return json({ error: "SIGNUP_RATE_LIMITED" }, 429);
       }
 
@@ -97,11 +108,28 @@ Deno.serve(async (request: Request) => {
         },
       });
       if (createError) {
+        const code = createError.code ?? "unknown";
         console.error("[account-recovery] Member creation failed:", {
           status: createError.status ?? null,
-          code: createError.code ?? "unknown",
+          code,
         });
-        return json({ error: "SIGNUP_FAILED" }, 400);
+
+        if (code === "email_exists" || code === "user_already_exists") {
+          return json({ error: "EMAIL_ALREADY_REGISTERED" }, 409);
+        }
+        if (code === "email_address_invalid") {
+          return json({ error: "INVALID_EMAIL" }, 400);
+        }
+        if (code === "weak_password") {
+          return json({ error: "PASSWORD_POLICY_REJECTED" }, 400);
+        }
+        if (code === "signup_disabled" || code === "email_provider_disabled") {
+          return json({ error: "SIGNUP_DISABLED" }, 403);
+        }
+        if (code === "over_request_rate_limit" || code === "over_email_send_rate_limit") {
+          return json({ error: "AUTH_RATE_LIMITED" }, 429);
+        }
+        return json({ error: "ACCOUNT_CREATION_FAILED" }, 500);
       }
       return json({ ok: true });
     }

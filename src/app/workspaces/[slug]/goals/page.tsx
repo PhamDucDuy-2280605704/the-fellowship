@@ -29,7 +29,7 @@ export default async function GoalsPage({ params, searchParams }: { params: Para
   const canWrite = isPlatformAdmin || ["owner","admin","member"].includes(membership?.role ?? "");
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.bgStrategy}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

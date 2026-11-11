@@ -19,9 +19,10 @@ export async function signIn(formData: FormData): Promise<void> {
   const isSafeInviteReturn = requestedNext.startsWith("/invite/")
     && !requestedNext.startsWith("//")
     && !requestedNext.includes(String.fromCharCode(92));
-  const safeNext = requestedNext === "/the-stewards-hall" || isSafeInviteReturn
-    ? requestedNext
-    : null;
+  const isSafePrivateAdminReturn = (requestedNext === "/the-stewards-hall" || requestedNext.startsWith("/the-stewards-hall/"))
+    && !requestedNext.startsWith("//")
+    && !requestedNext.includes(String.fromCharCode(92));
+  const safeNext = isSafePrivateAdminReturn || isSafeInviteReturn ? requestedNext : null;
 
   if (!isValidEmail(email) || password.length < 1 || password.length > 128) {
     redirect("/login?error=invalid-input");

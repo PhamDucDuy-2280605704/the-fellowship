@@ -1,6 +1,6 @@
-# The Fellowship — game background image credits
+# The Fellowship — background image credits
 
-The application backgrounds now use promotional gameplay imagery published on the official **The Lord of the Rings Online** website. These are game visuals, not Peter Jackson film stills or real-world landscape photographs.
+The links below document source artwork references from an earlier background configuration. The application now serves its selected shared background locally from `public/images/backgrounds/fellowship.jpg`; those external image URLs are not requested at runtime.
 
 | App area | Game visual | Official source asset |
 |---|---|---|
@@ -15,4 +15,4 @@ The application backgrounds now use promotional gameplay imagery published on th
 
 Daybreak's Terms of Service describe permitted fan sites and apps, while reserving other intellectual-property rights. The permission is limited and revocable; if this project introduces paid subscriptions/access or other commercial use outside the stated fan-site allowances, obtain the required written licence first. Review the [current Daybreak Terms of Service](https://www.daybreakgames.com/terms-of-service?locale=en_GB) before changing the project's monetisation model.
 
-Images are loaded from the official LOTRO website CDN with dark overlays for text contrast. No film stills are used.
+The current shared background is stored locally at `public/images/backgrounds/fellowship.jpg`. Local hosting does not transfer ownership or remove any attribution or licensing obligations that may apply to the image.

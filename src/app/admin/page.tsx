@@ -1,3 +1,4 @@
+import { AppIcon } from "@/components/ui/icon";
 import Link from "next/link";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import styles from "./admin.module.css";
@@ -25,7 +26,6 @@ export default async function AdminOverviewPage() {
 
   return (
     <section className={`${styles.content} ${styles.adminDashboardPage}`}>
-      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-3.png?v=2732952715" fetchPriority="high" />
       <div className={styles.hero}>
         <div>
           <p className={styles.eyebrow}>THE STEWARD’S HALL · PRIVATE ADMINISTRATION</p>
@@ -61,20 +61,20 @@ export default async function AdminOverviewPage() {
 
       <div className={styles.shortcuts}>
         <Link className={styles.shortcut} href="/the-stewards-hall/accounts">
-          <span className={styles.shortcutIcon}>♙</span>
+          <span className={styles.shortcutIcon}><AppIcon name="users" /></span>
           <span>
             <b>Quản lý tài khoản</b>
             <small>Xem người dùng, trạng thái email và lần đăng nhập gần nhất; tạm khóa hoặc mở lại tài khoản.</small>
           </span>
-          <span className={styles.arrow}>↗</span>
+          <span className={styles.arrow}><AppIcon name="arrow-up-right" /></span>
         </Link>
         <Link className={styles.shortcut} href="/the-stewards-hall/workspaces">
-          <span className={styles.shortcutIcon}>⌂</span>
+          <span className={styles.shortcutIcon}><AppIcon name="layers" /></span>
           <span>
             <b>Quản lý toàn bộ workspace</b>
             <small>Xem người tạo, số thành viên, trạng thái và lưu trữ hoặc khôi phục workspace.</small>
           </span>
-          <span className={styles.arrow}>↗</span>
+          <span className={styles.arrow}><AppIcon name="arrow-up-right" /></span>
         </Link>
       </div>
 

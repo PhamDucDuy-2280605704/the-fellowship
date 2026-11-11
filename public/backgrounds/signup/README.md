@@ -1,1 +1,0 @@
-Nền riêng trang đăng ký thành viên. Thêm `background.webp` vào thư mục này.

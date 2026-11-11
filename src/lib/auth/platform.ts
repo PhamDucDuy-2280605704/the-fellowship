@@ -20,36 +20,42 @@ export async function requireActiveUser(options: { allowPlatformAdmin?: boolean;
       : "/login");
   }
 
-  const { data: isActive, error: statusError } = await supabase.rpc("is_platform_user_active");
-  if (statusError || !isActive) {
+  const pinStatusRequest = options.allowMissingRecoveryPin
+    ? Promise.resolve({ data: true, error: null })
+    : supabase.rpc("has_own_account_recovery_pin");
+  const [statusResult, roleResult, pinResult] = await Promise.all([
+    supabase.rpc("is_platform_user_active"),
+    supabase.rpc("is_platform_admin"),
+    pinStatusRequest,
+  ]);
+
+  if (statusResult.error || !statusResult.data) {
     await supabase.auth.signOut();
     redirect("/login?error=suspended");
   }
-
-  const { data: isPlatformAdmin, error: roleError } = await supabase.rpc("is_platform_admin");
-  if (roleError) {
+  if (roleResult.error) {
     await supabase.auth.signOut();
     redirect("/login?error=role-check");
   }
+  const isPlatformAdmin = roleResult.data === true;
+
   if (!options.allowMissingRecoveryPin) {
-    const { data: hasRecoveryPin, error: pinStatusError } = await supabase.rpc("has_own_account_recovery_pin");
-    if (pinStatusError) {
+    if (pinResult.error) {
       await supabase.auth.signOut();
-      redirect(isPlatformAdmin === true ? "/the-stewards-hall/login?error=pin-check" : "/login?error=pin-check");
+      redirect(isPlatformAdmin ? "/the-stewards-hall/login?error=pin-check" : "/login?error=pin-check");
     }
-    if (hasRecoveryPin !== true) redirect("/recovery-pin");
+    if (pinResult.data !== true) redirect("/recovery-pin");
   }
 
-  if (isPlatformAdmin === true && !options.allowPlatformAdmin) redirect("/the-stewards-hall");
+  if (isPlatformAdmin && !options.allowPlatformAdmin) redirect("/the-stewards-hall");
 
-  return { supabase, user: data.user };
+  return { supabase, user: data.user, isPlatformAdmin };
 }
 
 export async function requirePlatformAdmin() {
   const session = await requireActiveUser({ allowPlatformAdmin: true });
-  const { data: isAdmin, error } = await session.supabase.rpc("is_platform_admin");
 
-  if (error || !isAdmin) {
+  if (!session.isPlatformAdmin) {
     await session.supabase.auth.signOut();
     redirect("/login?error=wrong-portal");
   }

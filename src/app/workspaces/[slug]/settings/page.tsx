@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
-import { WorkspaceNav } from "@/components/workspace-nav";
+import { WorkspaceNav } from "@/components/navigation/workspace-nav";
 import { leaveWorkspace } from "@/features/workspaces/member-actions";
 import { updateWorkspaceDetails } from "@/features/workspaces/settings-actions";
 import styles from "../../../workspaces.module.css";
@@ -14,11 +14,8 @@ type SearchParams = Promise<{ notice?: string; error?: string }>;
 export default async function WorkspaceSettingsPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
-  const [{ data: workspace }, { data: isPlatformAdmin }] = await Promise.all([
-    supabase.from("workspaces").select("id,name,slug,description,created_at").eq("slug",slug).maybeSingle(),
-    supabase.rpc("is_platform_admin"),
-  ]);
+  const { supabase, user, isPlatformAdmin } = await requireActiveUser({ allowPlatformAdmin: true });
+  const { data: workspace } = await supabase.from("workspaces").select("id,name,slug,description,created_at").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 
   const { data: membership } = await supabase.from("workspace_members")

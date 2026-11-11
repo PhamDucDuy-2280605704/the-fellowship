@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
-import { WorkspaceNav } from "@/components/workspace-nav";
+import { WorkspaceNav } from "@/components/navigation/workspace-nav";
 import styles from "../../../workspaces.module.css";
 
 export const dynamic = "force-dynamic";
@@ -13,11 +13,8 @@ const actionLabels: Record<string,string> = { created: "đã tạo", updated: "�
 
 export default async function WorkspaceActivityPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
-  const [{ data: workspace }, { data: isPlatformAdmin }] = await Promise.all([
-    supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle(),
-    supabase.rpc("is_platform_admin"),
-  ]);
+  const { supabase, user, isPlatformAdmin } = await requireActiveUser({ allowPlatformAdmin: true });
+  const { data: workspace } = await supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 
   const [membershipResult, activityResult] = await Promise.all([

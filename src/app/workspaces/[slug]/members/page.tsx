@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
-import { WorkspaceNav } from "@/components/workspace-nav";
-import { CopyLinkButton } from "@/components/copy-link-button";
+import { WorkspaceNav } from "@/components/navigation/workspace-nav";
+import { CopyLinkButton } from "@/components/ui/copy-link-button";
 import {
   createWorkspaceInvitation,
   leaveWorkspace,
@@ -27,9 +27,7 @@ export default async function WorkspaceMembersPage({
 }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
-  const { data: isPlatformAdmin } = await supabase.rpc("is_platform_admin");
-
+  const { supabase, user, isPlatformAdmin } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data: workspace } = await supabase
     .from("workspaces")
     .select("id,name,slug")

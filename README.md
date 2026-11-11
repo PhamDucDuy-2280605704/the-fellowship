@@ -66,6 +66,19 @@ Weighted criteria, score aggregation, anonymous voting, voting schedules, and fo
 - `@supabase/ssr` for cookie-based Next.js sessions
 - GitHub Actions for dependency audit, lint, typecheck, unit tests, production build, and route smoke tests
 
+## Source and asset layout
+
+- `src/app`: Next.js routes, route handlers, and route-specific styles.
+- `src/components/navigation`: shared navigation patterns.
+- `src/components/ui`: reusable icons and interface components.
+- `src/features/<domain>`: domain-specific server actions and workflows.
+- `src/lib/auth`, `src/lib/domain`, `src/lib/supabase`: authentication, domain utilities, and data clients.
+- `public/images/backgrounds`: locally served shared background artwork.
+- `supabase/migrations` and `supabase/functions`: database migrations and Edge Functions.
+- `docs`: product, architecture, access-control, and onboarding documentation.
+
+Keep route files in `src/app`; move reusable interface code into `src/components` and business workflows into the matching `src/features` domain.
+
 ## Supabase environment
 
 Dedicated Supabase Free project:

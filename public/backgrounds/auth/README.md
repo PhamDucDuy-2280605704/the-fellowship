@@ -1,1 +1,0 @@
-Ảnh nền riêng cho các trang đăng nhập, đăng ký và khôi phục tài khoản. Tên file đề xuất: `background.webp`.

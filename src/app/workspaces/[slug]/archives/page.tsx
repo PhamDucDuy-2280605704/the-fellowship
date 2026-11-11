@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
-import { WorkspaceNav } from "@/components/workspace-nav";
-import { MarkdownContent } from "@/components/markdown-content";
+import { WorkspaceNav } from "@/components/navigation/workspace-nav";
+import { MarkdownContent } from "@/components/ui/markdown-content";
 import { archiveNote, createNote, updateNote } from "@/features/archives/actions";
 import styles from "../../../workspaces.module.css";
 
@@ -16,11 +16,8 @@ export default async function ArchivesPage({ params, searchParams }: { params: P
   const query = await searchParams;
   const searchTerm = (query.q ?? "").trim().slice(0, 120);
   const tagFilter = (query.tag ?? "").trim().toLocaleLowerCase("vi").slice(0, 32);
-  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
-  const [{ data: workspace }, { data: isPlatformAdmin }] = await Promise.all([
-    supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle(),
-    supabase.rpc("is_platform_admin"),
-  ]);
+  const { supabase, user, isPlatformAdmin } = await requireActiveUser({ allowPlatformAdmin: true });
+  const { data: workspace } = await supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 
   const [membershipResult, notesQuery, goalsResult, questsResult, proposalsResult] = await Promise.all([

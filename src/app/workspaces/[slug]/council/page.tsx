@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
-import { WorkspaceNav } from "@/components/workspace-nav";
-import { LocalDateTimeOffset } from "@/components/local-datetime-offset";
+import { WorkspaceNav } from "@/components/navigation/workspace-nav";
+import { LocalDateTimeOffset } from "@/components/ui/local-datetime-offset";
 import {
   castProposalVote,
   createProposal,
@@ -22,11 +22,8 @@ const statusLabels: Record<string,string> = { draft: "Bản nháp", voting: "Đa
 export default async function CouncilPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
-  const [{ data: workspace }, { data: isPlatformAdmin }] = await Promise.all([
-    supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle(),
-    supabase.rpc("is_platform_admin"),
-  ]);
+  const { supabase, user, isPlatformAdmin } = await requireActiveUser({ allowPlatformAdmin: true });
+  const { data: workspace } = await supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 
   const [membershipResult, proposalsResult, optionsResult, votesResult, decisionsResult, criteriaResult, scoresResult] = await Promise.all([

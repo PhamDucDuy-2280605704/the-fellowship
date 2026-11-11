@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
-import { WorkspaceNav } from "@/components/workspace-nav";
+import { WorkspaceNav } from "@/components/navigation/workspace-nav";
 import { createGoal, updateGoalStatus } from "@/features/goals/actions";
 import styles from "../../../workspaces.module.css";
 
@@ -17,14 +17,13 @@ const statusLabels: Record<string,string> = {
 export default async function GoalsPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
+  const { supabase, user, isPlatformAdmin } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data: workspace } = await supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 
-  const [{ data: membership }, { data: goals, error }, { data: isPlatformAdmin }] = await Promise.all([
+  const [{ data: membership }, { data: goals, error }] = await Promise.all([
     supabase.from("workspace_members").select("role").eq("workspace_id",workspace.id).eq("user_id",user.id).eq("status","active").maybeSingle(),
     supabase.from("goals").select("id,title,description,status,target_date,created_at,created_by").eq("workspace_id",workspace.id).order("created_at",{ascending:false}),
-    supabase.rpc("is_platform_admin"),
   ]);
   if (!membership && !isPlatformAdmin) notFound();
   const canWrite = isPlatformAdmin || ["owner","admin","member"].includes(membership?.role ?? "");

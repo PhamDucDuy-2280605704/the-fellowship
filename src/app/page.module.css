@@ -1,5 +1,5 @@
 .page{--gold:#d9b777;--bright:#f2d49a;--ink:#f3ead6;position:relative;isolation:isolate;display:flex;min-height:100svh;flex-direction:column;overflow:hidden;padding:0 clamp(22px,4.8vw,82px);color:var(--ink);background:#10130f}
-.backdrop{position:fixed;z-index:-3;inset:-18px;background-image:url("/images/1.jpg");background-position:center 47%;background-size:cover;filter:none;transform:none;pointer-events:none}
+.backdrop{position:fixed;z-index:-3;inset:-18px;background-image:url("/images/backgrounds/fellowship.jpg");background-position:center 47%;background-size:cover;filter:none;transform:none;pointer-events:none}
 .backdrop:before,.backdrop:after{position:absolute;content:"";inset:0;pointer-events:none}
 .backdrop:before{background:linear-gradient(90deg,rgba(7,9,8,.58),rgba(10,11,10,.2) 28%,rgba(8,10,9,.2) 70%,rgba(7,9,8,.35)),linear-gradient(180deg,rgba(6,8,8,.5),transparent 23%,rgba(6,8,7,.13) 65%,rgba(6,8,7,.65))}
 .backdrop:after{background:radial-gradient(ellipse at 50% 42%,rgba(19,19,15,.1),rgba(8,10,8,.42) 76%)}

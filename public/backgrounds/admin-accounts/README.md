@@ -1,1 +1,0 @@
-Nền riêng trang quản lý tài khoản quản trị. Thêm `background.webp` vào thư mục này.

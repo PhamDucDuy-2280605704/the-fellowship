@@ -23,7 +23,6 @@ export default async function AdminWorkspacesPage({ searchParams }: { searchPara
 
   return (
     <section className={`${styles.content} ${styles.adminWorkspacesPage}`}>
-      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-6.png?v=255186907" fetchPriority="high" />
       <div className={styles.pageHeading}>
         <div>
           <p className={styles.eyebrow}>ALL SHARED SPACES</p>

@@ -1,1 +1,0 @@
-Trang chủ Fellowship. Đặt ảnh nền tối ưu web tại đây với tên `background.webp` (khuyến nghị WebP/AVIF, chiều ngang 1920–2560 px, dung lượng dưới 800 KB). CSS sẽ dùng ảnh này làm nền; khi chưa có ảnh sẽ hiển thị nền màu dự phòng.

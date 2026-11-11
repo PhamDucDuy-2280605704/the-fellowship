@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
-import { WorkspaceNav } from "@/components/workspace-nav";
+import { WorkspaceNav } from "@/components/navigation/workspace-nav";
 import {
   addQuestCheckIn,
   addQuestDependency,
@@ -25,13 +25,12 @@ const priorityLabels: Record<string,string> = { low: "Thấp", medium: "Vừa", 
 export default async function QuestsPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
+  const { supabase, user, isPlatformAdmin } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data: workspace } = await supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 
-  const [membershipResult, adminResult, goalsResult, questsResult, membersResult, assigneesResult, depsResult, checksResult] = await Promise.all([
+  const [membershipResult, goalsResult, questsResult, membersResult, assigneesResult, depsResult, checksResult] = await Promise.all([
     supabase.from("workspace_members").select("role").eq("workspace_id",workspace.id).eq("user_id",user.id).eq("status","active").maybeSingle(),
-    supabase.rpc("is_platform_admin"),
     supabase.from("goals").select("id,title").eq("workspace_id",workspace.id).neq("status","archived").order("created_at",{ascending:false}),
     supabase.from("quests").select("id,title,description,goal_id,status,priority,due_date,created_at").eq("workspace_id",workspace.id).order("created_at",{ascending:false}),
     supabase.rpc("list_workspace_members",{p_workspace_id:workspace.id}),
@@ -40,7 +39,6 @@ export default async function QuestsPage({ params, searchParams }: { params: Par
     supabase.from("quest_check_ins").select("id,quest_id,content,progress,created_at,created_by").eq("workspace_id",workspace.id).order("created_at",{ascending:false}).limit(30),
   ]);
   const membership = membershipResult.data;
-  const isPlatformAdmin = adminResult.data === true;
   if (!membership && !isPlatformAdmin) notFound();
   const canWrite = isPlatformAdmin || ["owner","admin","member"].includes(membership?.role ?? "");
   const goals = goalsResult.data ?? [];

@@ -43,7 +43,6 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
 
   return (
     <main className={styles.page}>
-      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-2.png?v=3504918561" fetchPriority="high" />
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

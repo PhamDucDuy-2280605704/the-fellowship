@@ -350,3 +350,48 @@
 @media (prefers-reduced-motion: reduce) {
   .portalCard { backdrop-filter: none; }
 }
+
+
+/* Responsive header and page overflow fixes */
+.headerActions { min-width: max-content; flex-shrink: 0; }
+.headerLogin {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 104px;
+  padding-right: 16px;
+  padding-left: 16px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+.navigation { gap: clamp(20px, 2.6vw, 40px); }
+.navigation a { flex: 0 0 auto; white-space: nowrap; }
+.navigation a svg { width: 17px; height: 17px; flex: 0 0 17px; }
+.page { min-height: 100svh; overflow-x: clip; overflow-y: visible; }
+
+@media (max-width: 1050px) {
+  .header { min-width: 0; }
+  .headerActions { grid-column: 2; grid-row: 1; }
+  .navigation { min-width: 0; gap: clamp(18px, 3vw, 28px); }
+}
+@media (max-width: 700px) {
+  .page { min-height: 100svh; overflow-x: clip; overflow-y: visible; }
+  .header { grid-template-columns: minmax(0, 1fr) max-content; }
+  .brand { min-width: 0; }
+  .headerActions { min-width: max-content; gap: 8px; }
+  .headerLogin { min-width: 100px; min-height: 36px; padding: 0 14px; font-size: 14px; }
+  .navigation {
+    width: 100%; max-width: 100%; gap: 22px;
+    overflow-x: auto; overflow-y: hidden; padding-bottom: 12px;
+    scrollbar-width: none;
+  }
+  .navigation::-webkit-scrollbar { display: none; }
+  .navigation a { gap: 7px; font-size: 14px; }
+  .navigation a svg { width: 17px; height: 17px; }
+  .portals, .footer { flex-shrink: 0; }
+  .portalCard { height: auto; }
+}
+@media (max-width: 380px) {
+  .headerLogin { min-width: 96px; padding-right: 12px; padding-left: 12px; font-size: 13px; }
+  .navigation { gap: 18px; }
+}

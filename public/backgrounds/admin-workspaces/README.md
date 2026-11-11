@@ -1,0 +1,1 @@
+Nền riêng trang quản lý workspace quản trị. Thêm `background.webp` vào thư mục này.

@@ -31,7 +31,6 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
 
   return (
     <main className={`${styles.page} ${styles.signupPage}`}>
-      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-6.png?v=255186907" fetchPriority="high" />
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/">
         <span>✦</span> THE FELLOWSHIP

@@ -20,7 +20,7 @@
   position: fixed;
   z-index: -2;
   inset: -16px;
-  background-image: linear-gradient(180deg, rgba(8,11,9,.5), rgba(8,10,9,.68)), url("/images/fellowship-reference-bg.webp");
+  background-image: linear-gradient(180deg, rgba(8,11,9,.5), rgba(8,10,9,.68)), url("/images/1.jpg");
   background-position: center 47%;
   background-size: cover;
   content: "";

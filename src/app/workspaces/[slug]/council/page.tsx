@@ -62,7 +62,7 @@ export default async function CouncilPage({ params, searchParams }: { params: Pa
     : query.error ? "Không thể lưu thay đổi. Kiểm tra vai trò và thông tin đã nhập." : null;
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.bgCouncil}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

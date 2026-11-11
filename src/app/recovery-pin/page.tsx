@@ -25,7 +25,6 @@ export default async function RecoveryPinPage({ searchParams }: { searchParams: 
 
   return (
     <main className={`${styles.page} ${styles.recoveryPinPage}`}>
-      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-3.png?v=2732952715" fetchPriority="high" />
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/"><span>✦</span> THE FELLOWSHIP</Link>
       <section className={styles.card}>

@@ -27,7 +27,7 @@ export default async function AdminWorkspacesPage({ searchParams }: { searchPara
         <div>
           <p className={styles.eyebrow}>ALL SHARED SPACES</p>
           <h1>Toàn bộ workspace.</h1>
-          <p>Quan sát mọi không gian do người dùng tạo, kể cả những workspace anh không trực tiếp tham gia.</p>
+          <p>Quan sát mọi không gian do người dùng tạo, kể cả những workspace quản trị viên không trực tiếp tham gia.</p>
         </div>
         <span className={styles.counter}>{workspaces?.length ?? 0} WORKSPACES</span>
       </div>
@@ -77,12 +77,12 @@ export default async function AdminWorkspacesPage({ searchParams }: { searchPara
               </tr>
             ))}
             {(!workspaces || workspaces.length === 0) && (
-              <tr><td colSpan={6} className={styles.emptyCell}>Chưa có workspace nào. Người dùng có thể tự tạo workspace trong khu vực User.</td></tr>
+              <tr><td colSpan={6} className={styles.emptyCell}>Chưa có workspace nào. Người dùng có thể tự tạo workspace trong khu vực làm việc.</td></tr>
             )}
           </tbody>
         </table>
       </div>
-      <p className={styles.footnote}>Lưu trữ không xóa dữ liệu. Anh có thể khôi phục workspace bất cứ lúc nào.</p>
+      <p className={styles.footnote}>Lưu trữ không xóa dữ liệu. Bạn có thể khôi phục workspace bất cứ lúc nào.</p>
     </section>
   );
 }

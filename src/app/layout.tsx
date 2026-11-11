@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Be_Vietnam_Pro, Cormorant_Garamond } from "next/font/google";
+import { Be_Vietnam_Pro, Noto_Serif } from "next/font/google";
 import "./globals.css";
 
 const bodyFont = Be_Vietnam_Pro({
@@ -10,7 +10,7 @@ const bodyFont = Be_Vietnam_Pro({
   display: "swap",
 });
 
-const displayFont = Cormorant_Garamond({
+const displayFont = Noto_Serif({
   subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],

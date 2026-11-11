@@ -49,3 +49,211 @@
 @media(max-width:700px){.page{min-height:100svh;overflow:hidden;padding:0 17px}.backdrop{background-position:53% center;filter:none}.header{min-height:68px;gap:12px}.brand{gap:8px;font-size:13px}.brand .compass{width:34px;height:34px}.navigation{gap:17px;overflow-x:auto;scrollbar-width:none}.navigation::-webkit-scrollbar{display:none}.navigation a{font-size:12px;white-space:nowrap}.headerActions>span{display:none}.headerLogin{min-height:34px;padding:0 12px;font-size:12px}.hero{padding:43px 0 18px}.heroKicker{gap:9px}.heroKicker span{width:32px}.heroKicker p{font-size: 12px;letter-spacing:.2em}.hero h1{margin-top:13px;font-size:clamp(48px,14vw,76px)}.tagline{max-width:340px;margin-top:10px;font-size:17px;line-height:1.35}.portals{grid-template-columns:1fr;gap:48px;width:min(100%,430px);margin-top:28px;padding-top:12px}.portalCard{min-height:316px;padding:62px 22px 18px}.cardDescription{min-height:auto}.highlights{max-width:310px}.journey{margin:24px auto 20px}.footer{flex-wrap:wrap;justify-content:center;padding:13px 0;text-align:center}.footerMessage{width:100%;justify-content:center;order:3}.footer>p{font-size:12px}}
 @media(max-width:380px){.page{padding:0 13px}.brand{font-size: 12px;letter-spacing:.07em}.brand .compass{width:29px;height:29px}.navigation{gap:14px}.hero{padding-top:34px}.portalCard{min-height:320px}.journey blockquote{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.atmosphere span{animation:none;display:none}.navigation a,.navigation a:after,.headerLogin,.portalCard,.portalButton{transition:none}}
+
+
+/* Readability and single-entry landing refinement */
+.page {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.navigation a,
+.headerLogin,
+.portalButton,
+.cardFootnote,
+.footerMessage {
+  font-family: var(--font-body), Arial, sans-serif;
+}
+.navigation a {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: .01em;
+  transition: color 120ms ease;
+}
+.headerLogin {
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.hero {
+  padding-top: clamp(38px, 5vh, 54px);
+  padding-bottom: 22px;
+}
+.hero h1 {
+  font-size: clamp(52px, 6.8vw, 92px);
+  letter-spacing: -.025em;
+  line-height: 1.04;
+}
+.heroKicker p {
+  font-size: 13px;
+  letter-spacing: .24em;
+}
+.tagline {
+  font-size: clamp(18px, 2.1vw, 25px);
+  line-height: 1.55;
+}
+.portals {
+  width: min(100%, 560px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  margin-top: 16px;
+  padding-top: 20px;
+}
+.portalCard {
+  width: 100%;
+  min-height: 370px;
+  padding: 72px clamp(24px, 4vw, 48px) 24px;
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+.portalCard:hover {
+  transform: translateY(-3px);
+}
+.cardEyebrow {
+  font-size: 13px;
+  letter-spacing: .18em;
+}
+.portalCard h2 {
+  font-size: clamp(30px, 3.1vw, 38px);
+  line-height: 1.16;
+}
+.cardDescription {
+  min-height: 0;
+  max-width: 430px;
+  margin: 12px 0 16px;
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+}
+.highlights {
+  max-width: 370px;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.highlights li {
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.portalButton {
+  width: min(100%, 340px);
+  min-height: 52px;
+  gap: 13px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+.cardFootnote {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.journey {
+  margin-top: 24px;
+  margin-bottom: 22px;
+}
+.journey blockquote {
+  font-size: 18px;
+}
+.journeyAuthor {
+  font-size: 13px;
+}
+.footerMessage {
+  font-size: 13px;
+}
+.footer > p {
+  font-size: 14px;
+}
+.headerLogin:hover {
+  transform: none;
+}
+@media (max-width: 1050px) {
+  .portals {
+    width: min(100%, 560px);
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .page {
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+  .navigation a {
+    font-size: 14px;
+  }
+  .hero {
+    padding-top: 35px;
+  }
+  .hero h1 {
+    font-size: clamp(43px, 12vw, 72px);
+    line-height: 1.08;
+  }
+  .heroKicker p {
+    font-size: 11px;
+    letter-spacing: .17em;
+  }
+  .tagline {
+    font-size: 17px;
+  }
+  .portals {
+    width: min(100%, 480px);
+    margin-top: 24px;
+    padding-top: 18px;
+  }
+  .portalCard {
+    min-height: 0;
+    padding: 64px 22px 22px;
+  }
+  .cardDescription {
+    font-size: 16px;
+  }
+  .highlights li {
+    font-size: 14px;
+  }
+  .portalButton {
+    min-height: 50px;
+    font-size: 15px;
+  }
+  .atmosphere {
+    display: none;
+  }
+  .footer {
+    gap: 9px;
+  }
+}
+@media (max-width: 420px) {
+  .page {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+  .header {
+    gap: 8px;
+  }
+  .brand {
+    gap: 7px;
+    font-size: 11px;
+    letter-spacing: .06em;
+  }
+  .brand .compass {
+    width: 30px;
+    height: 30px;
+  }
+  .headerActions {
+    gap: 8px;
+  }
+  .headerLogin {
+    min-height: 34px;
+    padding: 0 11px;
+    font-size: 13px;
+  }
+  .portalCard h2 {
+    font-size: 29px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portalCard,
+  .portalButton,
+  .headerLogin,
+  .navigation a,
+  .navigation a::after {
+    transition: none;
+  }
+}

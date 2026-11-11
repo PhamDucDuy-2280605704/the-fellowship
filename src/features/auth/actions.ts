@@ -16,7 +16,8 @@ export async function signIn(formData: FormData): Promise<void> {
   const email = readString(formData, "email").toLowerCase();
   const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
   const requestedNext = readString(formData, "next");
-  const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\")
+  const safeNext = requestedNext === "/the-stewards-hall"
+    || (requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\\\"))
     ? requestedNext
     : null;
 

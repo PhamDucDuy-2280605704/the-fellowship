@@ -28,7 +28,7 @@ export async function createGoal(formData: FormData): Promise<void> {
     target_date: targetDate,
     created_by: user.id,
   });
-  back(slug, error || !data ? "save" : undefined);
+  back(slug, error ? "save" : undefined);
 }
 
 export async function updateGoalStatus(formData: FormData): Promise<void> {
@@ -43,5 +43,5 @@ export async function updateGoalStatus(formData: FormData): Promise<void> {
     status,
     archived_at: status === "archived" ? new Date().toISOString() : null,
   }).eq("id", goalId).eq("workspace_id", workspaceId).select("id").maybeSingle();
-  back(slug, error ? "save" : undefined);
+  back(slug, error || !data ? "save" : undefined);
 }

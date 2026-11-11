@@ -34,7 +34,7 @@ export async function createQuest(formData: FormData): Promise<void> {
     due_date: dueDate,
     created_by: user.id,
   });
-  back(slug, error || !data ? "save" : undefined);
+  back(slug, error ? "save" : undefined);
 }
 
 export async function updateQuestStatus(formData: FormData): Promise<void> {
@@ -49,7 +49,7 @@ export async function updateQuestStatus(formData: FormData): Promise<void> {
     status,
     completed_at: status === "done" ? new Date().toISOString() : null,
   }).eq("id", questId).eq("workspace_id", workspaceId).select("id").maybeSingle();
-  back(slug, error ? "save" : undefined);
+  back(slug, error || !data ? "save" : undefined);
 }
 
 export async function assignQuest(formData: FormData): Promise<void> {

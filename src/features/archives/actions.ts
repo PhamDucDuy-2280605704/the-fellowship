@@ -71,7 +71,7 @@ export async function archiveNote(formData: FormData): Promise<void> {
   const shouldArchive = field(formData, "shouldArchive") === "true";
   if (!validId(workspaceId) || !validId(noteId)) back(slug, "invalid");
   const { supabase } = await requireActiveUser();
-  const { error } = await supabase.from("notes").update({
+  const { data, error } = await supabase.from("notes").update({
     archived_at: shouldArchive ? new Date().toISOString() : null,
   }).eq("id", noteId).eq("workspace_id", workspaceId);
   back(slug, error || !data ? "archive" : undefined);

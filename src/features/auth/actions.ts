@@ -80,11 +80,17 @@ export async function signUp(formData: FormData): Promise<void> {
   const recoveryPin = readString(formData, "recoveryPin");
   const recoveryPinConfirm = readString(formData, "recoveryPinConfirm");
 
-  if (displayName.length < 2 || displayName.length > 80 || !isValidEmail(email)) {
-    redirect("/signup?error=invalid-input");
+  if (displayName.length < 2 || displayName.length > 80) {
+    redirect("/signup?error=invalid-name");
   }
-  if (!/^\d{6}$/.test(recoveryPin) || recoveryPin !== recoveryPinConfirm) {
-    redirect("/signup?error=pin");
+  if (!isValidEmail(email)) {
+    redirect("/signup?error=invalid-email");
+  }
+  if (!/^\d{6}$/.test(recoveryPin)) {
+    redirect("/signup?error=pin-invalid");
+  }
+  if (recoveryPin !== recoveryPinConfirm) {
+    redirect("/signup?error=pin-mismatch");
   }
   if (password.length < 6 || password.length > 128) {
     redirect("/signup?error=password");
@@ -96,10 +102,32 @@ export async function signUp(formData: FormData): Promise<void> {
   });
 
   if (registrationError || registration?.ok !== true) {
-    console.error("[auth.signup] Member registration failed", {
-      status: registrationError?.context?.status ?? null,
+    let rejectionCode = typeof registration?.error === "string" ? registration.error : "";
+    const responseContext = registrationError?.context;
+    if (responseContext instanceof Response) {
+      const payload = await responseContext.clone().json().catch(() => null) as { error?: string } | null;
+      if (typeof payload?.error === "string") rejectionCode = payload.error;
+    }
+
+    console.error("[auth.signup] Member registration rejected", {
+      status: responseContext instanceof Response ? responseContext.status : null,
+      code: rejectionCode || "unknown",
     });
-    redirect(registrationError?.context?.status === 429 ? "/signup?error=rate-limit" : "/signup?error=signup-failed");
+
+    const errorByCode: Record<string, string> = {
+      INVALID_EMAIL: "invalid-email",
+      INVALID_PASSWORD: "password",
+      PASSWORD_POLICY_REJECTED: "password",
+      INVALID_DISPLAY_NAME: "invalid-name",
+      INVALID_PIN: "pin-invalid",
+      EMAIL_ALREADY_REGISTERED: "email-exists",
+      SIGNUP_RATE_LIMITED: "rate-limit",
+      AUTH_RATE_LIMITED: "rate-limit",
+      SIGNUP_DISABLED: "signup-disabled",
+      RATE_CHECK_UNAVAILABLE: "server-error",
+      ACCOUNT_CREATION_FAILED: "server-error",
+    };
+    redirect(\`/signup?error=\${errorByCode[rejectionCode] ?? "server-error"}\`);
   }
 
   // The Edge Function creates the member with email_confirm=true. This keeps

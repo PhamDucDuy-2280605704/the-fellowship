@@ -40,7 +40,6 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>
-          {isAdmin && <Link className={styles.quietButton} href="/admin">Admin Console</Link>}
           <span>{user.email}</span>
           <form action={signOut}><button type="submit" className={styles.quietButton}>Đăng xuất</button></form>
         </div>

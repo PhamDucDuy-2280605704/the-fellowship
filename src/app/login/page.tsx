@@ -44,7 +44,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
         {noticeMessage ? <p className={styles.notice} role="status">{noticeMessage}</p> : null}
 
         <form action={signIn} className={styles.form}>
-          {params.next?.startsWith("/invite/") && !params.next.startsWith("//") ? <input type="hidden" name="next" value={params.next} /> : null}
+          {(params.next === "/the-stewards-hall" || params.next?.startsWith("/the-stewards-hall/") || (params.next?.startsWith("/invite/") && !params.next.startsWith("//"))) ? <input type="hidden" name="next" value={params.next} /> : null}
           <label htmlFor="email">Email</label>
           <input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" placeholder="you@example.com" required />
           <label htmlFor="password">Mật khẩu</label>

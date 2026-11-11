@@ -28,7 +28,7 @@ export default async function AdminWorkspaceDetailPage({ params }: { params: Par
 
   return (
     <section className={styles.content}>
-      <p className={styles.eyebrow}><Link href="/admin/workspaces">ALL WORKSPACES</Link> · STEWARD’S HALL</p>
+      <p className={styles.eyebrow}><Link href="/the-stewards-hall/workspaces">ALL WORKSPACES</Link> · STEWARD’S HALL</p>
       <div className={styles.pageHeading}>
         <div>
           <h1>{workspace.name}</h1>

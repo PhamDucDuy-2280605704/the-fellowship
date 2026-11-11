@@ -18,7 +18,6 @@ type SearchParams = Promise<{ error?: string }>;
 export default async function WorkspacesPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
   const { supabase, user } = await requireActiveUser();
-  const { data: isAdmin } = await supabase.rpc("is_platform_admin");
 
   const { data: memberships, error: membershipsError } = await supabase
     .from("workspace_members")
@@ -47,7 +46,6 @@ export default async function WorkspacesPage({ searchParams }: { searchParams: S
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>
-          {isAdmin && <Link className={styles.quietButton} href="/admin">Admin Console</Link>}
           <Link className={styles.quietButton} href="/recovery-pin">Mã PIN bảo mật</Link>
           <span>{user.email}</span>
           <form action={signOut}>

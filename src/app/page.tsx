@@ -7,9 +7,6 @@ function Compass() {
 function Tree() {
   return <svg viewBox="0 0 64 72" aria-hidden="true"><path d="M32 67V36m0 13L21 39m11 4 12-13M32 36 22 25m10 8 10-13M32 27 26 15m6 12 8-13M32 20V8M22 67h20M17 71h30M32 8c-4 5-7 8-11 9m11-9c4 5 7 8 11 9" /></svg>;
 }
-function Crown() {
-  return <svg viewBox="0 0 72 64" aria-hidden="true"><path d="m7 17 15 13L35 8l13 22 17-13-7 31H14L7 17ZM14 54h44M18 60h36"/><circle cx="7" cy="15" r="3"/><circle cx="35" cy="6" r="3"/><circle cx="65" cy="15" r="3"/></svg>;
-}
 function People() {
   return <svg viewBox="0 0 72 64" aria-hidden="true"><circle cx="36" cy="18" r="9"/><circle cx="16" cy="24" r="7"/><circle cx="56" cy="24" r="7"/><path d="M19 54c0-12 7-20 17-20s17 8 17 20v3H19v-3ZM3 54c0-10 5-16 13-16 4 0 7 2 9 5M69 54c0-10-5-16-13-16-4 0-7 2-9 5"/></svg>;
 }
@@ -20,7 +17,7 @@ export default function HomePage() {
     <header className={styles.header}>
       <Link className={styles.brand} href="/" aria-label="The Fellowship"><Compass/><span>THE FELLOWSHIP</span></Link>
       <nav className={styles.navigation} aria-label="Điều hướng chính">
-        <Link href="#intro">Khám phá</Link><Link href="#portals">Cộng đồng</Link><Link href="#journey">Hành trình</Link><Link href="/login">Tính năng</Link>
+        <Link href="#intro">Khám phá</Link><Link href="#portals">Cộng đồng</Link><Link href="#journey">Hành trình</Link><Link href="/signup">Tham gia</Link>
       </nav>
       <div className={styles.headerActions}><span aria-hidden="true">✧</span><Link className={styles.headerLogin} href="/login">Đăng nhập</Link></div>
     </header>
@@ -39,15 +36,7 @@ export default function HomePage() {
         <Link className={styles.portalButton} href="/login"><People/><span>Đăng nhập Thành Viên</span><b>›</b></Link>
         <p className={styles.cardFootnote}>Chưa có tài khoản? <Link href="/signup">Tham gia Fellowship</Link></p>
       </article>
-      <article className={styles.portalCard}>
-        <div className={styles.cardSeal}><div className={styles.sealInner}><Crown/></div></div>
-        <p className={styles.cardEyebrow}>THE STEWARD’S HALL · ADMIN</p>
-        <h2>Cổng Quản Trị</h2>
-        <p className={styles.cardDescription}>Dành cho quản trị viên và người được ủy quyền điều hành The Fellowship.</p>
-        <ul className={styles.highlights}><li><span>✧</span>Quản lý hệ thống và tài khoản</li><li><span>✧</span>Điều phối workspace và thành viên</li><li><span>✧</span>Giám sát hoạt động nền tảng</li></ul>
-        <Link className={styles.portalButton} href="/admin"><Crown/><span>Đăng nhập Admin</span><b>›</b></Link>
-        <p className={styles.cardFootnote}>Quyền quản trị được xác minh an toàn ở máy chủ.</p>
-      </article>
+
     </section>
     <section className={styles.journey} id="journey" aria-label="Thông điệp hành trình">
       <span className={styles.journeyRule}/><span className={styles.journeyStar}>✥</span>

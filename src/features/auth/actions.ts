@@ -16,9 +16,13 @@ export async function signIn(formData: FormData): Promise<void> {
   const email = readString(formData, "email").toLowerCase();
   const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
   const requestedNext = readString(formData, "next");
-  const safeNext = requestedNext.startsWith("/invite/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\")
-    ? requestedNext
-    : null;
+  const isSafeInviteReturn = requestedNext.startsWith("/invite/")
+    && !requestedNext.startsWith("//")
+    && !requestedNext.includes(String.fromCharCode(92));
+  const isSafePrivateAdminReturn = (requestedNext === "/the-stewards-hall" || requestedNext.startsWith("/the-stewards-hall/"))
+    && !requestedNext.startsWith("//")
+    && !requestedNext.includes(String.fromCharCode(92));
+  const safeNext = isSafePrivateAdminReturn || isSafeInviteReturn ? requestedNext : null;
 
   if (!isValidEmail(email) || password.length < 1 || password.length > 128) {
     redirect("/login?error=invalid-input");

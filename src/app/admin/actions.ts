@@ -14,7 +14,7 @@ export async function setUserSuspension(formData: FormData): Promise<void> {
   const reason = field(formData, "reason");
 
   if (!/^[0-9a-f-]{36}$/i.test(userId) || (shouldSuspend && !reason) || reason.length > 500) {
-    redirect("/admin/accounts?error=invalid-input");
+    redirect("/the-stewards-hall/accounts?error=invalid-input");
   }
 
   const { supabase } = await requirePlatformAdmin();
@@ -25,10 +25,10 @@ export async function setUserSuspension(formData: FormData): Promise<void> {
   });
 
   if (error) {
-    redirect("/admin/accounts?error=update-failed");
+    redirect("/the-stewards-hall/accounts?error=update-failed");
   }
 
-  redirect(shouldSuspend ? "/admin/accounts?notice=suspended" : "/admin/accounts?notice=restored");
+  redirect(shouldSuspend ? "/the-stewards-hall/accounts?notice=suspended" : "/the-stewards-hall/accounts?notice=restored");
 }
 
 export async function setWorkspaceArchived(formData: FormData): Promise<void> {
@@ -36,7 +36,7 @@ export async function setWorkspaceArchived(formData: FormData): Promise<void> {
   const shouldArchive = field(formData, "shouldArchive") === "true";
 
   if (!/^[0-9a-f-]{36}$/i.test(workspaceId)) {
-    redirect("/admin/workspaces?error=invalid-input");
+    redirect("/the-stewards-hall/workspaces?error=invalid-input");
   }
 
   const { supabase } = await requirePlatformAdmin();
@@ -46,8 +46,8 @@ export async function setWorkspaceArchived(formData: FormData): Promise<void> {
   });
 
   if (error) {
-    redirect("/admin/workspaces?error=update-failed");
+    redirect("/the-stewards-hall/workspaces?error=update-failed");
   }
 
-  redirect(shouldArchive ? "/admin/workspaces?notice=archived" : "/admin/workspaces?notice=restored");
+  redirect(shouldArchive ? "/the-stewards-hall/workspaces?notice=archived" : "/the-stewards-hall/workspaces?notice=restored");
 }

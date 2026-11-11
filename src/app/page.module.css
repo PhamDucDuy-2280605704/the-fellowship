@@ -313,3 +313,40 @@
   .highlights li { font-size: 15px; }
   .portalButton { min-height: 52px; }
 }
+
+/* Landing page polish — keep the original Fellowship identity, improve hierarchy and depth. */
+.page { --gold: #dfbf82; --bright: #f4dba8; }
+.backdrop:before {
+  background:
+    linear-gradient(90deg, rgba(5,9,7,.72), rgba(8,11,9,.28) 48%, rgba(5,9,7,.56)),
+    linear-gradient(180deg, rgba(5,8,7,.62), rgba(5,8,7,.12) 34%, rgba(5,8,7,.72));
+}
+.header { min-height: 84px; border-color: rgba(223,191,130,.28); }
+.brand { font-size: 14px; letter-spacing: .14em; }
+.navigation { gap: clamp(14px, 2vw, 30px); }
+.navigation a { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+.navigation a svg { width: 15px; height: 15px; opacity: .78; }
+.hero { padding-top: clamp(48px, 7vh, 82px); padding-bottom: 30px; }
+.hero h1 { text-shadow: 0 5px 34px rgba(0,0,0,.7), 0 0 46px rgba(226,176,96,.22); }
+.tagline { max-width: 680px; }
+.portalCard {
+  border-radius: 8px 24px 8px 24px;
+  background: linear-gradient(145deg, rgba(19,25,20,.94), rgba(11,17,13,.91));
+  box-shadow: inset 0 0 0 1px rgba(234,198,137,.13), 0 24px 72px rgba(0,0,0,.42), 0 0 36px rgba(216,172,98,.09);
+  backdrop-filter: blur(10px) saturate(1.08);
+}
+.cardDescription { color: #d7d1c2; }
+.portalButton { border-radius: 7px 17px 7px 17px; font-weight: 600; }
+.headerLogin { border-radius: 7px 15px 7px 15px; }
+.journey blockquote { line-height: 1.6; }
+.footer { border-color: rgba(223,191,130,.25); }
+@media (max-width: 700px) {
+  .header { grid-template-columns: 1fr auto; }
+  .navigation { gap: 16px; padding-bottom: 12px; }
+  .navigation a { font-size: 13px; }
+  .hero { padding-top: 42px; }
+  .portalCard { backdrop-filter: blur(7px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portalCard { backdrop-filter: none; }
+}

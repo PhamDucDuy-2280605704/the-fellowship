@@ -33,7 +33,7 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
   const role = membership?.role ?? "platform admin";
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.bgFortress}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

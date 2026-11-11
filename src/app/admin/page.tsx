@@ -80,7 +80,7 @@ export default async function AdminOverviewPage() {
 
       <div className={styles.note}>
         <b>Ranh giới quyền hạn</b>
-        <p>Admin quản trị toàn nền tảng. User vẫn tự tạo và quản lý workspace của mình; quyền Owner/Admin bên trong workspace không thay thế quyền Admin nền tảng.</p>
+        <p>Admin quản trị toàn nền tảng. Người dùng vẫn tự tạo và quản lý workspace của mình; quyền Owner/Admin bên trong workspace không thay thế quyền Admin nền tảng.</p>
       </div>
     </section>
   );

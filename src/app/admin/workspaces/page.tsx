@@ -22,7 +22,8 @@ export default async function AdminWorkspacesPage({ searchParams }: { searchPara
   const { data: workspaces, error } = await supabase.rpc("admin_list_workspaces");
 
   return (
-    <section className={styles.content}>
+    <section className={`${styles.content} ${styles.adminWorkspacesPage}`}>
+      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-6.png?v=255186907" fetchPriority="high" />
       <div className={styles.pageHeading}>
         <div>
           <p className={styles.eyebrow}>ALL SHARED SPACES</p>

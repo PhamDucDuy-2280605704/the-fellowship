@@ -21,7 +21,8 @@ export default async function AdminAccountsPage({ searchParams }: { searchParams
   const { data: users, error } = await supabase.rpc("admin_list_users");
 
   return (
-    <section className={styles.content}>
+    <section className={`${styles.content} ${styles.adminAccountsPage}`}>
+      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-2.png?v=3504918561" fetchPriority="high" />
       <div className={styles.pageHeading}>
         <div>
           <p className={styles.eyebrow}>IDENTITIES & ACCESS</p>

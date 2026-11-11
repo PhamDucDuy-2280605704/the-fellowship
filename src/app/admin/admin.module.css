@@ -71,7 +71,7 @@
   font: inherit;
   font-size: 14px;
 }
-.content { padding: 62px 0 0; }
+.content { position: relative; isolation: isolate; padding: 62px 0 0; }
 .hero, .pageHeading {
   display: flex;
   align-items: end;
@@ -236,7 +236,7 @@
   position: fixed;
   z-index: -2;
   inset: 0;
-  background-image: linear-gradient(180deg, rgba(8,11,9,.56), rgba(8,10,9,.72)), url("https://www.lotro.com/images/about/feature-3.png?v=2732952715");
+  background-image: linear-gradient(180deg, rgba(8,11,9,.56), rgba(8,10,9,.72)), url("https://www.lotro.com/images/about/feature-3.png?v=2732952715"), url("/images/fellowship-reference-bg.webp");
   background-position: center 44%;
   background-size: cover;
   content: "";
@@ -247,3 +247,20 @@
 
 .workspaceLink { color: inherit; text-decoration: none; }
 .workspaceLink:hover b { color: var(--gold); }
+
+
+/* Route-specific Steward's Hall backdrops; local artwork remains visible while the remote image loads. */
+.content::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background-image: linear-gradient(180deg, rgba(8,11,9,.56), rgba(8,10,9,.76)), var(--admin-route-background, url("/images/fellowship-reference-bg.webp")), url("/images/fellowship-reference-bg.webp");
+  background-position: center 44%;
+  background-size: cover;
+  content: "";
+  pointer-events: none;
+}
+.adminDashboardPage { --admin-route-background: url("https://www.lotro.com/images/about/feature-3.png?v=2732952715"); }
+.adminAccountsPage { --admin-route-background: url("https://www.lotro.com/images/about/feature-2.png?v=3504918561"); }
+.adminWorkspacesPage { --admin-route-background: url("https://www.lotro.com/images/about/feature-6.png?v=255186907"); }
+.adminWorkspaceDetailPage { --admin-route-background: url("https://www.lotro.com/images/about/feature-1.png?v=602098898"); }

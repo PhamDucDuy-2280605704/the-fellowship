@@ -17,7 +17,6 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
           <b>ADMIN</b>
         </Link>
         <nav className={styles.nav} aria-label="Quản trị">
-          <Link href="/the-stewards-hall">Tổng quan</Link>
           <Link href="/the-stewards-hall/accounts">Tài khoản</Link>
           <Link href="/the-stewards-hall/workspaces">Workspaces</Link>
         </nav>

@@ -493,7 +493,7 @@
   position: fixed;
   z-index: -2;
   inset: 0;
-  background-image: linear-gradient(180deg, rgba(9,12,10,.34), rgba(8,10,9,.58)), url("/images/fellowship-reference-bg.webp");
+  background-image: linear-gradient(180deg, rgba(9,12,10,.34), rgba(8,10,9,.58)), var(--workspace-background, url("/images/fellowship-reference-bg.webp")), url("/images/fellowship-reference-bg.webp");
   background-position: center 46%;
   background-size: cover;
   content: "";
@@ -562,3 +562,15 @@
 .optionRow { grid-template-columns:minmax(0,1fr) auto; }
 .optionRow > form { grid-column:2; }
 .optionRow > .councilScoreGrid { grid-column:1/-1; }
+
+
+/* Distinct route artwork, with the compact local image as an immediate fallback. */
+.page:has(.contentGrid) { --workspace-background: url("https://www.lotro.com/images/about/feature-2.png?v=3504918561"); }
+.page:has(.workspaceStats) { --workspace-background: url("https://www.lotro.com/images/about/feature-3.png?v=2732952715"); }
+.page:has(.moduleNavActive[href$="/goals"]) { --workspace-background: url("https://www.lotro.com/images/about/feature-1.png?v=602098898"); }
+.page:has(.moduleNavActive[href$="/quests"]) { --workspace-background: url("https://www.lotro.com/images/about/feature-6.png?v=255186907"); }
+.page:has(.moduleNavActive[href$="/council"]) { --workspace-background: url("https://www.lotro.com/images/about/feature-5.png?v=758224346"); }
+.page:has(.moduleNavActive[href$="/archives"]) { --workspace-background: url("https://www.lotro.com/images/about/feature-2.png?v=3504918561"); }
+.page:has(.moduleNavActive[href$="/members"]) { --workspace-background: url("https://www.lotro.com/images/about/feature-3.png?v=2732952715"); }
+.page:has(.moduleNavActive[href$="/activity"]) { --workspace-background: url("https://www.lotro.com/images/about/feature-1.png?v=602098898"); }
+.page:has(.moduleNavActive[href$="/settings"]) { --workspace-background: url("https://www.lotro.com/images/about/feature-5.png?v=758224346"); }

@@ -1,5 +1,5 @@
 .page{--gold:#d9b777;--bright:#f2d49a;--ink:#f3ead6;position:relative;isolation:isolate;display:flex;min-height:100svh;flex-direction:column;overflow:hidden;padding:0 clamp(22px,4.8vw,82px);color:var(--ink);background:#10130f}
-.backdrop{position:fixed;z-index:-3;inset:-18px;background-image:url("https://www.lotro.com/images/about/feature-1.png?v=602098898");background-position:center 47%;background-size:cover;filter:none;transform:none;pointer-events:none}
+.backdrop{position:fixed;z-index:-3;inset:-18px;background-image:url("https://www.lotro.com/images/about/feature-1.png?v=602098898"),url("/images/fellowship-reference-bg.webp");background-position:center 47%;background-size:cover;filter:none;transform:none;pointer-events:none}
 .backdrop:before,.backdrop:after{position:absolute;content:"";inset:0;pointer-events:none}
 .backdrop:before{background:linear-gradient(90deg,rgba(7,9,8,.58),rgba(10,11,10,.2) 28%,rgba(8,10,9,.2) 70%,rgba(7,9,8,.35)),linear-gradient(180deg,rgba(6,8,8,.5),transparent 23%,rgba(6,8,7,.13) 65%,rgba(6,8,7,.65))}
 .backdrop:after{background:radial-gradient(ellipse at 50% 42%,rgba(19,19,15,.1),rgba(8,10,8,.42) 76%)}
@@ -22,7 +22,7 @@
 .heroKicker p{margin:0;color:#e9c887;font-size: 12px;letter-spacing:.3em;white-space:nowrap}
 .hero h1{margin:8px 0 0;color:#f5e5c5;font-family:var(--font-display),Georgia,serif;font-size:clamp(58px,7.6vw,106px);font-weight:400;letter-spacing:-.035em;line-height:.97;text-shadow:0 3px 20px rgba(0,0,0,.56),0 0 38px rgba(226,176,96,.23)}
 .tagline{margin:14px 0 0;color:#e6c58f;font-family:var(--font-display),Georgia,serif;font-size:clamp(17px,2vw,24px);font-style:italic;text-shadow:0 2px 15px rgba(0,0,0,.65)}
-.portals{display:grid;width:min(100%,960px);grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,64px);align-self:center;margin:17px auto 0;padding-top:22px}
+.portals{display:grid;width:min(100%,960px);grid-template-columns:minmax(0,520px);justify-content:center;gap:clamp(28px,4vw,64px);align-self:center;margin:17px auto 0;padding-top:22px}
 .portalCard{position:relative;display:flex;min-height:334px;flex-direction:column;align-items:center;padding:70px clamp(22px,3vw,42px) 20px;border:1px solid rgba(224,184,112,.72);border-radius:3px 22px 3px 22px;background:linear-gradient(145deg,rgba(20,22,18,.94),rgba(18,23,19,.91));box-shadow:inset 0 0 0 1px rgba(234,198,137,.15),inset 0 0 42px rgba(213,167,91,.075),0 16px 44px rgba(0,0,0,.32),0 0 25px rgba(216,172,98,.09);backdrop-filter:none;text-align:center;transition:transform 260ms ease,border-color 260ms ease,box-shadow 260ms ease}
 .portalCard:before,.portalCard:after{position:absolute;width:23px;height:23px;border-color:var(--bright);border-style:solid;content:"";opacity:.9;pointer-events:none}.portalCard:before{top:7px;left:7px;border-width:1px 0 0 1px}.portalCard:after{right:7px;bottom:7px;border-width:0 1px 1px 0}
 .portalCard:hover{transform:translateY(-7px);border-color:#f0cc8b;box-shadow:inset 0 0 0 1px rgba(234,198,137,.2),0 22px 55px rgba(0,0,0,.42),0 0 35px rgba(216,172,98,.18)}

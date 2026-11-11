@@ -24,7 +24,8 @@ export default async function AdminOverviewPage() {
   const archivedWorkspaces = workspaces.length - activeWorkspaces;
 
   return (
-    <section className={styles.content}>
+    <section className={`${styles.content} ${styles.adminDashboardPage}`}>
+      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-3.png?v=2732952715" fetchPriority="high" />
       <div className={styles.hero}>
         <div>
           <p className={styles.eyebrow}>THE STEWARD’S HALL · PRIVATE ADMINISTRATION</p>

@@ -35,7 +35,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="vi" data-scroll-behavior="smooth">
+    <html lang="vi" data-scroll-behavior="smooth"><head><link rel="preconnect" href="https://www.lotro.com" crossOrigin="anonymous" /></head>
       <body className={`${bodyFont.variable} ${displayFont.variable}`}>{children}</body>
     </html>
   );

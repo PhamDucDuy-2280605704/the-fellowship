@@ -29,6 +29,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
 
   return (
     <main className={`${styles.page} ${styles.signupPage}`}>
+      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-6.png?v=255186907" fetchPriority="high" />
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/">
         <span>✦</span> THE FELLOWSHIP
@@ -66,7 +67,6 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
           Đã có tài khoản? <Link href="/login">Đăng nhập</Link>
         </p>
       </section>
-      <Link className={styles.backLink} href="/">← Quay về trang giới thiệu</Link>
     </main>
   );
 }

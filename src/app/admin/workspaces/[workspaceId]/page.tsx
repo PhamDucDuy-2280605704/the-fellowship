@@ -27,7 +27,8 @@ export default async function AdminWorkspaceDetailPage({ params }: { params: Par
   const activeCount = (members ?? []).filter((member) => member.membership_status === "active").length;
 
   return (
-    <section className={styles.content}>
+    <section className={`${styles.content} ${styles.adminWorkspaceDetailPage}`}>
+      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-1.png?v=602098898" fetchPriority="high" />
       <p className={styles.eyebrow}><Link href="/the-stewards-hall/workspaces">ALL WORKSPACES</Link> · STEWARD’S HALL</p>
       <div className={styles.pageHeading}>
         <div>

@@ -661,3 +661,28 @@
 @media (max-width: 560px) {
   .activityShortcut { align-items: flex-start; flex-direction: column; }
 }
+
+
+/* Cinematic scene backgrounds for each Fellowship workspace area. */
+.page::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background-color: #10140f;
+  background-image: linear-gradient(180deg, rgba(8,12,9,.76), rgba(8,12,9,.68) 42%, rgba(8,12,9,.84)), var(--workspace-scene);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.bgWorkspace { --workspace-scene: url("/images/backgrounds/lucid-origin_A_cinematic_dark_medieval_fantasy_kingdom_inspired_by_the_atmospheric_world_of_T-0.jpg"); }
+.bgFortress { --workspace-scene: url("/images/backgrounds/lucid-origin_The_interior_of_a_powerful_ancient_medieval_fortress_keep_the_strategic_heart_of-0.jpg"); }
+.bgStrategy { --workspace-scene: url("/images/backgrounds/lucid-origin_An_ancient_medieval_war_council_chamber_inside_a_legendary_mountain_fortress._A_-0.jpg"); }
+.bgCouncil { --workspace-scene: url("/images/backgrounds/lucid-origin_A_majestic_ancient_medieval_council_chamber_within_a_legendary_stone_kingdom._A_-0.jpg"); }
+.bgLibrary { --workspace-scene: url("/images/backgrounds/lucid-origin_An_enormous_ancient_medieval_archive_hidden_deep_within_a_legendary_stone_fortre-0.jpg"); }
+.bgGathering { --workspace-scene: url("/images/backgrounds/lucid-origin_A_beautiful_medieval_fellowship_gathering_courtyard_inside_an_ancient_fortified_-0.jpg"); }
+.bgStudy { --workspace-scene: url("/images/backgrounds/lucid-origin_A_secluded_private_medieval_study_inside_an_ancient_stone_fortress_an_elegant_an-0.jpg"); }
+@media (max-width: 700px) {
+  .page::before { background-position: center; }
+}

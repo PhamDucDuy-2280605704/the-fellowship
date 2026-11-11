@@ -12,7 +12,6 @@ function People() {
 }
 export default function HomePage() {
   return <main className={styles.page}>
-    <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-1.png?v=602098898" fetchPriority="high" />
     <div className={styles.backdrop} aria-hidden="true"/>
     <div className={styles.atmosphere} aria-hidden="true">{[0,1,2,3,4,5].map(n=><span key={n}/>)}</div>
     <header className={styles.header}>

@@ -251,3 +251,35 @@
 
 .shortcutIcon svg { width: 20px; height: 20px; display: block; }
 .arrow svg { width: 18px; height: 18px; display: block; }
+
+/* Steward's Hall: align admin tables and dashboard with the shared visual system. */
+.shell { width: min(100% - 64px, 1280px); }
+.topbar { border-color: rgba(214,180,119,.24); }
+.nav a { border-radius: 7px 13px 7px 13px; }
+.nav a:hover { background: rgba(214,180,119,.07); }
+.metric, .shortcut, .note, .tableWrap {
+  border-radius: 8px 18px 8px 18px;
+  background-color: rgba(12,17,13,.72);
+}
+.metric { padding: 22px; }
+.metric strong { line-height: 1.1; }
+.shortcut { transition: transform 150ms ease, border-color 150ms ease, background 150ms ease; }
+.shortcut:hover { transform: translateY(-2px); }
+.tableWrap { overflow: auto; }
+.table { border-collapse: separate; border-spacing: 0; }
+.table th { background: rgba(201,168,106,.045); }
+.table td { line-height: 1.55; }
+.reasonInput { min-height: 40px; border-radius: 7px 13px 7px 13px; }
+.dangerButton, .restoreButton {
+  min-height: 36px;
+  border-radius: 7px 12px 7px 12px;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+.dangerButton:hover { background: rgba(190,112,92,.09); }
+.restoreButton:hover { background: rgba(120,165,111,.09); }
+@media (max-width: 700px) {
+  .shell { width: min(100% - 30px, 1280px); }
+  .metric { padding: 18px; }
+  .shortcut { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .shortcut { transition: none; } }

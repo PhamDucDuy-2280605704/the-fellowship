@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 export default function ForgotPasswordPage() {
   return (
     <main className={`${styles.page} ${styles.recoveryPage}`}>
-      <link rel="preload" as="image" href="https://www.lotro.com/images/about/feature-5.png?v=758224346" fetchPriority="high" />
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/"><span>✦</span> THE FELLOWSHIP</Link>
       <RecoveryForm />

@@ -24,6 +24,13 @@ export async function requireActiveUser() {
     redirect("/login?error=suspended");
   }
 
+  const { data: isPlatformAdmin, error: roleError } = await supabase.rpc("is_platform_admin");
+  if (roleError) {
+    await supabase.auth.signOut();
+    redirect("/login?error=role-check");
+  }
+  if (isPlatformAdmin === true) redirect("/the-stewards-hall");
+
   return { supabase, user: data.user };
 }
 
@@ -32,7 +39,8 @@ export async function requirePlatformAdmin() {
   const { data: isAdmin, error } = await session.supabase.rpc("is_platform_admin");
 
   if (error || !isAdmin) {
-    redirect("/workspaces");
+    await session.supabase.auth.signOut();
+    redirect("/login?error=wrong-portal");
   }
 
   return session;

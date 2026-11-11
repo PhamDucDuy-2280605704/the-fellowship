@@ -1,0 +1,1 @@
+Nền riêng trang quên mật khẩu và đặt lại mật khẩu. Thêm `background.webp` vào thư mục này.

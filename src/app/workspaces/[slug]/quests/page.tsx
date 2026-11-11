@@ -55,7 +55,7 @@ export default async function QuestsPage({ params, searchParams }: { params: Par
     : query.error ? "Không thể lưu thay đổi. Hãy kiểm tra dữ liệu và quyền truy cập." : null;
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.bgStrategy}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

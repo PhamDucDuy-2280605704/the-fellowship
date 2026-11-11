@@ -16,7 +16,7 @@ export default async function ArchivesPage({ params, searchParams }: { params: P
   const query = await searchParams;
   const searchTerm = (query.q ?? "").trim().slice(0, 120);
   const tagFilter = (query.tag ?? "").trim().toLocaleLowerCase("vi").slice(0, 32);
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const [{ data: workspace }, { data: isPlatformAdmin }] = await Promise.all([
     supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle(),
     supabase.rpc("is_platform_admin"),

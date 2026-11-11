@@ -14,7 +14,7 @@ type SearchParams = Promise<{ notice?: string; error?: string }>;
 export default async function WorkspaceSettingsPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const [{ data: workspace }, { data: isPlatformAdmin }] = await Promise.all([
     supabase.from("workspaces").select("id,name,slug,description,created_at").eq("slug",slug).maybeSingle(),
     supabase.rpc("is_platform_admin"),

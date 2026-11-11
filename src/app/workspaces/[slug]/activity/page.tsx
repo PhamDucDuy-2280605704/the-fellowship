@@ -13,7 +13,7 @@ const actionLabels: Record<string,string> = { created: "đã tạo", updated: "�
 
 export default async function WorkspaceActivityPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const [{ data: workspace }, { data: isPlatformAdmin }] = await Promise.all([
     supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle(),
     supabase.rpc("is_platform_admin"),

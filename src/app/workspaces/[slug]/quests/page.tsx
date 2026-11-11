@@ -25,7 +25,7 @@ const priorityLabels: Record<string,string> = { low: "Thấp", medium: "Vừa", 
 export default async function QuestsPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data: workspace } = await supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 

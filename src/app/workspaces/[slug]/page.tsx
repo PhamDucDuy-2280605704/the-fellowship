@@ -12,7 +12,7 @@ type Params = Promise<{ slug: string }>;
 
 export default async function WorkspaceDetailPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const [{ data: isAdmin }, { data: workspace, error }] = await Promise.all([
     supabase.rpc("is_platform_admin"),
     supabase.from("workspaces").select("id,name,slug,description,created_at").eq("slug",slug).maybeSingle(),
@@ -41,11 +41,12 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>
           <span>{user.email}</span>
+          {isAdmin && <Link className={styles.quietButton} href="/the-stewards-hall">Admin Console</Link>}
           <form action={signOut}><button type="submit" className={styles.quietButton}>Đăng xuất</button></form>
         </div>
       </header>
 
-      <Link className={styles.backLink} href="/workspaces">← Tất cả workspace</Link>
+      <Link className={styles.backLink} href={isAdmin ? "/the-stewards-hall/workspaces" : "/workspaces"}>← Tất cả workspace</Link>
       <section className={styles.detailHero}>
         <p className={styles.eyebrow}>A SHARED COMPANY · {role.toUpperCase()}</p>
         <h1>{workspace.name}</h1>

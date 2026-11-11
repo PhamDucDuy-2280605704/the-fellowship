@@ -27,7 +27,7 @@ export default async function WorkspaceMembersPage({
 }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data: isPlatformAdmin } = await supabase.rpc("is_platform_admin");
 
   const { data: workspace } = await supabase

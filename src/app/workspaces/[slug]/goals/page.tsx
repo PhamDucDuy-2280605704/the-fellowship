@@ -17,7 +17,7 @@ const statusLabels: Record<string,string> = {
 export default async function GoalsPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
   const { slug } = await params;
   const query = await searchParams;
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data: workspace } = await supabase.from("workspaces").select("id,name").eq("slug",slug).maybeSingle();
   if (!workspace) notFound();
 

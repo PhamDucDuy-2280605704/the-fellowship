@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
-export async function requireActiveUser() {
+export async function requireActiveUser(options: { allowPlatformAdmin?: boolean } = {}) {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
 
@@ -29,13 +29,13 @@ export async function requireActiveUser() {
     await supabase.auth.signOut();
     redirect("/login?error=role-check");
   }
-  if (isPlatformAdmin === true) redirect("/the-stewards-hall");
+  if (isPlatformAdmin === true && !options.allowPlatformAdmin) redirect("/the-stewards-hall");
 
   return { supabase, user: data.user };
 }
 
 export async function requirePlatformAdmin() {
-  const session = await requireActiveUser();
+  const session = await requireActiveUser({ allowPlatformAdmin: true });
   const { data: isAdmin, error } = await session.supabase.rpc("is_platform_admin");
 
   if (error || !isAdmin) {

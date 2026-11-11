@@ -889,7 +889,7 @@ export type Database = {
       }
       create_council_proposal: {
         Args: {
-          p_closes_at: string
+          p_closes_at: string | null
           p_context: string
           p_criteria: Json
           p_options: Json
@@ -916,7 +916,7 @@ export type Database = {
       }
       decide_council_proposal: {
         Args: {
-          p_followup_quest_title: string
+          p_followup_quest_title: string | null
           p_option_id: string
           p_proposal_id: string
           p_rationale: string

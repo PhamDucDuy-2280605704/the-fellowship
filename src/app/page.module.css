@@ -257,3 +257,59 @@
     transition: none;
   }
 }
+
+
+/* Member-only landing layout: one centered portal with larger, clearer copy. */
+.page { overflow: visible; }
+.portals {
+  width: min(100%, 700px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin-top: 28px;
+  padding-top: 26px;
+}
+.portalCard {
+  width: 100%;
+  min-height: 0;
+  padding: 76px clamp(24px, 5vw, 56px) 28px;
+}
+.navigation a {
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 15px;
+}
+.cardEyebrow {
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: .16em;
+}
+.portalCard h2 { font-size: clamp(30px, 4vw, 40px); }
+.cardDescription {
+  max-width: 500px;
+  min-height: 0;
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+}
+.highlights { max-width: 430px; gap: 9px; }
+.highlights li {
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.portalButton {
+  width: min(100%, 360px);
+  min-height: 54px;
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 16px;
+  transition-duration: 120ms;
+}
+.cardFootnote { font-size: 14px; }
+.headerLogin { font-family: var(--font-body), Arial, sans-serif; font-size: 14px; }
+@media (max-width: 700px) {
+  .page { overflow: visible; padding: 0 17px; }
+  .portals { width: min(100%, 480px); margin-top: 26px; padding-top: 20px; }
+  .portalCard { min-height: 0; padding: 66px 22px 24px; }
+  .cardDescription { font-size: 16px; }
+  .highlights li { font-size: 15px; }
+  .portalButton { min-height: 52px; }
+}

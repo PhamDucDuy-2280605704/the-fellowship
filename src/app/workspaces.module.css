@@ -639,3 +639,25 @@
 @media (prefers-reduced-motion: reduce) {
   .quietButton, .workspaceCard, .primaryButton, .smallButton, .removeButton, .votedButton, .copyButton { transition: none; }
 }
+
+
+/* A single route to the activity log replaces the repeated module launch cards. */
+.activityShortcut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 22px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px 16px 8px 16px;
+  background: rgba(13,18,14,.62);
+}
+.activityShortcut b, .activityShortcut span { display: block; }
+.activityShortcut b { color: var(--ink); font-size: 15px; }
+.activityShortcut div > span { margin-top: 3px; color: var(--muted); font-size: 13px; }
+.activityShortcut a { flex: 0 0 auto; color: #dfc58d; font-size: 14px; text-decoration: none; }
+.activityShortcut a:hover { color: #f2dfb9; text-decoration: underline; }
+@media (max-width: 560px) {
+  .activityShortcut { align-items: flex-start; flex-direction: column; }
+}

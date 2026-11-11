@@ -1,5 +1,6 @@
 <div align="center">
-  <h1>✦ The Fellowship</h1>
+  <img src="./docs/assets/the-fellowship-banner.svg" alt="The Fellowship — Goals, Decisions, Knowledge" width="100%" />
+
   <p><strong>Cùng nhau đi xa hơn — biến mục tiêu chung thành hành động, quyết định và tri thức có thể kế thừa.</strong></p>
 
   <p>
@@ -82,6 +83,17 @@ Thay vì để mục tiêu, nhiệm vụ, thảo luận và ghi chú nằm rời
 - Platform Admin có khu vực quản trị riêng để xem danh sách tài khoản, trạng thái xác nhận email/lần đăng nhập gần nhất, tạm khóa hoặc kích hoạt lại tài khoản.
 - Platform Admin có thể xem danh sách workspace và thực hiện lưu trữ/khôi phục workspace.
 - Các thao tác quản trị nhạy cảm được kiểm tra ở PostgreSQL/RPC phía máy chủ, không dựa vào việc ẩn giao diện.
+
+## 🗺️ Ba trụ cột của The Fellowship
+
+Ba module kết nối thành một vòng lặp cộng tác — từ thống nhất điều cần làm, lựa chọn cách thực hiện đến lưu lại kinh nghiệm cho lần tiếp theo.
+
+~~~mermaid
+flowchart LR
+    A["⚔️ The Fellowship<br/>Goals & Quests"] --> B["⚖️ The Council<br/>Discuss & Decide"]
+    B --> C["📚 The Archives<br/>Knowledge & Memory"]
+    C --> A
+~~~
 
 ## 🧭 Các khu vực trong ứng dụng
 

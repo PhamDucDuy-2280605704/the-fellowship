@@ -56,7 +56,7 @@ export default async function AdminAccountsPage({ searchParams }: { searchParams
                   <b>{user.display_name || "Thành viên"}</b>
                   <small className={styles.subtleId}>{user.user_id.slice(0, 8)}…</small>
                 </td>
-                <td><span className={user.platform_role === "admin" ? styles.adminPill : styles.userPill}>{user.platform_role === "admin" ? "Admin" : "User"}</span></td>
+                <td><span className={user.platform_role === "admin" ? styles.adminPill : styles.userPill}>{user.platform_role === "admin" ? "Admin" : "Người dùng"}</span></td>
                 <td>
                   <span>{user.email || "Không có email"}</span>
                   <small>{user.email_confirmed_at ? "Email đã xác nhận" : "Chưa xác nhận email"}</small>

@@ -568,3 +568,74 @@
 /* Workspace navigation uses one distinct icon per destination. */
 .moduleNavLink, .moduleNavActive { display: inline-flex; align-items: center; gap: 8px; }
 .moduleNavIcon { width: 16px; height: 16px; flex: 0 0 auto; opacity: .86; }
+
+/* Workspace surfaces: shared spacing, legible controls and stronger navigation states. */
+.page { width: min(100% - 64px, 1240px); }
+.topbar { min-height: 82px; border-color: rgba(214,180,119,.24); }
+.brand { letter-spacing: .14em; }
+.quietButton {
+  min-height: 40px;
+  padding: 8px 13px;
+  border-radius: 7px 14px 7px 14px;
+  transition: border-color 140ms ease, background 140ms ease, color 140ms ease;
+}
+.quietButton:hover { border-color: rgba(214,180,119,.55); background: rgba(214,180,119,.08); color: #f2dfb9; }
+.intro { padding-top: clamp(52px, 7vw, 82px); }
+.intro h1, .detailHero h1, .moduleHero h1 { text-wrap: balance; }
+.workspaceCard, .createPanel, .modulePanel, .recordCard, .noteCard, .moduleLaunchCard {
+  border-radius: 8px 18px 8px 18px;
+  background-color: rgba(13,18,14,.72);
+  box-shadow: 0 14px 40px rgba(0,0,0,.13);
+}
+.workspaceCard { padding: 24px; transition: transform 150ms ease, border-color 150ms ease, background 150ms ease; }
+.workspaceCard:hover { transform: translateY(-2px); }
+.createPanel, .modulePanel { border-color: rgba(214,180,119,.24); }
+.form input, .form textarea, .moduleForm input, .moduleForm textarea, .moduleForm select,
+.inlineControls select, .reasonInput, .checkInForm textarea, .decisionForm textarea {
+  min-height: 44px;
+  border-radius: 7px 13px 7px 13px;
+  border-color: rgba(226,218,190,.24);
+  background: rgba(7,12,9,.88);
+}
+.form textarea, .moduleForm textarea { min-height: 104px; }
+.primaryButton, .smallButton, .removeButton, .votedButton, .copyButton {
+  min-height: 40px;
+  border-radius: 7px 13px 7px 13px;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+.primaryButton:hover, .smallButton:hover, .copyButton:hover { border-color: #e3c58b; background: rgba(201,168,106,.15); }
+.moduleNav { gap: 8px; padding-bottom: 10px; }
+.moduleNavLink, .moduleNavActive {
+  min-height: 42px;
+  align-items: center;
+  border-radius: 7px 13px 7px 13px;
+  padding: 9px 13px;
+}
+.moduleNavActive { background: linear-gradient(135deg, rgba(214,180,119,.15), rgba(214,180,119,.055)); }
+.moduleLaunchCard { min-height: 170px; padding: 22px; }
+.moduleLaunchCard b { margin-top: 25px; }
+.workspaceStats { overflow: hidden; border-radius: 8px 18px 8px 18px; background: rgba(9,14,10,.58); }
+.workspaceStats article { min-width: 0; }
+.memberRow, .optionRow, .timelineBody, .pendingInviteRow, .leavePanel {
+  border-radius: 7px 14px 7px 14px;
+  background-color: rgba(12,17,13,.62);
+}
+.recordCard h3, .noteCard h3 { line-height: 1.25; }
+:where(.form, .moduleForm, .checkInForm, .decisionForm) :focus-visible,
+.archiveSearch input:focus-visible { outline-offset: 2px; }
+@media (max-width: 860px) {
+  .page { width: min(100% - 40px, 1240px); }
+  .moduleColumns { gap: 24px; }
+}
+@media (max-width: 560px) {
+  .page { width: min(100% - 30px, 1240px); }
+  .intro { padding-top: 48px; }
+  .topbar { gap: 12px; }
+  .account { gap: 8px; }
+  .workspaceCard { min-height: 0; padding: 18px; }
+  .modulePanel { padding: 18px; }
+  .moduleNav { margin-top: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quietButton, .workspaceCard, .primaryButton, .smallButton, .removeButton, .votedButton, .copyButton { transition: none; }
+}

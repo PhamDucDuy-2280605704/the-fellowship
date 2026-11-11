@@ -34,7 +34,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
         : null;
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.loginPage}`}>
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/">
         <span>✦</span> THE FELLOWSHIP

@@ -16,7 +16,7 @@ export default async function StewardLoginPage({ searchParams }: { searchParams:
       : params.error === "credentials"
         ? "Email hoặc mật khẩu chưa chính xác."
         : null;
-  return <main className={styles.page}>
+  return <main className={`${styles.page} ${styles.adminLoginPage}`}>
     <div className={styles.ambient} aria-hidden="true" />
     <Link className={styles.brand} href="/">✦ THE FELLOWSHIP · STEWARDS</Link>
     <section className={styles.card} aria-labelledby="login-title">

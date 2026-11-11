@@ -28,7 +28,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
     : null;
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.signupPage}`}>
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/">
         <span>✦</span> THE FELLOWSHIP

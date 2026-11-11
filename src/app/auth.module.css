@@ -20,7 +20,7 @@
   position: fixed;
   z-index: -2;
   inset: -16px;
-  background-image: linear-gradient(180deg, rgba(8,11,9,.5), rgba(8,10,9,.68)), url("/images/fellowship-reference-bg.webp");
+  background-image: linear-gradient(180deg, rgba(8,11,9,.5), rgba(8,10,9,.68)), url("https://upload.wikimedia.org/wikipedia/commons/3/3e/Glenorchy_Isengard_in_New_Zealand_-_Lord_of_the_Rings.jpg");
   background-position: center 47%;
   background-size: cover;
   content: "";
@@ -210,4 +210,16 @@
 .submitButton > span:first-child {
   flex: 1;
   text-align: left;
+}
+
+
+/* Each portal uses a distinct real Middle-earth filming landscape. */
+.signupPage::before {
+  background-image: linear-gradient(180deg, rgba(8,11,9,.52), rgba(8,10,9,.72)), url("https://upload.wikimedia.org/wikipedia/commons/6/64/Hutt_River%2C_Kaitoke_Regional_Park%2C_Rivendell.jpg");
+  background-position: center 48%;
+}
+.recoveryPage::before,
+.adminLoginPage::before {
+  background-image: linear-gradient(180deg, rgba(8,11,9,.58), rgba(8,10,9,.76)), url("https://upload.wikimedia.org/wikipedia/commons/d/d2/Mount_Ngauruhoe.jpg");
+  background-position: center 52%;
 }

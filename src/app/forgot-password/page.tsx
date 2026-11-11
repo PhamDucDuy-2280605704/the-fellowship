@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ForgotPasswordPage() {
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.recoveryPage}`}>
       <div className={styles.ambient} aria-hidden="true" />
       <Link className={styles.brand} href="/"><span>✦</span> THE FELLOWSHIP</Link>
       <RecoveryForm />

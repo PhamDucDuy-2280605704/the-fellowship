@@ -66,7 +66,7 @@ export default async function WorkspaceMembersPage({
     : null;
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles.bgGathering}`}>
       <header className={styles.topbar}>
         <Link className={styles.brand} href="/">✦ THE FELLOWSHIP</Link>
         <div className={styles.account}>

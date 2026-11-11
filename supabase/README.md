@@ -78,11 +78,11 @@ The hosted project currently reports these 22 applied migrations:
 | `20261111033818` | `fix_workspace_member_rpc_null_role_guard` |
 | `20261111034138` | `atomic_council_proposal_and_decision_actions` |
 
-### Migration-history caveat
+### Migration-history recovery
 
-The hosted project has an applied migration `20261110095443_portal_auth_and_foreign_key_performance`, but no matching SQL file could be recovered from the current repository history. The other local migration filenames have been aligned with the hosted versions.
+The SQL body for `20261110095443_portal_auth_and_foreign_key_performance` was recovered from the hosted PostgreSQL migration logs and restored as a checked-in migration file. The seven later migration filenames were also aligned with the versions recorded by the hosted project. The repository and hosted migration ledger now contain the same 22 versions.
 
-Do not use `supabase db reset` or treat a fresh database as reproducible until the original SQL for that missing migration is recovered or its effects are reconstructed and reviewed. Do not invent a no-op replacement: it would hide the history mismatch without recreating the schema changes.
+A clean `supabase db reset` has not been run in a disposable environment during this pass. Validate a fresh bootstrap against a disposable project before relying on it for a new environment.
 
 ## Migration workflow
 

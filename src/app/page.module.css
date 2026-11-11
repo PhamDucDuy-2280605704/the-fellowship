@@ -395,3 +395,32 @@
   .headerLogin { min-width: 96px; padding-right: 12px; padding-left: 12px; font-size: 13px; }
   .navigation { gap: 18px; }
 }
+
+
+/* Final header icon sizing: prevent the decorative sparkle SVG from using its default intrinsic size. */
+.headerActions > svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+}
+.navigation a svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+.navigation a {
+  gap: 9px;
+}
+@media (max-width: 700px) {
+  .headerActions > svg {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+  }
+  .navigation a svg {
+    width: 18px;
+    height: 18px;
+    flex-basis: 18px;
+  }
+}

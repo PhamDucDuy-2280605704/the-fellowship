@@ -29,7 +29,7 @@ export async function createNote(formData: FormData): Promise<void> {
   const tags = readTags(field(formData, "tags"));
   if (!validId(workspaceId) || title.length < 2 || title.length > 160 || content.length > 40000 ||
       goalId === undefined || questId === undefined || proposalId === undefined) back(slug, "invalid");
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.from("notes").insert({
     workspace_id: workspaceId,
     title,
@@ -57,7 +57,7 @@ export async function updateNote(formData: FormData): Promise<void> {
       content.length > 40000 || goalId === undefined || questId === undefined || proposalId === undefined) {
     back(slug, "invalid");
   }
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("notes").update({
     title, content, tags, goal_id: goalId, quest_id: questId, council_proposal_id: proposalId,
   }).eq("id", noteId).eq("workspace_id", workspaceId).select("id").maybeSingle();
@@ -70,7 +70,7 @@ export async function archiveNote(formData: FormData): Promise<void> {
   const noteId = field(formData, "noteId");
   const shouldArchive = field(formData, "shouldArchive") === "true";
   if (!validId(workspaceId) || !validId(noteId)) back(slug, "invalid");
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("notes").update({
     archived_at: shouldArchive ? new Date().toISOString() : null,
   }).eq("id", noteId).eq("workspace_id", workspaceId);

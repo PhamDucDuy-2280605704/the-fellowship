@@ -20,7 +20,7 @@ export async function createGoal(formData: FormData): Promise<void> {
   const targetDate = field(formData, "targetDate") || null;
 
   if (!validId(workspaceId) || title.length < 2 || title.length > 140 || description.length > 4000) back(slug, "invalid");
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.from("goals").insert({
     workspace_id: workspaceId,
     title,
@@ -38,7 +38,7 @@ export async function updateGoalStatus(formData: FormData): Promise<void> {
   const status = field(formData, "status");
   if (!validId(workspaceId) || !validId(goalId) ||
       !["draft", "active", "on_hold", "completed", "archived"].includes(status)) back(slug, "invalid");
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("goals").update({
     status,
     archived_at: status === "archived" ? new Date().toISOString() : null,

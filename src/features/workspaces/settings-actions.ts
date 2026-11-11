@@ -18,7 +18,7 @@ export async function updateWorkspaceDetails(formData: FormData): Promise<void> 
     redirect(`/workspaces/${slug}/settings?error=invalid`);
   }
 
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("workspaces").update({ name, description }).eq("id", workspaceId).select("id").maybeSingle();
   redirect(error || !data ? `/workspaces/${slug}/settings?error=save` : `/workspaces/${slug}/settings?notice=saved`);
 }

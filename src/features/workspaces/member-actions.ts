@@ -28,7 +28,7 @@ export async function createWorkspaceInvitation(formData: FormData): Promise<voi
     redirect(`/workspaces/${slug}/members?error=invalid-invitation`);
   }
 
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const token = randomBytes(32).toString("base64url");
   const tokenHash = createHash("sha256").update(token).digest("hex");
   const { error } = await supabase.rpc("create_workspace_invitation", {
@@ -51,7 +51,7 @@ export async function acceptWorkspaceInvitation(formData: FormData): Promise<voi
     redirect("/workspaces?error=invalid-invitation");
   }
 
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const tokenHash = createHash("sha256").update(token).digest("hex");
   const { data: workspaceId, error } = await supabase.rpc("accept_workspace_invitation", {
     p_token_hash: tokenHash,
@@ -84,7 +84,7 @@ export async function updateWorkspaceMemberRole(formData: FormData): Promise<voi
     redirect(`/workspaces/${slug}/members?error=invalid-member`);
   }
 
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.rpc("update_workspace_member_role", {
     p_workspace_id: workspaceId,
     p_user_id: userId,
@@ -104,7 +104,7 @@ export async function removeWorkspaceMember(formData: FormData): Promise<void> {
     redirect(`/workspaces/${slug}/members?error=invalid-member`);
   }
 
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.rpc("remove_workspace_member", {
     p_workspace_id: workspaceId,
     p_user_id: userId,
@@ -120,7 +120,7 @@ export async function revokeWorkspaceInvitation(formData: FormData): Promise<voi
   if (!validId(invitationId) || !safeSlug(slug)) {
     redirect(`/workspaces/${slug}/members?error=invalid-invitation`);
   }
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.rpc("revoke_workspace_invitation", {
     p_invitation_id: invitationId,
   });
@@ -132,7 +132,7 @@ export async function revokeWorkspaceInvitation(formData: FormData): Promise<voi
 export async function leaveWorkspace(formData: FormData): Promise<void> {
   const workspaceId = field(formData, "workspaceId");
   if (!validId(workspaceId)) redirect("/workspaces?error=invalid-workspace");
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.rpc("leave_workspace", { p_workspace_id: workspaceId });
   redirect(error ? "/workspaces?error=leave-failed" : "/workspaces?notice=left-workspace");
 }

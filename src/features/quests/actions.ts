@@ -24,7 +24,7 @@ export async function createQuest(formData: FormData): Promise<void> {
   if (!validId(workspaceId) || title.length < 2 || title.length > 160 ||
       description.length > 6000 || !["low", "medium", "high", "urgent"].includes(priority) ||
       (goalId && !validId(goalId))) back(slug, "invalid");
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.from("quests").insert({
     workspace_id: workspaceId,
     goal_id: goalId,
@@ -44,7 +44,7 @@ export async function updateQuestStatus(formData: FormData): Promise<void> {
   const status = field(formData, "status");
   if (!validId(workspaceId) || !validId(questId) ||
       !["backlog", "ready", "in_progress", "blocked", "done", "cancelled"].includes(status)) back(slug, "invalid");
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("quests").update({
     status,
     completed_at: status === "done" ? new Date().toISOString() : null,
@@ -58,7 +58,7 @@ export async function assignQuest(formData: FormData): Promise<void> {
   const questId = field(formData, "questId");
   const userId = field(formData, "userId");
   if (![workspaceId, questId, userId].every(validId)) back(slug, "invalid");
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.from("quest_assignees").upsert({
     workspace_id: workspaceId,
     quest_id: questId,
@@ -77,7 +77,7 @@ export async function addQuestCheckIn(formData: FormData): Promise<void> {
   const progress = progressRaw ? Number(progressRaw) : null;
   if (!validId(workspaceId) || !validId(questId) || content.length < 1 || content.length > 3000 ||
       (progress !== null && (!Number.isInteger(progress) || progress < 0 || progress > 100))) back(slug, "invalid");
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.from("quest_check_ins").insert({
     workspace_id: workspaceId,
     quest_id: questId,
@@ -94,7 +94,7 @@ export async function addQuestDependency(formData: FormData): Promise<void> {
   const questId = field(formData, "questId");
   const dependsOnQuestId = field(formData, "dependsOnQuestId");
   if (![workspaceId, questId, dependsOnQuestId].every(validId) || questId === dependsOnQuestId) back(slug, "invalid");
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.from("quest_dependencies").insert({
     workspace_id: workspaceId,
     quest_id: questId,

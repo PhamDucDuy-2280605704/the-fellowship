@@ -35,7 +35,7 @@ export async function createProposal(formData: FormData): Promise<void> {
       criteria.some((criterion) => criterion.title.length < 2 || criterion.title.length > 120 || !Number.isFinite(criterion.weight) || criterion.weight <= 0 || criterion.weight > 100) ||
       (closesAtRaw && (!closesAt || closesAtDate!.getTime() <= Date.now()))) back(slug, "invalid");
 
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data: proposalId, error } = await supabase.rpc("create_council_proposal", {
     p_workspace_id: workspaceId,
     p_title: title,
@@ -53,7 +53,7 @@ export async function setProposalStatus(formData: FormData): Promise<void> {
   const proposalId = field(formData, "proposalId");
   const status = field(formData, "status");
   if (!validId(workspaceId) || !validId(proposalId) || !["voting", "archived"].includes(status)) back(slug, "invalid");
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("council_proposals").update({ status }).eq("id", proposalId).eq("workspace_id", workspaceId).select("id").maybeSingle();
   back(slug, error || !data ? "status" : undefined);
 }
@@ -64,7 +64,7 @@ export async function castProposalVote(formData: FormData): Promise<void> {
   const proposalId = field(formData, "proposalId");
   const optionId = field(formData, "optionId");
   if (![workspaceId, proposalId, optionId].every(validId)) back(slug, "invalid");
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.rpc("cast_council_vote", {
     p_workspace_id: workspaceId,
     p_proposal_id: proposalId,
@@ -83,7 +83,7 @@ export async function scoreCouncilOption(formData: FormData): Promise<void> {
   const comment = field(formData, "comment");
   if (![workspaceId, proposalId, optionId, criterionId].every(validId) ||
       !Number.isInteger(score) || score < 0 || score > 5 || comment.length > 1000) back(slug, "score");
-  const { supabase, user } = await requireActiveUser();
+  const { supabase, user } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.from("council_option_scores").upsert({
     workspace_id: workspaceId, proposal_id: proposalId, option_id: optionId,
     criterion_id: criterionId, user_id: user.id, score, comment,
@@ -102,7 +102,7 @@ export async function decideProposal(formData: FormData): Promise<void> {
       rationale.length < 1 || rationale.length > 5000 ||
       (followupTitle.length > 0 && (followupTitle.length < 2 || followupTitle.length > 160))) back(slug, "invalid");
 
-  const { supabase } = await requireActiveUser();
+  const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.rpc("decide_council_proposal", {
     p_workspace_id: workspaceId,
     p_proposal_id: proposalId,

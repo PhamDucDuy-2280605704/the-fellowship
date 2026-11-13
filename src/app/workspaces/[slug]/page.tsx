@@ -23,13 +23,14 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
   const membership = membershipResult.data;
   if (!membership && !isPlatformAdmin) notFound();
 
-  const stats = statsResult.data?.[0];
-  const activeMembers = Number(stats?.active_member_count ?? 0);
-  const goalCount = Number(stats?.goal_count ?? 0);
-  const questCount = Number(stats?.quest_count ?? 0);
-  const completedQuests = Number(stats?.completed_quest_count ?? 0);
-  const openQuests = questCount - completedQuests;
-  const activeNoteCount = Number(stats?.active_note_count ?? 0);
+  const stats = statsResult.data?.[0] ?? null;
+  const statsUnavailable = Boolean(statsResult.error) || !stats;
+  const activeMembers = stats ? Number(stats.active_member_count ?? 0) : null;
+  const goalCount = stats ? Number(stats.goal_count ?? 0) : null;
+  const questCount = stats ? Number(stats.quest_count ?? 0) : null;
+  const completedQuests = stats ? Number(stats.completed_quest_count ?? 0) : null;
+  const openQuests = questCount !== null && completedQuests !== null ? questCount - completedQuests : null;
+  const activeNoteCount = stats ? Number(stats.active_note_count ?? 0) : null;
   const role = membership?.role ?? "platform admin";
 
   return (
@@ -52,11 +53,17 @@ export default async function WorkspaceDetailPage({ params }: { params: Params }
       </section>
       <WorkspaceNav slug={slug} active="overview" />
 
+      {statsUnavailable && (
+        <p className={styles.error} role="alert">
+          Chưa thể xác nhận số liệu tổng quan từ database. Các ô bên dưới được để dấu gạch ngang thay vì hiển thị 0 sai lệch.
+        </p>
+      )}
+
       <section className={styles.workspaceStats}>
-        <article><span>THÀNH VIÊN</span><strong>{activeMembers}</strong><small>Những người đang đồng hành</small></article>
-        <article><span>GOALS</span><strong>{goalCount}</strong><small>Mục tiêu của nhóm</small></article>
-        <article><span>QUESTS ĐANG MỞ</span><strong>{openQuests}</strong><small>{completedQuests} Quest đã hoàn thành</small></article>
-        <article><span>ARCHIVES</span><strong>{activeNoteCount}</strong><small>Ghi chú đang lưu giữ</small></article>
+        <article><span>THÀNH VIÊN</span><strong>{activeMembers ?? "—"}</strong><small>Những người đang đồng hành</small></article>
+        <article><span>GOALS</span><strong>{goalCount ?? "—"}</strong><small>Mục tiêu của nhóm</small></article>
+        <article><span>QUESTS ĐANG MỞ</span><strong>{openQuests ?? "—"}</strong><small>{completedQuests === null ? "Chưa xác định tiến độ" : `${completedQuests} Quest đã hoàn thành`}</small></article>
+        <article><span>ARCHIVES</span><strong>{activeNoteCount ?? "—"}</strong><small>Ghi chú đang lưu giữ</small></article>
       </section>
 
       <div className={styles.activityShortcut}>

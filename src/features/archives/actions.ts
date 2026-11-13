@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
 
@@ -14,8 +15,18 @@ function readTags(value: string): string[] {
     tag.trim().toLocaleLowerCase("vi").replace(/\s+/g, "-").replace(/[^\p{L}\p{N}-]/gu, "").slice(0, 32)
   ).filter(Boolean))].slice(0, 20);
 }
-function back(slug: string, error?: string) {
-  redirect(error ? `/workspaces/${slug}/archives?error=${error}` : `/workspaces/${slug}/archives`);
+
+function refreshWorkspace(slug: string) {
+  revalidatePath(`/workspaces/${slug}`);
+  revalidatePath(`/workspaces/${slug}/archives`);
+  revalidatePath(`/workspaces/${slug}/activity`);
+}
+
+function back(slug: string, error?: string, notice = "note-updated"): never {
+  if (!error) refreshWorkspace(slug);
+  redirect(error
+    ? `/workspaces/${slug}/archives?error=${encodeURIComponent(error)}`
+    : `/workspaces/${slug}/archives?notice=${encodeURIComponent(notice)}`);
 }
 
 export async function createNote(formData: FormData): Promise<void> {
@@ -40,7 +51,7 @@ export async function createNote(formData: FormData): Promise<void> {
     council_proposal_id: proposalId,
     created_by: user.id,
   });
-  back(slug, error ? "save" : undefined);
+  back(slug, error ? "save" : undefined, "note-created");
 }
 
 export async function updateNote(formData: FormData): Promise<void> {
@@ -61,7 +72,7 @@ export async function updateNote(formData: FormData): Promise<void> {
   const { data, error } = await supabase.from("notes").update({
     title, content, tags, goal_id: goalId, quest_id: questId, council_proposal_id: proposalId,
   }).eq("id", noteId).eq("workspace_id", workspaceId).select("id").maybeSingle();
-  back(slug, error || !data ? "update" : undefined);
+  back(slug, error || !data ? "update" : undefined, "note-updated");
 }
 
 export async function archiveNote(formData: FormData): Promise<void> {
@@ -73,6 +84,6 @@ export async function archiveNote(formData: FormData): Promise<void> {
   const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("notes").update({
     archived_at: shouldArchive ? new Date().toISOString() : null,
-  }).eq("id", noteId).eq("workspace_id", workspaceId);
-  back(slug, error || !data ? "archive" : undefined);
+  }).eq("id", noteId).eq("workspace_id", workspaceId).select("id").maybeSingle();
+  back(slug, error || !data ? "archive" : undefined, shouldArchive ? "note-archived" : "note-restored");
 }

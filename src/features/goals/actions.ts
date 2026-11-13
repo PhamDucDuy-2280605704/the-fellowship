@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
 
@@ -8,8 +9,20 @@ function field(formData: FormData, name: string): string {
   return typeof value === "string" ? value.trim() : "";
 }
 function validId(value: string) { return /^[0-9a-f-]{36}$/i.test(value); }
-function back(slug: string, error?: string) {
-  redirect(error ? `/workspaces/${slug}/goals?error=${error}` : `/workspaces/${slug}/goals`);
+
+function refreshWorkspace(slug: string) {
+  revalidatePath(`/workspaces/${slug}`);
+  revalidatePath(`/workspaces/${slug}/goals`);
+  revalidatePath(`/workspaces/${slug}/quests`);
+  revalidatePath(`/workspaces/${slug}/archives`);
+  revalidatePath(`/workspaces/${slug}/activity`);
+}
+
+function back(slug: string, error?: string, notice = "goal-updated"): never {
+  if (!error) refreshWorkspace(slug);
+  redirect(error
+    ? `/workspaces/${slug}/goals?error=${encodeURIComponent(error)}`
+    : `/workspaces/${slug}/goals?notice=${encodeURIComponent(notice)}`);
 }
 
 export async function createGoal(formData: FormData): Promise<void> {
@@ -28,7 +41,7 @@ export async function createGoal(formData: FormData): Promise<void> {
     target_date: targetDate,
     created_by: user.id,
   });
-  back(slug, error ? "save" : undefined);
+  back(slug, error ? "save" : undefined, "goal-created");
 }
 
 export async function updateGoalStatus(formData: FormData): Promise<void> {
@@ -43,5 +56,5 @@ export async function updateGoalStatus(formData: FormData): Promise<void> {
     status,
     archived_at: status === "archived" ? new Date().toISOString() : null,
   }).eq("id", goalId).eq("workspace_id", workspaceId).select("id").maybeSingle();
-  back(slug, error || !data ? "save" : undefined);
+  back(slug, error || !data ? "save" : undefined, "goal-updated");
 }

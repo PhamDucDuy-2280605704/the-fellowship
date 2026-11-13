@@ -1,4 +1,5 @@
-import { setUserSuspension } from "../actions";
+import { deleteUserAccount, setUserSuspension } from "../actions";
+import { CredentialResetPanel } from "./credential-reset-panel";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import styles from "../admin.module.css";
 
@@ -14,6 +15,16 @@ function dateLabel(value: string | null) {
   if (!value) return "Chưa có";
   return new Intl.DateTimeFormat("vi-VN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 }
+
+const errorMessages: Record<string, string> = {
+  "delete-invalid": "Thông tin xác nhận xóa không hợp lệ.",
+  "delete-self": "Không thể tự xóa tài khoản Admin đang đăng nhập.",
+  "delete-admin": "Không thể xóa tài khoản thuộc nhóm quản trị viên nền tảng.",
+  "delete-email": "Email xác nhận không khớp với tài khoản cần xóa.",
+  "delete-workspaces": "Tài khoản đang sở hữu workspace. Hãy chuyển quyền sở hữu hoặc xử lý workspace trước khi xóa.",
+  "delete-related-data": "Không thể xóa vì tài khoản vẫn được tham chiếu bởi dữ liệu hoặc tệp trong ứng dụng. Hãy xử lý dữ liệu liên quan trước.",
+  "delete-failed": "Không thể xóa tài khoản. Hãy thử lại hoặc kiểm tra cấu hình Edge Function.",
+};
 
 export default async function AdminAccountsPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
@@ -33,7 +44,8 @@ export default async function AdminAccountsPage({ searchParams }: { searchParams
 
       {params.notice === "suspended" && <p className={styles.success} role="status">Đã tạm khóa tài khoản.</p>}
       {params.notice === "restored" && <p className={styles.success} role="status">Đã mở lại quyền truy cập tài khoản.</p>}
-      {params.error && <p className={styles.error} role="alert">Không thể cập nhật tài khoản. Hãy kiểm tra lại trạng thái và thử lại.</p>}
+      {params.notice === "deleted" && <p className={styles.success} role="status">Đã xóa vĩnh viễn tài khoản người dùng.</p>}
+      {params.error && <p className={styles.error} role="alert">{errorMessages[params.error] ?? "Không thể cập nhật tài khoản. Hãy kiểm tra lại trạng thái và thử lại."}</p>}
       {error && <p className={styles.error} role="alert">Không thể tải danh sách tài khoản.</p>}
 
       <div className={styles.tableWrap}>
@@ -73,16 +85,37 @@ export default async function AdminAccountsPage({ searchParams }: { searchParams
                   {user.platform_role === "admin" ? (
                     <span className={styles.protected}>Tài khoản quản trị</span>
                   ) : (
-                    <form action={setUserSuspension} className={styles.inlineForm}>
-                      <input type="hidden" name="userId" value={user.user_id} />
-                      <input type="hidden" name="shouldSuspend" value={String(!user.is_suspended)} />
-                      {!user.is_suspended && (
-                        <input className={styles.reasonInput} name="reason" maxLength={500} placeholder="Lý do (bắt buộc)" required />
-                      )}
-                      <button className={user.is_suspended ? styles.restoreButton : styles.dangerButton} type="submit">
-                        {user.is_suspended ? "Mở khóa" : "Tạm khóa"}
-                      </button>
-                    </form>
+                    <div className={styles.accountActions}>
+                      <form action={setUserSuspension} className={styles.inlineForm}>
+                        <input type="hidden" name="userId" value={user.user_id} />
+                        <input type="hidden" name="shouldSuspend" value={String(!user.is_suspended)} />
+                        {!user.is_suspended && (
+                          <input className={styles.reasonInput} name="reason" maxLength={500} placeholder="Lý do (bắt buộc)" required />
+                        )}
+                        <button className={user.is_suspended ? styles.restoreButton : styles.dangerButton} type="submit">
+                          {user.is_suspended ? "Mở khóa" : "Tạm khóa"}
+                        </button>
+                      </form>
+
+                      <details className={styles.deleteAccount}>
+                        <summary className={styles.deleteSummary}>Xóa tài khoản</summary>
+                        <form action={deleteUserAccount} className={styles.deleteForm}>
+                          <input type="hidden" name="userId" value={user.user_id} />
+                          <label htmlFor={`confirm-delete-${user.user_id}`}>Nhập chính xác email để xác nhận</label>
+                          <input
+                            id={`confirm-delete-${user.user_id}`}
+                            className={styles.confirmEmailInput}
+                            name="confirmEmail"
+                            type="email"
+                            autoComplete="off"
+                            placeholder={user.email || "email@example.com"}
+                            required
+                          />
+                          <button className={styles.deleteAccountButton} type="submit">Xóa vĩnh viễn</button>
+                        </form>
+                      </details>
+                      <CredentialResetPanel userId={user.user_id} email={user.email || ""} />
+                    </div>
                   )}
                 </td>
               </tr>
@@ -93,7 +126,12 @@ export default async function AdminAccountsPage({ searchParams }: { searchParams
           </tbody>
         </table>
       </div>
-      <p className={styles.footnote}>Tạm khóa sẽ chặn truy cập dữ liệu và khu vực ứng dụng. Tài khoản Admin được bảo vệ và không thể tự khóa.</p>
+      <p className={styles.footnote}>
+        Tạm khóa sẽ chặn truy cập dữ liệu và khu vực ứng dụng. Tài khoản Admin được bảo vệ. Xóa tài khoản là thao tác vĩnh viễn; hệ thống sẽ từ chối nếu tài khoản còn sở hữu workspace hoặc dữ liệu liên quan.
+      </p>
+      <p className={styles.footnote}>
+        Admin có thể tạo mật khẩu và PIN mới cho tài khoản thường. Thông tin mới chỉ hiển thị một lần trong phiên thao tác; mật khẩu/PIN cũ không thể đọc lại.
+      </p>
     </section>
   );
 }

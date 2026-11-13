@@ -157,6 +157,114 @@ Deno.serve(async (request: Request) => {
       return json({ ok: true });
     }
 
+    if (action === "admin-reset-credentials") {
+      const session = await authenticatedUser(request);
+      if (!session) return json({ error: "AUTH_REQUIRED" }, 401);
+      const [adminCheck, activeCheck] = await Promise.all([
+        session.userClient.rpc("is_platform_admin"),
+        session.userClient.rpc("is_platform_user_active"),
+      ]);
+      if (adminCheck.error || adminCheck.data !== true) return json({ error: "ADMIN_REQUIRED" }, 403);
+      if (activeCheck.error || activeCheck.data !== true) return json({ error: "ADMIN_ACCOUNT_ACTIVE_REQUIRED" }, 403);
+
+      const userId = readString(body.userId, 36);
+      const password = typeof body.password === "string" ? body.password : "";
+      const pin = readString(body.pin, 6);
+      if (!/^[0-9a-f-]{36}$/i.test(userId) || password.length < 16 || password.length > 128 || !/^\d{6}$/.test(pin)) {
+        return json({ error: "INVALID_USER" }, 400);
+      }
+      if (userId === session.user.id) return json({ error: "ADMIN_ACCOUNT_PROTECTED" }, 403);
+
+      const { data: users, error: usersError } = await session.userClient.rpc("admin_list_users");
+      if (usersError || !users) return json({ error: "USER_LOOKUP_UNAVAILABLE" }, 503);
+      const target = users.find((item) => item.user_id === userId);
+      if (!target) return json({ error: "INVALID_USER" }, 404);
+      if (target.platform_role === "admin") return json({ error: "ADMIN_ACCOUNT_PROTECTED" }, 403);
+
+      const { error: pinError } = await admin.rpc("admin_set_account_recovery_pin", {
+        p_admin_user_id: session.user.id,
+        p_target_user_id: userId,
+        p_pin: pin,
+      });
+      if (pinError) {
+        console.error("[account-recovery] Admin PIN reset failed", { code: pinError.code ?? "unknown" });
+        return json({ error: "PIN_UPDATE_FAILED" }, 400);
+      }
+      const { error: passwordError } = await admin.auth.admin.updateUserById(userId, { password });
+      if (passwordError) {
+        console.error("[account-recovery] Admin password reset failed", { code: passwordError.code ?? "unknown" });
+        return json({ error: "PASSWORD_UPDATE_FAILED" }, 400);
+      }
+      return json({ ok: true, email: target.email ?? "" });
+    }
+
+    if (action === "delete-user") {
+      const session = await authenticatedUser(request);
+      if (!session) return json({ error: "AUTH_REQUIRED" }, 401);
+
+      // This operation is privileged. Re-check both platform role and account status
+      // inside the Edge Function; never trust a role supplied by the browser.
+      const [adminCheck, activeCheck] = await Promise.all([
+        session.userClient.rpc("is_platform_admin"),
+        session.userClient.rpc("is_platform_user_active"),
+      ]);
+      if (adminCheck.error || adminCheck.data !== true) {
+        return json({ error: "ADMIN_REQUIRED" }, 403);
+      }
+      if (activeCheck.error || activeCheck.data !== true) {
+        return json({ error: "ADMIN_ACCOUNT_ACTIVE_REQUIRED" }, 403);
+      }
+
+      const userId = readString(body.userId, 36);
+      const confirmEmail = readString(body.confirmEmail, 254).toLowerCase();
+      if (!/^[0-9a-f-]{36}$/i.test(userId) || !confirmEmail) {
+        return json({ error: "INVALID_USER" }, 400);
+      }
+      if (userId === session.user.id) {
+        return json({ error: "CANNOT_DELETE_SELF" }, 403);
+      }
+
+      // These authenticated admin RPCs are the source of truth for account role,
+      // email and workspace ownership; the browser cannot override these checks.
+      const { data: users, error: usersError } = await session.userClient.rpc("admin_list_users");
+      if (usersError || !users) {
+        console.error("[account-recovery] Admin account lookup failed:", usersError?.code ?? "unknown");
+        return json({ error: "USER_LOOKUP_UNAVAILABLE" }, 503);
+      }
+      const target = users.find((item) => item.user_id === userId);
+      if (!target) return json({ error: "INVALID_USER" }, 404);
+      if (target.platform_role === "admin") {
+        return json({ error: "ADMIN_ACCOUNT_PROTECTED" }, 403);
+      }
+      if (!target.email || target.email.toLowerCase() !== confirmEmail) {
+        return json({ error: "EMAIL_CONFIRMATION_MISMATCH" }, 400);
+      }
+
+      const { data: workspaces, error: workspacesError } = await session.userClient.rpc("admin_list_workspaces");
+      if (workspacesError || !workspaces) {
+        console.error("[account-recovery] Workspace ownership check failed:", workspacesError?.code ?? "unknown");
+        return json({ error: "WORKSPACE_CHECK_UNAVAILABLE" }, 503);
+      }
+      if (workspaces.some((workspace) => workspace.created_by === userId)) {
+        return json({ error: "USER_OWNS_WORKSPACES" }, 409);
+      }
+
+      // Auth Admin API requires the service key. It is used only on this server-side
+      // function and is never returned to, or embedded in, the application bundle.
+      const { error: deleteError } = await admin.auth.admin.deleteUser(userId, false);
+      if (deleteError) {
+        console.error("[account-recovery] Admin deletion failed:", {
+          code: deleteError.code ?? "unknown",
+          status: deleteError.status ?? null,
+        });
+        // Several application tables intentionally retain authored records with
+        // ON DELETE RESTRICT, and Storage objects can also prevent Auth deletion.
+        return json({ error: "DELETE_BLOCKED" }, 409);
+      }
+
+      return json({ ok: true });
+    }
+
     if (action !== "reset-password") return json({ error: "INVALID_ACTION" }, 400);
 
     const email = readString(body.email, 254).toLowerCase();

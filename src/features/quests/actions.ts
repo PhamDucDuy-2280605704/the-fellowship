@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
 
@@ -8,8 +9,19 @@ function field(formData: FormData, name: string): string {
   return typeof value === "string" ? value.trim() : "";
 }
 function validId(value: string) { return /^[0-9a-f-]{36}$/i.test(value); }
-function back(slug: string, error?: string) {
-  redirect(error ? `/workspaces/${slug}/quests?error=${error}` : `/workspaces/${slug}/quests`);
+
+function refreshWorkspace(slug: string) {
+  revalidatePath(`/workspaces/${slug}`);
+  revalidatePath(`/workspaces/${slug}/quests`);
+  revalidatePath(`/workspaces/${slug}/archives`);
+  revalidatePath(`/workspaces/${slug}/activity`);
+}
+
+function back(slug: string, error?: string, notice = "quest-updated"): never {
+  if (!error) refreshWorkspace(slug);
+  redirect(error
+    ? `/workspaces/${slug}/quests?error=${encodeURIComponent(error)}`
+    : `/workspaces/${slug}/quests?notice=${encodeURIComponent(notice)}`);
 }
 
 export async function createQuest(formData: FormData): Promise<void> {
@@ -34,7 +46,7 @@ export async function createQuest(formData: FormData): Promise<void> {
     due_date: dueDate,
     created_by: user.id,
   });
-  back(slug, error ? "save" : undefined);
+  back(slug, error ? "save" : undefined, "quest-created");
 }
 
 export async function updateQuestStatus(formData: FormData): Promise<void> {
@@ -49,7 +61,7 @@ export async function updateQuestStatus(formData: FormData): Promise<void> {
     status,
     completed_at: status === "done" ? new Date().toISOString() : null,
   }).eq("id", questId).eq("workspace_id", workspaceId).select("id").maybeSingle();
-  back(slug, error || !data ? "save" : undefined);
+  back(slug, error || !data ? "save" : undefined, "quest-updated");
 }
 
 export async function assignQuest(formData: FormData): Promise<void> {
@@ -65,7 +77,7 @@ export async function assignQuest(formData: FormData): Promise<void> {
     user_id: userId,
     assigned_by: user.id,
   }, { onConflict: "quest_id,user_id", ignoreDuplicates: true });
-  back(slug, error ? "assign" : undefined);
+  back(slug, error ? "assign" : undefined, "quest-assigned");
 }
 
 export async function addQuestCheckIn(formData: FormData): Promise<void> {
@@ -85,7 +97,7 @@ export async function addQuestCheckIn(formData: FormData): Promise<void> {
     progress,
     created_by: user.id,
   });
-  back(slug, error ? "checkin" : undefined);
+  back(slug, error ? "checkin" : undefined, "checkin-created");
 }
 
 export async function addQuestDependency(formData: FormData): Promise<void> {
@@ -101,5 +113,5 @@ export async function addQuestDependency(formData: FormData): Promise<void> {
     depends_on_quest_id: dependsOnQuestId,
     created_by: user.id,
   });
-  back(slug, error ? "dependency" : undefined);
+  back(slug, error ? "dependency" : undefined, "dependency-created");
 }

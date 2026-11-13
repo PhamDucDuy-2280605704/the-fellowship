@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
 
@@ -8,8 +9,20 @@ function field(formData: FormData, name: string): string {
   return typeof value === "string" ? value.trim() : "";
 }
 function validId(value: string) { return /^[0-9a-f-]{36}$/i.test(value); }
-function back(slug: string, error?: string): never {
-  redirect(error ? `/workspaces/${slug}/council?error=${error}` : `/workspaces/${slug}/council`);
+
+function refreshWorkspace(slug: string) {
+  revalidatePath(`/workspaces/${slug}`);
+  revalidatePath(`/workspaces/${slug}/council`);
+  revalidatePath(`/workspaces/${slug}/quests`);
+  revalidatePath(`/workspaces/${slug}/archives`);
+  revalidatePath(`/workspaces/${slug}/activity`);
+}
+
+function back(slug: string, error?: string, notice = "proposal-updated"): never {
+  if (!error) refreshWorkspace(slug);
+  redirect(error
+    ? `/workspaces/${slug}/council?error=${encodeURIComponent(error)}`
+    : `/workspaces/${slug}/council?notice=${encodeURIComponent(notice)}`);
 }
 
 export async function createProposal(formData: FormData): Promise<void> {
@@ -44,7 +57,7 @@ export async function createProposal(formData: FormData): Promise<void> {
     p_options: options,
     p_criteria: criteria,
   });
-  back(slug, error || !proposalId ? "proposal" : undefined);
+  back(slug, error || !proposalId ? "proposal" : undefined, "proposal-created");
 }
 
 export async function setProposalStatus(formData: FormData): Promise<void> {
@@ -55,7 +68,7 @@ export async function setProposalStatus(formData: FormData): Promise<void> {
   if (!validId(workspaceId) || !validId(proposalId) || !["voting", "archived"].includes(status)) back(slug, "invalid");
   const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("council_proposals").update({ status }).eq("id", proposalId).eq("workspace_id", workspaceId).select("id").maybeSingle();
-  back(slug, error || !data ? "status" : undefined);
+  back(slug, error || !data ? "status" : undefined, "proposal-updated");
 }
 
 export async function castProposalVote(formData: FormData): Promise<void> {
@@ -70,7 +83,7 @@ export async function castProposalVote(formData: FormData): Promise<void> {
     p_proposal_id: proposalId,
     p_option_id: optionId,
   });
-  back(slug, error ? "vote" : undefined);
+  back(slug, error ? "vote" : undefined, "vote-submitted");
 }
 
 export async function scoreCouncilOption(formData: FormData): Promise<void> {
@@ -88,7 +101,7 @@ export async function scoreCouncilOption(formData: FormData): Promise<void> {
     workspace_id: workspaceId, proposal_id: proposalId, option_id: optionId,
     criterion_id: criterionId, user_id: user.id, score, comment,
   }, { onConflict: "option_id,criterion_id,user_id" });
-  back(slug, error ? "score" : undefined);
+  back(slug, error ? "score" : undefined, "score-saved");
 }
 
 export async function decideProposal(formData: FormData): Promise<void> {
@@ -110,5 +123,5 @@ export async function decideProposal(formData: FormData): Promise<void> {
     p_rationale: rationale,
     p_followup_quest_title: followupTitle || null,
   });
-  back(slug, error ? "decision" : undefined);
+  back(slug, error ? "decision" : undefined, "decision-recorded");
 }

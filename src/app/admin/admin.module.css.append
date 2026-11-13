@@ -1,0 +1,29 @@
+
+/* Explicit, guarded account deletion controls. */
+.accountActions { display: grid; gap: 10px; min-width: 170px; }
+.deleteAccount { border-top: 1px solid rgba(226,218,190,.12); padding-top: 8px; }
+.deleteSummary { width: max-content; color: #e0a99c; cursor: pointer; font-size: 13px; list-style-position: inside; }
+.deleteSummary:hover { color: #f1c0b4; }
+.deleteForm { display: grid; gap: 7px; margin-top: 9px; padding: 10px; border: 1px solid rgba(190,112,92,.28); border-radius: 7px 13px 7px 13px; background: rgba(70,24,18,.18); }
+.deleteForm label { color: #d8c7b9; font-size: 12px; line-height: 1.5; }
+.confirmEmailInput { width: 100%; min-width: 0; min-height: 38px; padding: 7px 9px; border: 1px solid rgba(226,218,190,.2); border-radius: 6px 10px 6px 10px; background: #11150f; color: var(--ink); font: inherit; font-size: 13px; }
+.deleteAccountButton { min-height: 38px; padding: 7px 9px; border: 1px solid rgba(190,90,76,.65); border-radius: 6px 10px 6px 10px; background: rgba(125,43,34,.18); color: #f0b6a8; cursor: pointer; font: inherit; font-size: 13px; }
+.deleteAccountButton:hover { border-color: rgba(224,125,105,.9); background: rgba(125,43,34,.3); }
+.deleteForm :focus-visible { outline: 2px solid #d88e7d; outline-offset: 2px; }
+@media (max-width: 700px) {
+  .accountActions { min-width: 185px; }
+  .deleteForm { padding: 9px; }
+}
+
+
+/* Admin-only one-time credential reset panel. */
+.credentialReset { display: grid; gap: 8px; }
+.credentialButton, .credentialDismiss { min-height: 36px; padding: 7px 9px; border: 1px solid rgba(201,168,106,.42); border-radius: 7px 12px 7px 12px; background: rgba(201,168,106,.06); color: #e1c78f; cursor: pointer; font: inherit; font-size: 13px; }
+.credentialButton:disabled { cursor: wait; opacity: .6; }
+.credentialResult { display: grid; gap: 8px; min-width: 245px; padding: 12px; border: 1px solid rgba(120,165,111,.4); border-radius: 8px 14px 8px 14px; background: rgba(8,14,10,.96); }
+.credentialResult b { color: #c0d0b1; }
+.credentialResult p { margin: 0; overflow-wrap: anywhere; color: var(--muted); }
+.credentialResult code { color: var(--ink); user-select: all; }
+.credentialResult small, .credentialError { color: var(--muted); line-height: 1.5; }
+.credentialError { margin: 0; color: #e5b4a8; }
+.credentialDismiss { border-color: var(--line); color: var(--muted); background: transparent; }

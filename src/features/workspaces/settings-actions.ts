@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
 
@@ -23,7 +24,12 @@ export async function updateWorkspaceDetails(formData: FormData): Promise<void> 
 
   const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { data, error } = await supabase.from("workspaces").update({ name, description }).eq("id", workspaceId).select("id").maybeSingle();
-  redirect(error || !data ? `/workspaces/${slug}/settings?error=save` : `/workspaces/${slug}/settings?notice=saved`);
+  if (error || !data) redirect(`/workspaces/${slug}/settings?error=save`);
+
+  revalidatePath(`/workspaces/${slug}`);
+  revalidatePath(`/workspaces/${slug}/settings`);
+  revalidatePath("/workspaces");
+  redirect(`/workspaces/${slug}/settings?notice=saved`);
 }
 
 export async function deleteWorkspace(formData: FormData): Promise<void> {
@@ -55,6 +61,9 @@ export async function deleteWorkspace(formData: FormData): Promise<void> {
       : `/workspaces/${slug}/settings?error=delete-failed`);
   }
 
+  revalidatePath("/workspaces");
+  revalidatePath("/the-stewards-hall/workspaces");
+  revalidatePath(`/workspaces/${slug}`);
   redirect(isPlatformAdmin
     ? "/the-stewards-hall/workspaces?notice=deleted"
     : "/workspaces?notice=deleted");

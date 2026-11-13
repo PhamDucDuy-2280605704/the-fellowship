@@ -46,15 +46,15 @@ export default async function GoalsPage({ params, searchParams }: { params: Para
       </section>
       <WorkspaceNav slug={slug} active="goals" />
       {query.error && <p className={styles.error} role="alert">Không thể lưu Goal. Hãy kiểm tra dữ liệu và quyền trong workspace.</p>}
-      {error && <p className={styles.error} role="alert">Chưa tải được danh sách Goals.</p>}
+      {error && <p className={styles.error} role="alert">Chưa tải được danh sách Goals. Dữ liệu không được coi là rỗng khi truy vấn gặp lỗi.</p>}
 
       <section className={styles.moduleColumns}>
         <div className={styles.moduleMain}>
           <div className={styles.sectionHeading}>
             <div><p className={styles.eyebrow}>SHARED DIRECTION</p><h2>Mục tiêu của nhóm</h2></div>
-            <span className={styles.count}>{goals?.length ?? 0} GOALS</span>
+            <span className={styles.count}>{error ? "— GOALS" : `${goals?.length ?? 0} GOALS`}</span>
           </div>
-          {!goals?.length ? (
+          {error ? null : !goals?.length ? (
             <div className={styles.emptyState}>
               <span className={styles.emptyMark}>✧</span>
               <h3>Chưa có mục tiêu nào.</h3>

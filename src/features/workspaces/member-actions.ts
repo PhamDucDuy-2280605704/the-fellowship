@@ -1,6 +1,7 @@
 "use server";
 
 import { createHash, randomBytes } from "node:crypto";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireActiveUser } from "@/lib/auth/platform";
 
@@ -15,6 +16,14 @@ function validId(value: string) {
 
 function safeSlug(value: string) {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
+}
+
+function refreshWorkspace(slug: string) {
+  revalidatePath(`/workspaces/${slug}`);
+  revalidatePath(`/workspaces/${slug}/members`);
+  revalidatePath(`/workspaces/${slug}/quests`);
+  revalidatePath(`/workspaces/${slug}/activity`);
+  revalidatePath("/workspaces");
 }
 
 export async function createWorkspaceInvitation(formData: FormData): Promise<void> {
@@ -42,7 +51,8 @@ export async function createWorkspaceInvitation(formData: FormData): Promise<voi
     redirect(`/workspaces/${slug}/members?error=invite-failed`);
   }
 
-  redirect(`/workspaces/${slug}/members?invite=${token}`);
+  refreshWorkspace(slug);
+  redirect(`/workspaces/${slug}/members?invite=${token}&notice=invitation-created`);
 }
 
 export async function acceptWorkspaceInvitation(formData: FormData): Promise<void> {
@@ -70,6 +80,7 @@ export async function acceptWorkspaceInvitation(formData: FormData): Promise<voi
   if (!workspace) {
     redirect("/workspaces");
   }
+  refreshWorkspace(workspace.slug);
   redirect(`/workspaces/${workspace.slug}/members?notice=joined`);
 }
 
@@ -90,9 +101,9 @@ export async function updateWorkspaceMemberRole(formData: FormData): Promise<voi
     p_user_id: userId,
     p_role: role,
   });
-  redirect(error
-    ? `/workspaces/${slug}/members?error=role-update`
-    : `/workspaces/${slug}/members?notice=role-updated`);
+  if (error) redirect(`/workspaces/${slug}/members?error=role-update`);
+  refreshWorkspace(slug);
+  redirect(`/workspaces/${slug}/members?notice=role-updated`);
 }
 
 export async function removeWorkspaceMember(formData: FormData): Promise<void> {
@@ -109,9 +120,9 @@ export async function removeWorkspaceMember(formData: FormData): Promise<void> {
     p_workspace_id: workspaceId,
     p_user_id: userId,
   });
-  redirect(error
-    ? `/workspaces/${slug}/members?error=remove-failed`
-    : `/workspaces/${slug}/members?notice=member-removed`);
+  if (error) redirect(`/workspaces/${slug}/members?error=remove-failed`);
+  refreshWorkspace(slug);
+  redirect(`/workspaces/${slug}/members?notice=member-removed`);
 }
 
 export async function revokeWorkspaceInvitation(formData: FormData): Promise<void> {
@@ -124,9 +135,9 @@ export async function revokeWorkspaceInvitation(formData: FormData): Promise<voi
   const { error } = await supabase.rpc("revoke_workspace_invitation", {
     p_invitation_id: invitationId,
   });
-  redirect(error
-    ? `/workspaces/${slug}/members?error=revoke-failed`
-    : `/workspaces/${slug}/members?notice=invitation-revoked`);
+  if (error) redirect(`/workspaces/${slug}/members?error=revoke-failed`);
+  refreshWorkspace(slug);
+  redirect(`/workspaces/${slug}/members?notice=invitation-revoked`);
 }
 
 export async function leaveWorkspace(formData: FormData): Promise<void> {
@@ -134,5 +145,7 @@ export async function leaveWorkspace(formData: FormData): Promise<void> {
   if (!validId(workspaceId)) redirect("/workspaces?error=invalid-workspace");
   const { supabase } = await requireActiveUser({ allowPlatformAdmin: true });
   const { error } = await supabase.rpc("leave_workspace", { p_workspace_id: workspaceId });
-  redirect(error ? "/workspaces?error=leave-failed" : "/workspaces?notice=left-workspace");
+  if (error) redirect("/workspaces?error=leave-failed");
+  revalidatePath("/workspaces");
+  redirect("/workspaces?notice=left-workspace");
 }

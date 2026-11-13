@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { slugifyWorkspaceName } from "@/lib/domain/workspace-slug.mjs";
@@ -54,5 +55,7 @@ export async function createWorkspace(formData: FormData): Promise<void> {
   // The database trigger creates the owner membership atomically.
   // Do not request RETURNING here: the SELECT policy may run before the AFTER INSERT
   // trigger-created membership is visible to the same statement.
-  redirect(`/workspaces/${encodeURIComponent(slug)}`);
+  revalidatePath("/workspaces");
+  revalidatePath(`/workspaces/${slug}`);
+  redirect(`/workspaces/${encodeURIComponent(slug)}?notice=workspace-created`);
 }

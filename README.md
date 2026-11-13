@@ -1,332 +1,657 @@
+# 🏰 The Fellowship
+
 <div align="center">
 
   <img src="./docs/assets/the-fellowship-banner.svg" alt="The Fellowship — Goals, Decisions, Knowledge" width="100%" />
 
-  <p><strong>Cùng nhau đi xa hơn — biến mục tiêu chung thành hành động, quyết định và tri thức có thể kế thừa.</strong></p>
+  **Cùng nhau đi xa hơn — biến mục tiêu chung thành hành động, quyết định và tri thức có thể kế thừa.**
 
   <p>
-
-    <a href="https://the-fellowship-zeta.vercel.app/">🌐 Website</a>
-
-    ·
-
-    <a href="https://github.com/PhamDucDuy-2280605704/the-fellowship">Mã nguồn</a>
-
-    ·
-
-    <a href="./docs/00-PRODUCT-BRIEF.md">Product brief</a>
-
-    ·
-
-    <a href="./docs/03-ARCHITECTURE.md">Kiến trúc</a>
-
-    ·
-
-    <a href="./docs/04-ACCESS-CONTROL.md">Phân quyền</a>
-
+    <a href="https://the-fellowship-zeta.vercel.app/">🌐 Website</a> ·
+    <a href="https://github.com/PhamDucDuy-2280605704/the-fellowship">GitHub Repository</a> ·
+    <a href="./docs/00-PRODUCT-BRIEF.md">Product Brief</a> ·
+    <a href="./docs/03-ARCHITECTURE.md">Architecture</a> ·
+    <a href="./docs/04-ACCESS-CONTROL.md">Access Control</a>
   </p>
 
-  <p>
+  ![Next.js](https://img.shields.io/badge/Next.js-16.4.5-000000?logo=nextdotjs)
+  ![React](https://img.shields.io/badge/React-19.3.0-149eca?logo=react)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss)
+  ![Supabase](https://img.shields.io/badge/Supabase-Auth%20%2B%20PostgreSQL-3ECF8E?logo=supabase)
+  ![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel)
 
-    <img src="https://img.shields.io/badge/Next.js-16.4.5-111111?logo=nextdotjs&logoColor=white" alt="Next.js 16.4.5" />
-
-    <img src="https://img.shields.io/badge/React-19.3.0-149eca?logo=react&logoColor=white" alt="React 19.3.0" />
-
-    <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5" />
-
-    <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" />
-
-    <img src="https://img.shields.io/badge/Supabase-Auth_%2B_Postgres-3ECF8E?logo=supabase&logoColor=white" alt="Supabase Auth and Postgres" />
-
-    <img src="https://img.shields.io/badge/Hosting-Vercel-111111?logo=vercel&logoColor=white" alt="Vercel" />
-
-  </p>
-
-  <p>
-
-    <a href="https://github.com/PhamDucDuy-2280605704/the-fellowship/actions/workflows/verify.yml">
-
-      <img src="https://github.com/PhamDucDuy-2280605704/the-fellowship/actions/workflows/verify.yml/badge.svg?branch=main" alt="Verify workflow on main" />
-
-    </a>
-
-    <img src="https://img.shields.io/badge/version-0.3.0-blue" alt="Version 0.3.0" />
-
-    <img src="https://img.shields.io/badge/status-In_Development-orange" alt="In development" />
-
-  </p>
+  ![Version](https://img.shields.io/badge/version-0.3.0-blue)
+  ![Status](https://img.shields.io/badge/status-In%20Development-orange)
+  [![Verify](https://github.com/PhamDucDuy-2280605704/the-fellowship/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/PhamDucDuy-2280605704/the-fellowship/actions/workflows/verify.yml)
 
 </div>
 
 ---
 
-## 🏰 Giới thiệu
+## 📖 1. Giới thiệu
 
-**The Fellowship** là không gian làm việc chung dành cho một nhóm người cùng theo đuổi mục tiêu. Dự án kết nối ba hoạt động quan trọng: tổ chức công việc, đưa ra quyết định minh bạch và lưu giữ tri thức để cả nhóm có thể tiếp tục sử dụng.
+**The Fellowship** là nền tảng cộng tác và quản lý tri thức dành cho các nhóm làm việc cùng hướng đến một mục tiêu chung.
 
-Thay vì để mục tiêu, nhiệm vụ, thảo luận và ghi chú nằm rời rạc, The Fellowship đưa chúng về cùng một workspace — nơi mọi người biết nhóm đang hướng tới điều gì, ai đang phụ trách việc gì và vì sao một quyết định được đưa ra.
+Dự án giải quyết ba vấn đề phổ biến trong quá trình cộng tác:
 
-> Cùng xác định mục tiêu. Cùng thực hiện công việc. Cùng lưu giữ những điều có giá trị.
+- **Phân tán công việc:** Mục tiêu, nhiệm vụ, người phụ trách và tiến độ thường nằm ở nhiều nơi khác nhau.
+- **Thiếu minh bạch trong quyết định:** Các cuộc thảo luận dễ bị lặp lại khi phương án, tiêu chí và lý do lựa chọn không được lưu trữ.
+- **Mất mát tri thức:** Ghi chú, kinh nghiệm và thông tin quan trọng không được liên kết với công việc đã tạo ra chúng.
 
-## ✨ Các module chính
+The Fellowship đưa các hoạt động này về một không gian làm việc thống nhất (**Workspace**), giúp thành viên theo dõi quá trình từ xác định mục tiêu, triển khai công việc, đưa ra quyết định đến lưu trữ tri thức.
 
-### ⚔️ The Fellowship — Công việc và mục tiêu
+> Define goals. Execute together. Decide transparently. Preserve knowledge.
 
-- Tạo workspace, quản lý thành viên và thiết lập vai trò riêng cho từng workspace.
+### Đối tượng sử dụng
 
-- Tạo **Goals** để xác định mục tiêu, mô tả và ngày cần hoàn thành.
+- Nhóm sinh viên thực hiện đồ án và dự án học tập.
+- Nhóm phát triển sản phẩm và kỹ thuật.
+- Câu lạc bộ, tổ chức và nhóm tình nguyện.
+- Các đội nhóm cần quản lý công việc và lưu trữ tri thức tập trung.
 
-- Tạo **Quests**, liên kết với Goal, thiết lập mức ưu tiên, hạn hoàn thành và người phụ trách.
+---
 
-- Theo dõi trạng thái nhiệm vụ, ghi nhận check-in và cập nhật tiến độ.
+## ✨ 2. Các tính năng chính
 
-- Thiết lập quan hệ phụ thuộc giữa các Quest; hệ thống kiểm tra quan hệ cùng workspace và ngăn chu trình phụ thuộc.
+### ⚔️ 2.1. The Fellowship — Goals & Quests
 
-### ⚖️ The Council — Thảo luận và quyết định
+**Goals — Mục tiêu**
 
-- Tạo đề xuất kèm bối cảnh và nhiều phương án lựa chọn.
+- Tạo mục tiêu cho workspace, kèm tên, mô tả và thời hạn.
+- Theo dõi trạng thái và vòng đời của mục tiêu.
+- Lưu trữ mục tiêu khi không còn hoạt động.
 
+**Quests — Nhiệm vụ**
+
+- Tạo nhiệm vụ và liên kết với Goal.
+- Thiết lập mức độ ưu tiên, hạn hoàn thành và trạng thái.
+- Giao nhiệm vụ cho thành viên workspace.
+- Theo dõi tiến độ bằng các lần check-in.
+
+**Quest Dependencies — Quan hệ phụ thuộc**
+
+- Thiết lập quan hệ phụ thuộc giữa các nhiệm vụ.
+- Giới hạn quan hệ phụ thuộc trong cùng workspace.
+- Ngăn chặn chu trình phụ thuộc không hợp lệ bằng kiểm tra ở tầng database.
+
+### ⚖️ 2.2. The Council — Decisions & Governance
+
+**Proposals — Đề xuất**
+
+- Tạo đề xuất kèm bối cảnh và mô tả vấn đề.
+- Xây dựng nhiều phương án lựa chọn.
+- Mô tả ưu điểm, nhược điểm và rủi ro của từng phương án.
 - Thiết lập tiêu chí đánh giá có trọng số và thời điểm kết thúc biểu quyết.
 
-- Thành viên tham gia bỏ phiếu kín theo nguyên tắc một thành viên — một phiếu trong thời gian biểu quyết.
+**Voting — Biểu quyết**
 
-- Chấm điểm từng phương án theo tiêu chí; hệ thống tổng hợp điểm có trọng số trên thang **0–100**.
+- Thành viên tham gia biểu quyết trong thời gian cho phép.
+- Áp dụng nguyên tắc một thành viên — một phiếu.
+- Bảo vệ dữ liệu phiếu thông qua cơ chế database/RPC.
+- Tổng hợp kết quả mà không công khai danh tính lựa chọn trong dữ liệu tổng hợp.
 
-- Owner/Admin có thể mở biểu quyết, ghi nhận phương án được chọn cùng lý do và lưu quyết định.
+**Weighted Scoring — Chấm điểm có trọng số**
 
-- Có thể tạo Quest tiếp theo ngay từ một quyết định để chuyển kết quả thảo luận thành hành động.
+- Đánh giá phương án theo từng tiêu chí.
+- Áp dụng trọng số cho từng tiêu chí.
+- Tổng hợp và chuẩn hóa kết quả trên thang điểm 0–100.
 
-### 📚 The Archives — Kho tri thức chung
+**Decisions — Quyết định**
 
-- Tạo và chỉnh sửa ghi chú bằng **Markdown**.
+- Owner/Admin quản lý quy trình quyết định theo quyền hạn.
+- Ghi nhận phương án được lựa chọn và lý do.
+- Lưu trữ đề xuất sau khi hoàn tất.
+- Tạo Quest tiếp theo trực tiếp từ một quyết định.
 
-- Gắn thẻ, lọc theo thẻ và tìm kiếm toàn văn trên tiêu đề, nội dung và thẻ.
+### 📚 2.3. The Archives — Knowledge Management
 
-- Liên kết ghi chú với Goal, Quest hoặc đề xuất trong Council.
+**Notes — Ghi chú**
 
-- Lưu trữ và khôi phục ghi chú mà không làm mất nội dung.
+- Tạo và chỉnh sửa ghi chú.
+- Soạn thảo và hiển thị nội dung Markdown an toàn.
+- Lưu trữ và khôi phục ghi chú.
 
-- Nội dung được giới hạn trong workspace tương ứng.
+**Knowledge Organization — Tổ chức tri thức**
 
-### 🤝 Workspace và cộng tác
+- Gắn thẻ và lọc ghi chú theo thẻ.
+- Tìm kiếm toàn văn trên tiêu đề, nội dung và thẻ.
+- Liên kết ghi chú với Goals, Quests và Council Proposals.
+- Giới hạn dữ liệu trong phạm vi workspace tương ứng.
 
-- Đăng ký, đăng nhập bằng email/mật khẩu và quản lý phiên đăng nhập.
+### 🤝 2.4. Workspace & Collaboration
 
-- Tạo workspace; người tạo được gán vai trò Owner tự động.
+- Đăng ký và đăng nhập bằng email/mật khẩu.
+- Tạo workspace; người tạo tự động trở thành Owner.
+- Mời thành viên bằng liên kết có token ngẫu nhiên được lưu dưới dạng SHA-256 hash.
+- Lời mời hết hạn sau 7 ngày và có thể thu hồi.
+- Quản lý danh sách thành viên và thay đổi vai trò.
+- Gỡ thành viên hoặc tự rời workspace.
+- Quản lý tên và mô tả workspace.
 
-- Mời thành viên bằng liên kết có token ngẫu nhiên được lưu dưới dạng SHA-256 hash; lời mời hết hạn sau 7 ngày và có thể thu hồi.
+### 🕰️ 2.5. Activity Timeline
 
-- Quản lý danh sách thành viên, thay đổi vai trò, gỡ thành viên và tự rời workspace.
+Hệ thống ghi nhận các hoạt động tạo/cập nhật Goal, Quest, Notes và Council Proposals. Timeline hiển thị tối đa 100 sự kiện gần nhất trong workspace.
 
-- Thiết lập tên và mô tả workspace.
+### 🛡️ 2.6. Platform Administration
 
-### 🕰️ Activity và quản trị nền tảng
+**Account Management**
 
-- Timeline ghi nhận hoạt động tạo/cập nhật Goal, Quest, ghi chú và đề xuất Council; hiển thị tối đa 100 sự kiện gần nhất.
+- Xem danh sách tài khoản toàn nền tảng.
+- Theo dõi trạng thái xác nhận email và lần đăng nhập gần nhất.
+- Tạm khóa hoặc kích hoạt lại tài khoản.
 
-- Platform Admin có khu vực quản trị riêng để xem danh sách tài khoản, trạng thái xác nhận email/lần đăng nhập gần nhất, tạm khóa hoặc kích hoạt lại tài khoản.
+**Workspace Management**
 
-- Platform Admin có thể xem danh sách workspace và thực hiện lưu trữ/khôi phục workspace.
+- Xem danh sách workspace toàn nền tảng.
+- Kiểm tra thông tin workspace và thành viên.
+- Lưu trữ hoặc khôi phục workspace.
 
-- Các thao tác quản trị nhạy cảm được kiểm tra ở PostgreSQL/RPC phía máy chủ, không dựa vào việc ẩn giao diện.
+Các thao tác quản trị nhạy cảm được kiểm tra tại PostgreSQL/RPC phía máy chủ, không phụ thuộc vào việc ẩn hoặc hiển thị giao diện.
 
-## 🗺️ Ba trụ cột của The Fellowship
+---
 
-Ba module kết nối thành một vòng lặp cộng tác — từ thống nhất điều cần làm, lựa chọn cách thực hiện đến lưu lại kinh nghiệm cho lần tiếp theo.
+## 🧭 3. Các khu vực trong ứng dụng
 
-~~~mermaid
-flowchart LR
-    A["⚔️ The Fellowship<br/>Goals & Quests"] --> B["⚖️ The Council<br/>Discuss & Decide"]
-    B --> C["📚 The Archives<br/>Knowledge & Memory"]
-    C --> A
-~~~
+### Public Routes
 
-## 🧭 Các khu vực trong ứng dụng
+| Route | Chức năng |
+|---|---|
+| `/` | Trang giới thiệu |
+| `/signup` | Đăng ký tài khoản |
+| `/login` | Đăng nhập |
+| `/forgot-password` | Khôi phục mật khẩu |
+| `/recovery-pin` | Thiết lập PIN khôi phục |
 
-| Đường dẫn công khai | Chức năng |
-| --- | --- |
-| **/** | Trang giới thiệu The Fellowship |
-| **/signup** | Tạo tài khoản |
-| **/login** | Đăng nhập thành viên |
-| **/forgot-password** | Bắt đầu quy trình khôi phục mật khẩu |
-| **/recovery-pin** | Thiết lập PIN khôi phục tài khoản |
-| **/workspaces** | Danh sách và tạo workspace |
-| **/workspaces/[slug]** | Tổng quan workspace |
-| **/workspaces/[slug]/goals** | Quản lý mục tiêu |
-| **/workspaces/[slug]/quests** | Quản lý nhiệm vụ, người phụ trách và tiến độ |
-| **/workspaces/[slug]/council** | Đề xuất, biểu quyết, chấm điểm và quyết định |
-| **/workspaces/[slug]/archives** | Ghi chú, Markdown, thẻ và tìm kiếm |
-| **/workspaces/[slug]/activity** | Dòng thời gian hoạt động |
-| **/workspaces/[slug]/members** | Thành viên và lời mời |
-| **/workspaces/[slug]/settings** | Cài đặt workspace |
-| **/the-stewards-hall** | Bảng điều khiển dành cho Platform Admin |
-| **/the-stewards-hall/login** | Cổng đăng nhập riêng cho Platform Admin |
-| **/the-stewards-hall/accounts** | Quản lý tài khoản toàn nền tảng |
-| **/the-stewards-hall/workspaces** | Quản lý workspace toàn nền tảng |
+### Workspace Routes
 
-Các khu vực workspace yêu cầu tài khoản đang hoạt động và membership hợp lệ. Những trang quản trị chỉ dành cho tài khoản có quyền Platform Admin.
+| Route | Chức năng |
+|---|---|
+| `/workspaces` | Danh sách và tạo workspace |
+| `/workspaces/[slug]` | Tổng quan workspace |
+| `/workspaces/[slug]/goals` | Quản lý mục tiêu |
+| `/workspaces/[slug]/quests` | Quản lý nhiệm vụ |
+| `/workspaces/[slug]/council` | Thảo luận và quyết định |
+| `/workspaces/[slug]/archives` | Quản lý tri thức |
+| `/workspaces/[slug]/activity` | Lịch sử hoạt động |
+| `/workspaces/[slug]/members` | Thành viên và lời mời |
+| `/workspaces/[slug]/settings` | Cài đặt workspace |
 
-**Lưu ý về route quản trị:** `/the-stewards-hall` và các đường dẫn con là URL công khai cần dùng. `src/proxy.ts` rewrite chúng sang các route nội bộ `/admin` và `/steward-login`. Truy cập trực tiếp `/admin` bị trả về `404`; `/steward-login` là đích rewrite nội bộ, không phải URL quản trị cần chia sẻ.
+### Platform Administration Routes
 
-## 🔐 Vai trò và bảo mật
+| Route | Chức năng |
+|---|---|
+| `/the-stewards-hall` | Dashboard quản trị |
+| `/the-stewards-hall/login` | Đăng nhập quản trị |
+| `/the-stewards-hall/accounts` | Quản lý tài khoản |
+| `/the-stewards-hall/workspaces` | Quản lý workspace toàn nền tảng |
 
-The Fellowship tách biệt quyền quản trị toàn nền tảng và quyền thành viên trong từng workspace.
+**Lưu ý:** Các URL quản trị công khai được rewrite nội bộ thông qua `src/proxy.ts`. Không sử dụng `/admin` hoặc `/steward-login` làm URL chia sẻ trực tiếp. Các khu vực workspace yêu cầu tài khoản đang hoạt động và membership hợp lệ.
 
-| Vai trò | Phạm vi |
-| --- | --- |
-| **Platform Admin** | Quản trị nền tảng; được cấp quyền riêng, không phải một workspace role |
-| **Owner** | Chủ sở hữu workspace, quản lý thành viên và thiết lập workspace |
-| **Admin** | Quản lý thành viên và các hoạt động quản trị workspace được cho phép |
-| **Member** | Tạo/cập nhật nội dung và tham gia hoạt động cộng tác |
-| **Viewer** | Chỉ xem dữ liệu trong workspace |
+---
 
-Các nguyên tắc bảo vệ dữ liệu:
+## 🔐 4. Authentication & Access Control
 
-- PostgreSQL **Row Level Security (RLS)** bảo vệ dữ liệu theo workspace và membership.
+The Fellowship sử dụng mô hình phân quyền hai cấp độc lập.
 
-- Người dùng thông thường chỉ truy cập workspace mà họ có membership đang hoạt động.
+### 4.1. Platform Roles
 
-- Kiểm tra vai trò và các thao tác đặc quyền được thực hiện ở phía máy chủ/cơ sở dữ liệu.
+| Vai trò | Phạm vi | Quyền hạn |
+|---|---|---|
+| Platform Admin | Toàn nền tảng | Quản lý tài khoản và workspace |
+| User | Các workspace được tham gia | Sử dụng chức năng theo workspace role |
 
-- Token lời mời được lưu dưới dạng hash, không lưu token gốc.
+Platform Admin được quản lý thông qua bảng riêng trong schema `private`, không được cấp quyền dựa trên metadata do người dùng tự chỉnh sửa.
 
-- Trình duyệt chỉ sử dụng Supabase Publishable Key. Không đưa Service Role Key hoặc secret vào biến môi trường có tiền tố `NEXT_PUBLIC_`.
+### 4.2. Workspace Roles
 
-- Ứng dụng không có chế độ workspace khách hoặc ẩn danh.
+| Vai trò | Quyền hạn |
+|---|---|
+| Owner | Chủ sở hữu workspace, quản lý thành viên và thiết lập |
+| Admin | Quản lý workspace và các hoạt động quản trị được cho phép |
+| Member | Tham gia và đóng góp nội dung |
+| Viewer | Chỉ xem dữ liệu |
 
-## 🧰 Công nghệ
+**Nguyên tắc:** Workspace Admin không đồng nghĩa với Platform Admin.
 
-| Lớp | Công nghệ |
-| --- | --- |
-| Framework | Next.js 16.4.5 — App Router |
-| UI | React 19.3.0 |
-| Ngôn ngữ | TypeScript 5 |
-| Styling | Tailwind CSS 4 và CSS Modules |
+### 4.3. Security Architecture
+
+- PostgreSQL Row Level Security (RLS).
+- Kiểm tra membership và vai trò tại database.
+- Server-side authorization.
+- Guarded RPC cho các thao tác đặc quyền.
+- Phân tách schema `public` và `private`.
+- Invitation token được lưu dưới dạng SHA-256 hash.
+- Giới hạn thử đăng ký và khôi phục tài khoản.
+- Kiểm soát trạng thái tài khoản đang hoạt động.
+- PIN khôi phục tài khoản.
+- Kiểm tra quyền trước khi xử lý các thao tác quan trọng.
+
+### 4.4. Security Principles
+
+1. Không tin tưởng dữ liệu phân quyền do client gửi lên.
+2. Không cho phép người dùng truy cập workspace ngoài phạm vi membership.
+3. Không cấp quyền Platform Admin qua `user_metadata`.
+4. Không cung cấp Service Role Key cho trình duyệt.
+5. Các thao tác quản trị phải được kiểm tra phía máy chủ/database.
+6. RLS và database constraints là lớp bảo vệ dữ liệu quan trọng.
+
+---
+
+## 🏗️ 5. Technology Stack
+
+| Thành phần | Công nghệ |
+|---|---|
+| Framework | Next.js 16.4.5 |
+| Routing | Next.js App Router |
+| UI Library | React 19.3.0 |
+| Programming Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| Additional Styling | CSS Modules |
 | Authentication | Supabase Auth |
-| Database | Supabase Postgres, Row Level Security và RPC |
-| Next.js session | `@supabase/ssr` |
-| Backend utilities | Supabase JavaScript Client |
+| Database | PostgreSQL |
+| Database Security | Row Level Security |
+| Backend | Supabase RPC |
+| Supabase Integration | `@supabase/supabase-js` |
+| Server-side Auth | `@supabase/ssr` |
+| Code Quality | ESLint 9 |
+| Testing | Node.js Test Runner |
+| CI/CD | GitHub Actions |
 | Hosting | Vercel |
-| CI | GitHub Actions |
 
-## 💻 Chạy dự án trên máy cá nhân
+### System Architecture
 
-### 1. Yêu cầu
+```mermaid
+flowchart TB
+    U["Users / Browser"]
 
-- **Node.js 22**.
+    subgraph Application["Next.js Application"]
+        UI["App Router / React UI"]
+        AUTH["Authentication & Session"]
+        SERVER["Server Actions / Route Handlers"]
+        AUTHZ["Authorization & Validation"]
+    end
 
+    subgraph Supabase["Supabase Platform"]
+        SA["Supabase Auth"]
+        DB[("PostgreSQL")]
+        RLS["Row Level Security"]
+        RPC["Database RPC"]
+        PRIVATE["Private Schema"]
+    end
+
+    subgraph Delivery["Deployment & CI"]
+        GH["GitHub Repository"]
+        CI["GitHub Actions"]
+        V["Vercel"]
+    end
+
+    U --> UI
+    UI --> AUTH
+    AUTH --> SA
+    UI --> SERVER
+    SERVER --> AUTHZ
+    AUTHZ --> DB
+    AUTHZ --> RPC
+    DB --> RLS
+    RPC --> PRIVATE
+    GH --> CI
+    CI --> V
+    V --> UI
+```
+
+---
+
+## 💻 6. Installation & Local Development
+
+### 6.1. Requirements
+
+- Node.js 22.
 - npm.
+- Git.
+- Tài khoản Supabase.
+- Supabase project có quyền cấu hình Auth, PostgreSQL và migrations.
 
-- Một dự án Supabase có quyền cấu hình Auth, Postgres và các migration.
-
-### 2. Clone và cài đặt
+### 6.2. Clone Repository
 
 ```bash
 git clone https://github.com/PhamDucDuy-2280605704/the-fellowship.git
+
 cd the-fellowship
+```
+
+### 6.3. Install Dependencies
+
+```bash
 npm ci
 ```
 
-### 3. Cấu hình môi trường
+Sử dụng `npm ci` để cài đặt dependencies theo lockfile.
 
-Sao chép file mẫu:
+### 6.4. Configure Environment Variables
 
-```bash
-cp .env.example .env.local
-```
+Tạo file `.env.local` từ file mẫu `.env.example`.
 
-Trên Windows PowerShell:
+**Windows PowerShell:**
 
 ```powershell
 Copy-Item .env.example .env.local
 ```
 
-Điền các giá trị Supabase trong **.env.local**:
+**macOS / Linux:**
+
+```bash
+cp .env.example .env.local
+```
+
+Cấu hình các biến môi trường:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable-key>
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your-publishable-key>
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-Trong Supabase Dashboard, thêm `http://localhost:3000/auth/callback` vào **Authentication → URL Configuration → Redirect URLs**. Khi triển khai, cấu hình thêm URL website production và callback tương ứng.
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL của Supabase project |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key của Supabase |
+| `NEXT_PUBLIC_SITE_URL` | URL gốc của ứng dụng |
 
-**Lưu ý:** Không commit `.env.local`, Service Role Key, database password hoặc bất kỳ secret nào lên GitHub.
+**Lưu ý bảo mật:**
 
-### 4. Khởi chạy môi trường phát triển
+- Không commit `.env.local` lên GitHub.
+- Không đưa Service Role Key vào biến `NEXT_PUBLIC_*`.
+- Không chia sẻ database password hoặc secret keys.
+- Chỉ sử dụng Publishable Key trong môi trường trình duyệt.
+
+### 6.5. Configure Supabase Authentication
+
+Trong Supabase Dashboard:
+
+1. Mở Authentication.
+2. Truy cập URL Configuration.
+3. Cấu hình Site URL.
+4. Thêm callback URL vào Redirect URLs.
+
+Local callback:
+
+```text
+http://localhost:3000/auth/callback
+```
+
+Production callback cần sử dụng domain production thực tế.
+
+### 6.6. Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Mở http://localhost:3000.
+Mở trình duyệt tại http://localhost:3000.
 
-## ✅ Kiểm tra chất lượng
+---
 
-| Lệnh | Mục đích |
-| --- | --- |
-| `npm run lint` | Kiểm tra quy tắc ESLint |
-| `npm run typecheck` | Kiểm tra kiểu TypeScript |
-| `npm test` | Chạy unit test |
-| `npm run build` | Tạo bản build production |
-| `npm run test:smoke` | Kiểm tra các route bằng production build |
+## 🗄️ 7. Database & Supabase
 
-GitHub Actions trong **.github/workflows/verify.yml** chạy khi push lên **main**, tạo Pull Request hoặc chạy thủ công. Pipeline cài dependencies, audit dependencies production, lint, typecheck, unit test, build production và smoke test.
+The Fellowship sử dụng Supabase làm nền tảng backend, bao gồm Authentication, PostgreSQL, RLS và RPC.
 
-Các kiểm tra tự động không thay thế việc xác minh đăng nhập thực tế, RLS, cách ly dữ liệu giữa workspace và ma trận quyền của từng vai trò trên môi trường Supabase đang triển khai.
+### 7.1. Database Modules
 
-## 🗂️ Tài liệu dự án
+| Module | Thành phần |
+|---|---|
+| Identity | Profiles, account controls |
+| Workspace | Workspaces, members, invitations |
+| Activity | Activity events |
+| Goals & Quests | Goals, quests, assignments, dependencies, check-ins |
+| Council | Proposals, options, votes, criteria, scores, decisions |
+| Archives | Notes |
+| Platform Administration | Platform admins, user status |
 
-- [Product brief](./docs/00-PRODUCT-BRIEF.md) — tầm nhìn và vấn đề sản phẩm.
+### 7.2. Database Security
 
-- [MVP scope](./docs/01-MVP-SCOPE.md) — phạm vi phiên bản MVP.
+- RLS được bật trên các bảng ứng dụng thuộc schema `public`.
+- Người dùng thông thường chỉ được truy cập dữ liệu thuộc workspace có membership hợp lệ.
+- Membership changes được thực hiện thông qua RPC có kiểm tra quyền.
+- Các thao tác đặc quyền được bảo vệ bằng server-side identity checks.
+- Các bảng quản trị nhạy cảm nằm trong schema `private`.
 
-- [Domain model](./docs/02-DOMAIN-MODEL.md) — các thực thể và quan hệ nghiệp vụ.
+### 7.3. Migration Management
 
-- [Architecture](./docs/03-ARCHITECTURE.md) — kiến trúc ứng dụng.
+Các migration được lưu tại:
 
-- [Access control](./docs/04-ACCESS-CONTROL.md) — vai trò, RLS và phân quyền.
+```text
+supabase/
+└── migrations/
+```
 
-- [Roadmap](./docs/05-ROADMAP.md) — trạng thái triển khai và các release gate.
+Tạo migration mới:
 
-- [Architecture decisions](./docs/06-DECISIONS.md) — các quyết định kiến trúc.
+```bash
+supabase migration new <migration_name>
+```
 
-- [Supabase foundation](./docs/07-SUPABASE-FOUNDATION.md) — nền tảng Supabase.
+Quy trình migration:
 
-- [Auth onboarding](./docs/08-AUTH-ONBOARDING.md) — hướng dẫn xác minh luồng xác thực.
+1. Kiểm tra nội dung SQL.
+2. Rà soát RLS policies.
+3. Kiểm tra quyền thực thi RPC.
+4. Áp dụng migration vào đúng Supabase project.
+5. Cập nhật database types nếu schema/RPC thay đổi.
+6. Kiểm tra migration history.
+7. Commit migration vào Git.
 
-- [Supabase README](./supabase/README.md) — schema, migration và lưu ý vận hành cơ sở dữ liệu.
+Không chỉnh sửa trực tiếp migration đã được áp dụng trên production.
 
-## 🗄️ Cơ sở dữ liệu
+Xem thêm: [Supabase README](./supabase/README.md).
 
-Các migration được quản lý trong **supabase/migrations/**. Lịch sử migration bao gồm workspace foundation, quản trị nền tảng, cộng tác, Goals/Quests, Council, Archives, activity, xác thực và tối ưu ràng buộc dữ liệu.
+---
 
-Khi thay đổi schema hoặc RPC:
+## 🧪 8. Testing & Code Quality
 
-1. Tạo migration mới với timestamp riêng.
+The Fellowship sử dụng nhiều lớp kiểm tra để đảm bảo chất lượng mã nguồn.
 
-2. Rà soát SQL, RLS policy và quyền thực thi function.
+### Available Scripts
 
-3. Áp dụng vào đúng Supabase project.
+| Command | Description |
+|---|---|
+| `npm run dev` | Chạy development server |
+| `npm run build` | Build production |
+| `npm run start` | Chạy production server |
+| `npm run lint` | Kiểm tra ESLint |
+| `npm run typecheck` | Kiểm tra TypeScript |
+| `npm test` | Chạy unit tests |
+| `npm run test:smoke` | Kiểm tra route bằng production build |
 
-4. Cập nhật `src/types/database.ts` khi public schema/RPC thay đổi.
+### Recommended Verification
 
-5. Kiểm tra lại migration history và các quyền liên quan.
+Trước khi push code:
 
-Không chỉnh sửa migration đã áp dụng trên production. Xem [Supabase README](./supabase/README.md) để biết chi tiết và các lưu ý bootstrap môi trường mới.
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run test:smoke
+```
 
-## 🚀 Triển khai
+### CI/CD Pipeline
 
-Repository được kết nối với **Vercel**. Nhánh **main** là nhánh production; GitHub Actions thực hiện các bước xác minh trên commit mới và Vercel tạo deployment theo cấu hình của project.
+GitHub Actions được cấu hình trong:
 
-**Website:** https://the-fellowship-zeta.vercel.app/
+```text
+.github/workflows/verify.yml
+```
 
-**Trạng thái dự án:** các module chính đã được tích hợp. Việc xác minh trực tiếp các luồng xác thực, phân quyền theo nhiều tài khoản và hành vi RLS trên môi trường production vẫn là release gate trước khi xem MVP là production-verified. Xem [Roadmap](./docs/05-ROADMAP.md).
+Pipeline thực hiện các bước xác minh:
+
+- Cài đặt dependencies từ lockfile.
+- Audit dependencies production.
+- ESLint.
+- TypeScript type checking.
+- Unit tests.
+- Production build.
+- Route smoke tests.
+
+Workflow được kích hoạt theo cấu hình GitHub Actions khi có thay đổi trên nhánh `main`, Pull Request hoặc chạy thủ công.
+
+**Lưu ý:** Build thành công không đồng nghĩa với việc toàn bộ phân quyền, RLS và luồng xác thực production đã được xác minh.
+
+---
+
+## 🚀 9. Deployment
+
+The Fellowship được triển khai thông qua Vercel và liên kết với GitHub Repository.
+
+### Production Website
+
+🌐 https://the-fellowship-zeta.vercel.app/
+
+### Deployment Workflow
+
+```mermaid
+flowchart LR
+    A["Developer"] --> B["Git Commit"]
+    B --> C["GitHub Repository"]
+    C --> D["GitHub Actions"]
+    D --> E{"Quality Checks"}
+    E -->|Passed| F["Vercel Deployment"]
+    E -->|Failed| G["Fix & Retry"]
+    G --> B
+    F --> H["Production Website"]
+```
+
+### Deployment Requirements
+
+- Các biến môi trường Supabase đã được cấu hình.
+- Production URL được khai báo trong Supabase Auth.
+- Database migrations đã được áp dụng.
+- Các kiểm tra CI hoàn thành thành công.
+- RLS và quyền truy cập đã được kiểm tra.
+- Authentication hoạt động đúng trên môi trường thực tế.
+
+---
+
+## 📂 10. Project Documentation
+
+Tài liệu kỹ thuật và nghiệp vụ được quản lý trong thư mục `docs/`.
+
+| Document | Description |
+|---|---|
+| [Product Brief](./docs/00-PRODUCT-BRIEF.md) | Tầm nhìn và mục tiêu sản phẩm |
+| [MVP Scope](./docs/01-MVP-SCOPE.md) | Phạm vi MVP |
+| [Domain Model](./docs/02-DOMAIN-MODEL.md) | Mô hình dữ liệu và nghiệp vụ |
+| [Architecture](./docs/03-ARCHITECTURE.md) | Kiến trúc hệ thống |
+| [Access Control](./docs/04-ACCESS-CONTROL.md) | Vai trò, quyền hạn và RLS |
+| [Roadmap](./docs/05-ROADMAP.md) | Tiến độ và các giai đoạn phát triển |
+| [Architecture Decisions](./docs/06-DECISIONS.md) | Các quyết định kiến trúc |
+| [Supabase Foundation](./docs/07-SUPABASE-FOUNDATION.md) | Nền tảng Supabase |
+| [Auth Onboarding](./docs/08-AUTH-ONBOARDING.md) | Hướng dẫn kiểm tra authentication |
+| [Supabase README](./supabase/README.md) | Database, migrations và vận hành |
+
+---
+
+## 🛣️ 11. Development Roadmap
+
+Dự án được phát triển theo từng giai đoạn.
+
+| Giai đoạn | Nội dung | Trạng thái |
+|---|---|---|
+| Stage 1 | Repository & Application Foundation | Completed |
+| Stage 2 | Supabase & Authentication | Implemented |
+| Stage 3 | Platform Administration | Integrated |
+| Stage 4 | Workspace & Membership | Implemented |
+| Stage 5 | Goals & Quests | Implemented |
+| Stage 6 | Activity & Archives | Implemented |
+| Stage 7 | The Council | Integrated |
+| Stage 8 | Advanced Archives | Integrated |
+
+### Remaining Release Gates
+
+Trước khi xác nhận MVP đã được production-verified, cần hoàn thành:
+
+- Kiểm tra đăng ký, xác nhận email và đăng nhập.
+- Kiểm tra PIN khôi phục và password recovery.
+- Kiểm tra cách ly dữ liệu giữa các workspace.
+- Kiểm tra ma trận quyền Owner, Admin, Member và Viewer.
+- Kiểm tra lời mời, hết hạn và thu hồi lời mời.
+- Kiểm tra Platform Admin và tài khoản thông thường.
+- Kiểm tra RPC và RLS trên môi trường thực tế.
+- Xác minh deployment production tương ứng với commit hiện tại.
+
+Trạng thái chi tiết được cập nhật trong [Roadmap](./docs/05-ROADMAP.md).
+
+---
+
+## ⚠️ 12. Important Security Notes
+
+1. Không commit `.env.local` hoặc secret keys.
+2. Không sử dụng Service Role Key ở client-side.
+3. Không bỏ qua RLS khi bổ sung bảng dữ liệu mới.
+4. Không cấp quyền Platform Admin bằng user metadata.
+5. Không cho phép client tự quyết định quyền truy cập.
+6. RPC có đặc quyền phải kiểm tra danh tính và vai trò.
+7. Migration phải được kiểm tra trước khi áp dụng production.
+8. Các thay đổi liên quan đến authentication phải được kiểm thử bằng nhiều tài khoản riêng biệt.
+
+**Operational note:** Cấu hình Leaked Password Protection trong Supabase Auth hiện cần được bật theo khuyến nghị vận hành của dự án. Cần hoàn tất việc này trước khi xem hệ thống là đã sẵn sàng production.
+
+---
+
+## 🤝 13. Contribution
+
+Mọi thay đổi trong dự án nên tuân thủ các nguyên tắc:
+
+- Giữ kiến trúc và phân chia module rõ ràng.
+- Không phá vỡ các quy tắc phân quyền hiện có.
+- Kiểm tra RLS và database constraints khi thay đổi schema.
+- Cập nhật tài liệu khi thay đổi chức năng.
+- Chạy các bước kiểm tra trước khi tạo Pull Request.
+
+### Development Workflow
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run test:smoke
+```
+
+---
+
+## 📌 14. Project Information
+
+| Information | Details |
+|---|---|
+| Project | The Fellowship |
+| Version | 0.3.0 |
+| Repository | PhamDucDuy-2280605704/the-fellowship |
+| Framework | Next.js 16 |
+| Frontend | React 19 + TypeScript |
+| Backend | Supabase |
+| Database | PostgreSQL |
+| Deployment | Vercel |
+| Main Branch | `main` |
+
+### Useful Links
+
+- 🌐 **Live Website:** https://the-fellowship-zeta.vercel.app/
+- 💻 **GitHub Repository:** https://github.com/PhamDucDuy-2280605704/the-fellowship
+- ⚙️ **GitHub Actions:** https://github.com/PhamDucDuy-2280605704/the-fellowship/actions
+- 📖 **Product Brief:** [docs/00-PRODUCT-BRIEF.md](./docs/00-PRODUCT-BRIEF.md)
+- 🏗️ **Architecture:** [docs/03-ARCHITECTURE.md](./docs/03-ARCHITECTURE.md)
 
 ---
 
 <div align="center">
 
-  <sub>The Fellowship · Cùng nhau đi xa hơn, cùng nhau lưu giữ điều có giá trị.</sub>
+  **🏰 THE FELLOWSHIP**
+
+  *Goals. Decisions. Knowledge.*
+
+  *Cùng nhau đi xa hơn, cùng nhau lưu giữ những điều có giá trị.*
+
+  <sub>Built with Next.js, React, TypeScript and Supabase.</sub>
 
 </div>

@@ -93,12 +93,35 @@ export default async function AdminAccountsPage({ searchParams }: { searchParams
                           <input className={styles.reasonInput} name="reason" maxLength={500} placeholder="Lý do (bắt buộc)" required />
                         )}
                         <button className={user.is_suspended ? styles.restoreButton : styles.dangerButton} type="submit">
-                          {user.is_suspended ? "Mở khóa" : "Tạm khóa"}
+                          <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            {user.is_suspended ? (
+                              <>
+                                <path d="M7 10V7a5 5 0 0 1 9.6-2" />
+                                <rect x="4" y="10" width="16" height="11" rx="2" />
+                                <path d="m10 15 2 2 3-4" />
+                              </>
+                            ) : (
+                              <>
+                                <rect x="4" y="10" width="16" height="11" rx="2" />
+                                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                                <path d="M12 14v3" />
+                              </>
+                            )}
+                          </svg>
+                          <span>{user.is_suspended ? "Mở khóa" : "Tạm khóa"}</span>
                         </button>
                       </form>
 
                       <details className={styles.deleteAccount}>
-                        <summary className={styles.deleteSummary}>Xóa tài khoản</summary>
+                        <summary className={styles.deleteSummary}>
+                          <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3" />
+                          </svg>
+                          <span>Xóa tài khoản</span>
+                          <svg className={styles.disclosureIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" />
+                          </svg>
+                        </summary>
                         <form action={deleteUserAccount} className={styles.deleteForm}>
                           <input type="hidden" name="userId" value={user.user_id} />
                           <label htmlFor={`confirm-delete-${user.user_id}`}>Nhập chính xác email để xác nhận</label>
@@ -111,7 +134,12 @@ export default async function AdminAccountsPage({ searchParams }: { searchParams
                             placeholder={user.email || "email@example.com"}
                             required
                           />
-                          <button className={styles.deleteAccountButton} type="submit">Xóa vĩnh viễn</button>
+                          <button className={styles.deleteAccountButton} type="submit">
+                            <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                              <path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3" />
+                            </svg>
+                            <span>Xóa vĩnh viễn</span>
+                          </button>
                         </form>
                       </details>
                       <CredentialResetPanel userId={user.user_id} email={user.email || ""} />

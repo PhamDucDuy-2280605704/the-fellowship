@@ -33,7 +33,12 @@ export function CredentialResetPanel({ userId, email }: { userId: string; email:
       <form action={submit}>
         <input type="hidden" name="userId" value={userId} />
         <button className={styles.credentialButton} type="submit" disabled={busy}>
-          {busy ? "Đang tạo…" : "Tạo mật khẩu + PIN mới"}
+          <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="8" cy="15" r="4" />
+            <path d="m11 12 8-8 3 3-2 2-2-2-2 2 2 2-3 3" />
+            <path d="M6.5 15h.01" />
+          </svg>
+          <span>{busy ? "Đang tạo…" : "Tạo mật khẩu + PIN mới"}</span>
         </button>
       </form>
       {error && <p className={styles.credentialError} role="alert">{error}</p>}
@@ -45,8 +50,16 @@ export function CredentialResetPanel({ userId, email }: { userId: string; email:
           <p>PIN khôi phục: <code>{credentials.pin}</code></p>
           <button type="button" className={styles.credentialButton} onClick={() => {
             void navigator.clipboard.writeText(`Email: ${credentials.email}\nMật khẩu: ${credentials.password}\nPIN: ${credentials.pin}`);
-          }}>Sao chép thông tin</button>
-          <button type="button" className={styles.credentialDismiss} onClick={() => setCredentials(null)}>Ẩn thông tin</button>
+          }}>
+            <svg className={styles.actionIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="8" y="8" width="12" height="12" rx="2" />
+              <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
+            </svg>
+            <span>Sao chép thông tin</span>
+          </button>
+          <button type="button" className={styles.credentialDismiss} onClick={() => setCredentials(null)}>
+            <span>Ẩn thông tin</span>
+          </button>
           <small>Hãy gửi thông tin qua kênh an toàn. Tải lại trang sẽ không thể xem lại các giá trị này.</small>
         </section>
       )}

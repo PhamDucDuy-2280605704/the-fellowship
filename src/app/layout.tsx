@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { Inter, Noto_Serif } from "next/font/google";
 import { UrlToast } from "@/components/ui/url-toast";
+import FirstVisitIntro from "@/components/first-visit-intro";
 import "./globals.css";
 
 const bodyFont = Inter({
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           <UrlToast />
         </Suspense>
         {children}
+        <FirstVisitIntro />
       </body>
     </html>
   );
